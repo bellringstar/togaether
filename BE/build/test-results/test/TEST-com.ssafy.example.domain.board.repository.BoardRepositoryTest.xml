@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.ssafy.example.domain.board.repository.BoardRepositoryTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-10-15T08:18:41" hostname="DESKTOP-BLHP263" time="0.903">
+  <properties/>
+  <testcase name="baseTimeEntity()" classname="com.ssafy.example.domain.board.repository.BoardRepositoryTest" time="0.903"/>
+  <system-out><![CDATA[17:18:28.719 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
+17:18:28.791 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
+17:18:28.939 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [com.ssafy.example.domain.board.repository.BoardRepositoryTest] from class [org.springframework.boot.test.context.SpringBootTestContextBootstrapper]
+17:18:28.981 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.ssafy.example.domain.board.repository.BoardRepositoryTest], using SpringBootContextLoader
+17:18:29.001 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.ssafy.example.domain.board.repository.BoardRepositoryTest]: class path resource [com/ssafy/example/domain/board/repository/BoardRepositoryTest-context.xml] does not exist
+17:18:29.020 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.ssafy.example.domain.board.repository.BoardRepositoryTest]: class path resource [com/ssafy/example/domain/board/repository/BoardRepositoryTestContext.groovy] does not exist
+17:18:29.022 [Test worker] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [com.ssafy.example.domain.board.repository.BoardRepositoryTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+17:18:29.025 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.ssafy.example.domain.board.repository.BoardRepositoryTest]: BoardRepositoryTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+17:18:29.279 [Test worker] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [com.ssafy.example.domain.board.repository.BoardRepositoryTest]
+17:18:29.556 [Test worker] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Identified candidate component class: file [C:\Users\SSAFY\Desktop\example\example\build\classes\java\main\com\ssafy\example\ExampleApplication.class]
+17:18:29.561 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.ssafy.example.ExampleApplication for test class com.ssafy.example.domain.board.repository.BoardRepositoryTest
+17:18:30.063 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - @TestExecutionListeners is not present for class [com.ssafy.example.domain.board.repository.BoardRepositoryTest]: using defaults.
+17:18:30.065 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener, org.springframework.security.test.context.support.ReactorContextTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+17:18:30.186 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@5552d10, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@3b3190fd, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@219dd935, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@66859ea9, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@4a9412c4, org.springframework.test.context.support.DirtiesContextTestExecutionListener@7d15c513, org.springframework.test.context.transaction.TransactionalTestExecutionListener@320efff5, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@78b44fcb, org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener@12dc702b, org.springframework.test.context.event.EventPublishingTestExecutionListener@41b2123e, org.springframework.security.test.context.support.ReactorContextTestExecutionListener@486bcaa, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@5e9671e6, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@2f3a0f37, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@7ec8db0c, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@4f1a5b93, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@22ee1ad7, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@5dd2ea0a]
+17:18:30.203 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@104cf647 testClass = BoardRepositoryTest, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@7488c183 testClass = BoardRepositoryTest, locations = '{}', classes = '{class com.ssafy.example.ExampleApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@76a1146d, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@6d17914a, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@43deba42, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@e972ee1, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@31c7c281, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@761956ac], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true]], class annotated with @DirtiesContext [false] with mode [null].
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::               (v2.7.16)
+
+2023-10-15 17:18:31.631  INFO 24148 --- [    Test worker] c.s.e.d.b.r.BoardRepositoryTest          : Starting BoardRepositoryTest using Java 11.0.20.1 on DESKTOP-BLHP263 with PID 24148 (started by SSAFY in C:\Users\SSAFY\Desktop\example\example)
+2023-10-15 17:18:31.635  INFO 24148 --- [    Test worker] c.s.e.d.b.r.BoardRepositoryTest          : No active profile set, falling back to 1 default profile: "default"
+2023-10-15 17:18:34.275  INFO 24148 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-10-15 17:18:34.372  INFO 24148 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 84 ms. Found 1 JPA repository interfaces.
+2023-10-15 17:18:35.343  INFO 24148 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-10-15 17:18:35.452  INFO 24148 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-10-15 17:18:35.831  INFO 24148 --- [    Test worker] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-10-15 17:18:36.058  INFO 24148 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-10-15 17:18:36.749  INFO 24148 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-10-15 17:18:36.826  INFO 24148 --- [    Test worker] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2023-10-15 17:18:37.940  INFO 24148 --- [    Test worker] p6spy                                    : 1697357917940|17|statement|connection 0|url jdbc:p6spy:mysql://localhost:3306/ssafy|drop table if exists board|drop table if exists board
+2023-10-15 17:18:37.965  INFO 24148 --- [    Test worker] p6spy                                    : 1697357917965|19|statement|connection 0|url jdbc:p6spy:mysql://localhost:3306/ssafy|create table board (id bigint not null auto_increment, created_date datetime(6), modified_date datetime(6), content varchar(255), title varchar(255), view_count bigint, primary key (id)) engine=InnoDB|create table board (id bigint not null auto_increment, created_date datetime(6), modified_date datetime(6), content varchar(255), title varchar(255), view_count bigint, primary key (id)) engine=InnoDB
+2023-10-15 17:18:37.969  INFO 24148 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-10-15 17:18:37.985  INFO 24148 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-10-15 17:18:39.181  WARN 24148 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-10-15 17:18:41.483  INFO 24148 --- [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 0 endpoint(s) beneath base path '/actuator'
+2023-10-15 17:18:41.570  INFO 24148 --- [    Test worker] c.s.e.d.b.r.BoardRepositoryTest          : Started BoardRepositoryTest in 11.18 seconds (JVM running for 16.084)
+2023-10-15 17:18:41.983  INFO 24148 --- [    Test worker] p6spy                                    : [statement] | 8 ms | 
+    insert       
+    into
+        board
+        (created_date, modified_date, content, title, view_count)       
+    values
+        ('2023-10-15T17:18:41.868+0900', '2023-10-15T17:18:41.868+0900', 'content', 'title', 0)
+2023-10-15 17:18:42.040  INFO 24148 --- [    Test worker] p6spy                                    : [commit] | 2 ms | 
+2023-10-15 17:18:42.330  INFO 24148 --- [    Test worker] p6spy                                    : [statement] | 6 ms | 
+    select
+        board0_.id as id1_0_,
+        board0_.created_date as created_2_0_,
+        board0_.modified_date as modified3_0_,
+        board0_.content as content4_0_,
+        board0_.title as title5_0_,
+        board0_.view_count as view_cou6_0_       
+    from
+        board board0_
+2023-10-15 17:18:42.350  INFO 24148 --- [    Test worker] p6spy                                    : [commit] | 0 ms | 
+>>>>>>>>> createDate=2023-10-15T17:18:41.868568, modifiedDate=2023-10-15T17:18:41.868568
+2023-10-15 17:18:42.470  INFO 24148 --- [    Test worker] p6spy                                    : [statement] | 0 ms | 
+    select
+        board0_.id as id1_0_,
+        board0_.created_date as created_2_0_,
+        board0_.modified_date as modified3_0_,
+        board0_.content as content4_0_,
+        board0_.title as title5_0_,
+        board0_.view_count as view_cou6_0_       
+    from
+        board board0_
+2023-10-15 17:18:42.496  INFO 24148 --- [    Test worker] p6spy                                    : [statement] | 0 ms | 
+    delete       
+    from
+        board       
+    where
+        id=1
+2023-10-15 17:18:42.501  INFO 24148 --- [    Test worker] p6spy                                    : [commit] | 2 ms | 
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

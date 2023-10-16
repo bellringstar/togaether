@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.24">
+<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\common\api\Api.java">
+</file>
+<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\common\api\Result.java">
+</file>
+<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\common\auditing\BaseTimeEntity.java">
+</file>
+<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\common\config\ObjectMapperConfig.java">
+</file>
+<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\common\config\SwaggerConfig.java">
+</file>
+<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\common\error\ErrorCode.java">
+</file>
+<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\common\excepation\CustomExceptionHandler.java">
+</file>
+<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\common\excepation\GlobalExceptionHandler.java">
+</file>
+<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\common\fillter\LoggingFilter.java">
+</file>
+<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\common\P6SpyFomatter.java">
+</file>
+<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\domain\board\controller\BoardController.java">
+</file>
+<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\domain\board\dto\request\BoardCreateRequest.java">
+</file>
+<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\domain\board\dto\response\BoardCreateResponse.java">
+</file>
+<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\domain\board\entity\Board.java">
+</file>
+<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\domain\board\repository\BoardRepository.java">
+</file>
+<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\domain\board\service\BoardService.java">
+</file>
+<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\ExampleApplication.java">
+</file>
+</checkstyle>
