@@ -2,7 +2,7 @@
 
 <div align="center">
   <div style="font-size: xx-large; justify-items: center" >강아지 산책 커뮤니티</div>
-  <img src="./readme_assets/images/jutopiaLogo.png" height="200"> 
+  <!-- <img src="./readme_assets/images/jutopiaLogo.png" height="200">  -->
 </div>
 
 ---
