@@ -187,3 +187,8 @@ out/
 .env.test.local
 .env.production.local
 .env.local
+
+# docker volume
+./database/mongodb/data/
+./database/mysql/data/
+./kafka/
