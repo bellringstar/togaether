@@ -161,3 +161,5 @@ BE/database/mysql/data/performance_schema/users_137.sdi
 BE/database/mysql/data/performance_schema/variables_by_thr_174.sdi
 BE/database/mysql/data/performance_schema/variables_info_177.sdi
 BE/database/mysql/data/sys/sys_config.ibd
+BE/database/mysql/data/
+BE/database/mongodb/data/

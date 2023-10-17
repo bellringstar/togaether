@@ -19,7 +19,7 @@ services:
 
 
   mongodb:
-    container_name: mongo
+    container_name: mongodb
     build:
       dockerfile: Dockerfile
       context: ./database/mongodb
@@ -169,4 +169,26 @@ services:
               properties:
                 bootstrap.servers: kafka1:19092,kafka2:29092,kafka3:39092
     ports:
-      - '10000:8080'
+      - '10000:10000'
+
+    # docker-compose up app 을 사용해 서비스만 실행
+  dog-app:
+    container_name: dog-app
+    build: .
+    depends_on:
+      - mongodb
+      - mysql
+      - redis
+      - kafka-1
+      - kafka-2
+      - kafka-3
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+    ports:
+      - "80:8080"
+    restart: always
