@@ -7,3 +7,4 @@ public interface ErrorCodeIfs {
 
 	String getDescription();
 }
+

@@ -1,37 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <checkstyle version="8.24">
-<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\common\api\Api.java">
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\common\api\Api.java">
 </file>
-<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\common\api\Result.java">
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\common\api\Result.java">
 </file>
-<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\common\auditing\BaseTimeEntity.java">
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\common\auditing\BaseTimeEntity.java">
 </file>
-<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\common\config\ObjectMapperConfig.java">
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\common\config\ObjectMapperConfig.java">
 </file>
-<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\common\config\SwaggerConfig.java">
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\common\config\SwaggerConfig.java">
 </file>
-<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\common\error\ErrorCode.java">
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\common\error\ErrorCode.java">
 </file>
-<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\common\excepation\CustomExceptionHandler.java">
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\common\error\ErrorCodeIfs.java">
 </file>
-<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\common\excepation\GlobalExceptionHandler.java">
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\common\error\UserErrorCode.java">
 </file>
-<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\common\fillter\LoggingFilter.java">
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\common\excepationhandler\CustomExceptionHandler.java">
 </file>
-<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\common\P6SpyFomatter.java">
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\common\excepationhandler\GlobalExceptionHandler.java">
 </file>
-<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\domain\board\controller\BoardController.java">
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\common\exception\ApiException.java">
 </file>
-<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\domain\board\dto\request\BoardCreateRequest.java">
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\common\exception\ApiExceptionIfs.java">
 </file>
-<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\domain\board\dto\response\BoardCreateResponse.java">
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\common\fillter\LoggingFilter.java">
 </file>
-<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\domain\board\entity\Board.java">
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\common\fomatter\P6SpyFomatter.java">
 </file>
-<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\domain\board\repository\BoardRepository.java">
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\DogApplication.java">
 </file>
-<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\domain\board\service\BoardService.java">
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\domain\board\controller\BoardController.java">
 </file>
-<file name="C:\Users\SSAFY\Desktop\example\example\src\main\java\com\ssafy\example\ExampleApplication.java">
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\domain\board\dto\request\BoardCreateRequest.java">
+</file>
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\domain\board\dto\response\BoardCreateResponse.java">
+</file>
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\domain\board\entity\Board.java">
+</file>
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\domain\board\repository\BoardRepository.java">
+</file>
+<file name="C:\Users\SSAFY\Desktop\ssafy\dog\BE\src\main\java\com\ssafy\dog\domain\board\service\BoardService.java">
 </file>
 </checkstyle>

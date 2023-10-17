@@ -36,7 +36,7 @@ public class Result {
 
 	public static Result error(ErrorCodeIfs errorCodeIfs, String description) {
 		return Result.builder()
-			.code(errorCodeIfs.getHttpStatusCode())
+			.code(errorCodeIfs.getErrorCode())
 			.message(errorCodeIfs.getDescription())
 			.description(description)
 			.build();
