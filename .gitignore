@@ -189,7 +189,7 @@ out/
 .env.local
 
 # docker volume
-.BE/database/mongodb/data/
-.BE/database/mysql/data/
-.BE/kafka/
+BE/database/mongodb/data/
+BE/database/mysql/data/
+BE/kafka/
 
