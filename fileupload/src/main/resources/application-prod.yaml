@@ -1,0 +1,47 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  datasource:
+    url: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+
+  data:
+    mongodb:
+      uri: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@mongodb:27017/dog?authSource=admin
+
+  redis:
+    host: redis
+    port: 6379
+
+
+logging:
+  level:
+    p6spy: info
+    org.hibernate:
+      SQL: info
+      type: info
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus"
+
+
+
+
+
+
