@@ -25,6 +25,13 @@ spring:
     host: localhost
     port: 6379
 
+  webflux:
+    multipart:
+      max-in-memory-size: 512KB
+      max-parts: 3
+      max-disk-usage-per-part: 1024KB
+      max-headers-size: 5KB
+
 
 logging:
   level:
