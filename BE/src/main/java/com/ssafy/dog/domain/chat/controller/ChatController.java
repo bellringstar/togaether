@@ -2,18 +2,25 @@ package com.ssafy.dog.domain.chat.controller;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.dog.common.api.Api;
 import com.ssafy.dog.domain.chat.dto.ChatMessage;
+import com.ssafy.dog.domain.chat.dto.Message;
+import com.ssafy.dog.domain.chat.service.ChatService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class ChatController {
+
+	private final ChatService chatService;
 
 	private final SimpMessageSendingOperations messagingTemplate;
 	// private final JwtUtil jwtUtil;
@@ -33,4 +40,10 @@ public class ChatController {
 		messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
 
 	}
+
+	@PostMapping("/chat/test")
+	public Api<?> createUser(@RequestBody Message message) {
+		return chatService.createChat(message);
+	}
+
 }

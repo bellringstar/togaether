@@ -1,4 +1,4 @@
-package com.ssafy.dog.common.config;
+package com.ssafy.dog.domain.chat.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
