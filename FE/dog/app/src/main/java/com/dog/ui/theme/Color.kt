@@ -1,4 +1,4 @@
-package com.ssafy.ui.theme
+package com.dog.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

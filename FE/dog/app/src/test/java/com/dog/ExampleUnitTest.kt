@@ -1,4 +1,4 @@
-package com.ssafy
+package com.dog
 
 import org.junit.Test
 
