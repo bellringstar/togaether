@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.ssafy"
+    namespace = "com.dog"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.ssafy"
+        applicationId = "com.dog"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

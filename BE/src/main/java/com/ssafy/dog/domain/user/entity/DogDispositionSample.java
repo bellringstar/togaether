@@ -1,18 +1,24 @@
 package com.ssafy.dog.domain.user.entity;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-import lombok.Data;
-import javax.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
 @Entity
+@Getter
+@NoArgsConstructor
 @Table(name = "DogDispositionSample")
 public class DogDispositionSample {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-  private String sampleId;
-  private String sampleDisposition;
+	private String sampleId;
+	private String sampleDisposition;
 }

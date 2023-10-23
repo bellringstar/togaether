@@ -1,4 +1,4 @@
-package com.ssafy.ui.theme
+package com.dog.ui.theme
 
 import android.app.Activity
 import android.os.Build
