@@ -10,6 +10,7 @@ plugins {
 group = 'com.ssafy'
 version = '0.0.1-SNAPSHOT'
 
+
 java {
     sourceCompatibility = '11'
 }
@@ -99,6 +100,10 @@ configurations {
     }
 }
 
+bootJar {
+    archiveFileName = 'app.jar'
+}
+
 repositories {
     mavenCentral()
 }
@@ -106,8 +111,8 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-//	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-//	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation "org.springdoc:springdoc-openapi-ui:1.6.11"
