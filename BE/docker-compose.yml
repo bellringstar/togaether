@@ -175,13 +175,6 @@ services:
   dog-app:
     container_name: dog-app
     build: .
-    depends_on:
-      - mongodb
-      - mysql
-      - redis
-      - kafka-1
-      - kafka-2
-      - kafka-3
     environment:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
