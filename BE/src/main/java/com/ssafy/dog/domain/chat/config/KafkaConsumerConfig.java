@@ -46,7 +46,6 @@ public class KafkaConsumerConfig {
 				.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class)
 				.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer)
 				.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest")
-				// .put("security.protocol", "SASL_SSL")
 				.build();
 
 		return new DefaultKafkaConsumerFactory<>(consumerConfigurations, new StringDeserializer(), deserializer);
