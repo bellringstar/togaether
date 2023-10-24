@@ -1,5 +1,7 @@
 package com.ssafy.dog.domain.chat.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -9,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.dog.common.api.Api;
 import com.ssafy.dog.domain.chat.dto.ChatMessage;
-import com.ssafy.dog.domain.chat.dto.Message;
+import com.ssafy.dog.domain.chat.dto.MessageDto;
 import com.ssafy.dog.domain.chat.service.ChatService;
 
 import lombok.RequiredArgsConstructor;
@@ -36,13 +38,23 @@ public class ChatController {
 		String memberId = "1";
 		message.setSender(memberId);
 
-		// /sub/chat/room/{roomId} - 구독
-		messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
+		// /sub/chatroom/{roomId} - 구독
+		messagingTemplate.convertAndSend("/sub/chatroom/" + message.getRoomId(), message);
 
 	}
 
+	// @MessageMapping("/message")
+	// public void sendMessage(@Valid MessageDto message, @Header("Authorization") final String accessToken) {
+	// 	chatService.sendMessage(message, accessToken);
+	// }
+
+	@MessageMapping("/message")
+	public void sendMessage(@Valid MessageDto message) {
+		chatService.sendMessage(message, "임시 토큰");
+	}
+
 	@PostMapping("/chat/test")
-	public Api<?> createUser(@RequestBody Message message) {
+	public Api<?> createUser(@RequestBody MessageDto message) {
 		return chatService.createChat(message);
 	}
 

@@ -20,7 +20,7 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Message implements Serializable {
+public class MessageDto implements Serializable {
 
 	private String id;
 

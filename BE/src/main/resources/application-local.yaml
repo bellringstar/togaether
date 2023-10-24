@@ -1,3 +1,5 @@
+server:
+  port: 8000
 spring:
   config:
     activate:
@@ -39,9 +41,3 @@ management:
     web:
       exposure:
         include: "prometheus"
-
-
-
-
-
-
