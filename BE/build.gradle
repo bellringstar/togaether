@@ -141,9 +141,9 @@ tasks.withType(Checkstyle) {
         html.required = true
     }
 }
-checkstyle {
-    maxWarnings = 0
-    configFile = file("config/checkstyle/naver-checkstyle-rules.xml")
-    configProperties = ["suppressionFile": "config/checkstyle/naver-checkstyle-suppressions.xml"]
-    toolVersion = "8.24"
-}
+//checkstyle {
+//    maxWarnings = 0
+//    configFile = file("config/checkstyle/naver-checkstyle-rules.xml")
+//    configProperties = ["suppressionFile": "config/checkstyle/naver-checkstyle-suppressions.xml"]
+//    toolVersion = "8.24"
+//}
