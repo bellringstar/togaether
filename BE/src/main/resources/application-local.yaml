@@ -1,4 +1,6 @@
 spring:
+  port: 8000
+
   config:
     activate:
       on-profile: local
@@ -25,7 +27,6 @@ spring:
     host: localhost
     port: 6379
 
-
 logging:
   level:
     p6spy: info
@@ -33,15 +34,8 @@ logging:
       SQL: debug
       type: trace
 
-
 management:
   endpoints:
     web:
       exposure:
         include: "prometheus"
-
-
-
-
-
-

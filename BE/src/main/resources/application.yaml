@@ -1,3 +1,4 @@
 spring:
+  port: 8000
   profiles:
     active: prod
