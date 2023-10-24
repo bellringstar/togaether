@@ -4,4 +4,6 @@
     <string name="drawer_closed">Closed Drawer</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="hello">Hi there</string>
+    <string name="signin">Login page</string>
+    <string name="signup">Signup!!</string>
 </resources>
