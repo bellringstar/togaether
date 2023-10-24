@@ -7,8 +7,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.dog.fileupload.service.FileStorageService;
+import org.springframework.kafka.annotation.EnableKafka;
 
 @SpringBootApplication
+@EnableKafka
 public class FileUploadApplication implements CommandLineRunner {
 
 	@Resource
