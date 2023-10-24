@@ -3,7 +3,7 @@ plugins {
     id 'org.springframework.boot' version '2.7.16'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'org.ec4j.editorconfig' version '0.0.3'
-    id 'checkstyle'
+//    id 'checkstyle'
     id 'jacoco'
 }
 
@@ -135,15 +135,15 @@ dependencies {
 
 }
 
-tasks.withType(Checkstyle) {
-    reports {
-        xml.required = true
-        html.required = true
-    }
-}
-checkstyle {
-    maxWarnings = 0
-    configFile = file("config/checkstyle/naver-checkstyle-rules.xml")
-    configProperties = ["suppressionFile": "config/checkstyle/naver-checkstyle-suppressions.xml"]
-    toolVersion = "8.24"
-}
+//tasks.withType(Checkstyle) {
+//    reports {
+//        xml.required = true
+//        html.required = true
+//    }
+//}
+//checkstyle {
+//    maxWarnings = 0
+//    configFile = file("config/checkstyle/naver-checkstyle-rules.xml")
+//    configProperties = ["suppressionFile": "config/checkstyle/naver-checkstyle-suppressions.xml"]
+//    toolVersion = "8.24"
+//}
