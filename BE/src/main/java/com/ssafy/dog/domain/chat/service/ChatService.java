@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.dog.common.api.Api;
 import com.ssafy.dog.domain.chat.dto.MessageDto;
-import com.ssafy.dog.domain.chat.repository.ChattingRepository;
+import com.ssafy.dog.domain.chat.repository.ChatHistoryRepository;
 import com.ssafy.dog.domain.chat.util.KafkaConstants;
 
 import lombok.RequiredArgsConstructor;
@@ -16,10 +16,10 @@ import lombok.RequiredArgsConstructor;
 public class ChatService {
 
 	private final KafkaProducerService kafkaProducerService;
-	private final ChattingRepository chattingRepository;
+	private final ChatHistoryRepository chatHistoryRepository;
 
 	public Api<?> createChat(MessageDto message) {
-		chattingRepository.save(message.convertEntity());
+		chatHistoryRepository.save(message.convertEntity());
 
 		return Api.ok("채팅 저장 성공");
 	}
