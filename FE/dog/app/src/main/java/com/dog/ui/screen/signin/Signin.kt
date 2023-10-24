@@ -10,7 +10,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.dog.ui.components.CommonInput
 import com.dog.ui.components.MainButton
+import com.dog.ui.components.PasswordInput
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
@@ -29,6 +31,8 @@ fun Signin() {
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            CommonInput(modifier = Modifier, "id")
+            PasswordInput(modifier = Modifier, "password")
             MainButton(onClick = {}, text = "button")
         }
     }

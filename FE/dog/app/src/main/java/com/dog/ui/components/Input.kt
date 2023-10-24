@@ -1,8 +1,8 @@
 @file:Suppress("unused", "UNUSED_VARIABLE", "PreviewMustBeTopLevelFunction")
-@file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.dog.ui.components
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -19,13 +19,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommonInput(
-    modifier: Modifier
+    modifier: Modifier,
+    placeHolder: String
 ) {
     var text by remember {
         mutableStateOf(" ")
@@ -33,24 +39,40 @@ fun CommonInput(
     OutlinedTextField(
         value = text, onValueChange = { text = it },
         label =
-        { Text("place holder") })
+        {
+            Text(
+                text = placeHolder,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 80.dp),
+                style =
+                TextStyle(
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Normal,
+                    fontStyle = FontStyle.Normal
+                ),
+            )
+        })
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasswordInput(
-    modifier: Modifier
+    modifier: Modifier,
+    placeHolder: String
 ) {
     var password by rememberSaveable { mutableStateOf("") }
 
     TextField(
         value = password,
         onValueChange = { password = it },
-        label = { Text("Enter password") },
+        label = { Text(placeHolder) },
         visualTransformation = PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchInput(
     modifier: Modifier

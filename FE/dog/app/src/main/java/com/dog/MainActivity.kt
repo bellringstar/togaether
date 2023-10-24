@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Column {
-                        CommonInput(modifier = Modifier)
+                        CommonInput(modifier = Modifier, "ㅁㄴㅇㄹ")
                         SearchInput(modifier = Modifier)
                     }
 
