@@ -15,14 +15,14 @@ spring:
         format_sql: true
 
     datasource:
-      url: jdbc:p6spy:mysql://k9c205.p.ssafy.io:3306/${MYSQL_DATABASE}
+      url: jdbc:p6spy:mysql://k9c205.p.ssafy.io:3306/dog
       driver-class-name: com.p6spy.engine.spy.P6SpyDriver
-      username: ${MYSQL_USER}
-      password: ${MYSQL_PASSWORD}
+      username: dog
+      password: dog
 
   data:
     mongodb:
-      uri: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@k9c205.p.ssafy.io:27017/dog?authSource=admin
+      uri: mongodb://dog:dog@k9c205.p.ssafy.io:27017/dog?authSource=admin
 
   redis:
     host: k9c205.p.ssafy.io
