@@ -27,14 +27,12 @@ spring:
     host: localhost
     port: 6379
 
-
 logging:
   level:
     p6spy: info
     org.hibernate:
       SQL: debug
       type: trace
-
 
 management:
   endpoints:
