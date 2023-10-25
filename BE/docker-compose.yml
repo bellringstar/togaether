@@ -168,17 +168,4 @@ services:
     ports:
       - "10000:10000"
 
-    # docker-compose up app 을 사용해 서비스만 실행
-  dog-app:
-    container_name: dog-app
-    build: .
-    environment:
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MONGO_USER=${MONGO_USER}
-      - MONGO_PASSWORD=${MONGO_PASSWORD}
-    ports:
-      - "8000:8000"
-    restart: always
+
