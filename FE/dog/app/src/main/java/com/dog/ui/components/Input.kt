@@ -40,7 +40,7 @@ import com.dog.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CommonInput(
+fun SignInIdInput(
     modifier: Modifier,
     placeHolder: String,
     auth: Boolean? = null,
@@ -77,7 +77,8 @@ fun CommonInput(
                 }
             },
             supportingText = {
-                Text(text = supportText!!)
+                if (supportText !== null)
+                    Text(text = "$supportText 찾기")
             }
         )
     }
@@ -86,9 +87,59 @@ fun CommonInput(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PasswordInput(
+fun SignInPwInput(
     modifier: Modifier,
-    placeHolder: String
+    placeHolder: String,
+    auth: Boolean? = null,
+    supportText: String? = null
+) {
+    DogTheme {
+        var text by remember {
+            mutableStateOf(" ")
+        }
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(White)
+                .border(BorderStroke(1.dp, Purple400)),
+            singleLine = true,
+            value = text, onValueChange = { text = it },
+            label = { Text(text = placeHolder) },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Pink400,
+                focusedLabelColor = Pink300,
+                cursorColor = Pink500,
+
+                ),
+            textStyle = TextStyle(
+                color = PinkGray400, fontWeight = FontWeight.Bold
+            ),
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            leadingIcon = {
+//                Icon(painter = painterResource(id = R.drawable.profile), contentDescription =)
+            },
+            trailingIcon = {
+                if (auth === true) {
+                    MainButton(onClick = { /*TODO*/ }, text = "인증")
+                }
+            },
+            supportingText = {
+                if (supportText !== null)
+                    Text(text = "$supportText 찾기")
+            }
+        )
+    }
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SignUpPwInput(
+    modifier: Modifier,
+    placeHolder: String,
+    checkPw: Boolean,
+    supportText: String? = null
 ) {
     DogTheme {
         var password by rememberSaveable { mutableStateOf("") }
@@ -108,7 +159,12 @@ fun PasswordInput(
                 color = PinkGray400, fontWeight = FontWeight.Normal, fontSize = 12.sp
             ),
             visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            supportingText = {
+                if (!checkPw)
+                    Text(text = "비밀번호 형식이 올바르지 않습니다")
+                else Text(text = "사용 가능한 비밀번호입니다.")
+            }
         )
 
     }

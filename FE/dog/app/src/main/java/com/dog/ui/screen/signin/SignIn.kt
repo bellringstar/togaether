@@ -15,10 +15,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dog.R
-import com.dog.ui.components.CommonInput
 import com.dog.ui.components.HeadingText
 import com.dog.ui.components.MainButton
-import com.dog.ui.components.PasswordInput
+import com.dog.ui.components.SignInIdInput
+import com.dog.ui.components.SignInPwInput
 import com.dog.ui.theme.DogTheme
 import com.dog.ui.theme.White
 
@@ -41,8 +41,9 @@ fun SignIn() {
 //                verticalArrangement = Arrangement.SpaceAround,
             ) {
                 HeadingText(modifier = Modifier, value = stringResource(id = R.string.signin))
-                CommonInput(modifier = Modifier, "id")
-                PasswordInput(modifier = Modifier, "password")
+                SignInIdInput(modifier = Modifier, "id", supportText = "아이디")
+                SignInPwInput(modifier = Modifier, "password", supportText = "비밀번호")
+
 
                 Row(
                     modifier = Modifier
