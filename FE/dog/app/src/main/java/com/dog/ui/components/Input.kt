@@ -3,6 +3,7 @@
 package com.dog.ui.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -34,13 +35,16 @@ import com.dog.ui.theme.Pink400
 import com.dog.ui.theme.Pink500
 import com.dog.ui.theme.PinkGray400
 import com.dog.ui.theme.Purple400
+import com.dog.ui.theme.White
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommonInput(
     modifier: Modifier,
-    placeHolder: String
+    placeHolder: String,
+    auth: Boolean? = null,
+    supportText: String? = null
 ) {
     DogTheme {
         var text by remember {
@@ -49,7 +53,9 @@ fun CommonInput(
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
+                .background(White)
                 .border(BorderStroke(1.dp, Purple400)),
+            singleLine = true,
             value = text, onValueChange = { text = it },
             label = { Text(text = placeHolder) },
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -64,6 +70,14 @@ fun CommonInput(
             keyboardOptions = KeyboardOptions.Default,
             leadingIcon = {
 //                Icon(painter = painterResource(id = R.drawable.profile), contentDescription =)
+            },
+            trailingIcon = {
+                if (auth === true) {
+                    MainButton(onClick = { /*TODO*/ }, text = "인증")
+                }
+            },
+            supportingText = {
+                Text(text = supportText!!)
             }
         )
     }

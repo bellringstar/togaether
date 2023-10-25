@@ -1,13 +1,13 @@
-package com.dog.ui.screen.signin
+package com.dog.ui.screen.signup
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,10 +17,9 @@ import androidx.compose.ui.unit.dp
 import com.dog.R
 import com.dog.ui.components.CommonInput
 import com.dog.ui.components.HeadingText
-import com.dog.ui.components.MainButton
-import com.dog.ui.components.PasswordInput
 import com.dog.ui.theme.DogTheme
 import com.dog.ui.theme.White
+
 
 @Preview
 @Composable
@@ -40,20 +39,17 @@ fun SignIn() {
                 horizontalAlignment = Alignment.CenterHorizontally,
 //                verticalArrangement = Arrangement.SpaceAround,
             ) {
-                HeadingText(modifier = Modifier, value = stringResource(id = R.string.signin))
-                CommonInput(modifier = Modifier, "id")
-                PasswordInput(modifier = Modifier, "password")
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                ) {
-                    MainButton(onClick = {}, text = "로그인")
-                    MainButton(onClick = {}, text = "회원가입")
+                HeadingText(modifier = Modifier, value = stringResource(id = R.string.signup))
+                Row {
+                    CommonInput(modifier = Modifier, "핸드폰 번호")
+                    Button(onClick = { /*TODO*/ }) {
+                        Text(text = "인증")
+                    }
                 }
 
+                CommonInput(modifier = Modifier, "핸드폰 번호", auth = true)
+
+                
             }
         }
     }

@@ -26,9 +26,10 @@ fun MainButton(
             enabled = enabled,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Orange300,
-                contentColor = Color.Black,
+                contentColor = Color.White,
                 disabledContainerColor = Color.Gray,
             )
+
         ) {
             Text(text = text)
         }
