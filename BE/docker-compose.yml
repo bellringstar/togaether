@@ -12,11 +12,10 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     ports:
-      - '3306:3306'
+      - "3306:3306"
     volumes:
       - ./database/mysql/data:/var/lib/mysql
       - ./database/mysql/data:/var/lib/mysql-files
-
 
   mongodb:
     container_name: mongodb
@@ -25,13 +24,12 @@ services:
       context: ./database/mongodb
     restart: always
     ports:
-      - '27017:27017'
+      - "27017:27017"
     volumes:
       - ./database/mongodb/data:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
-
 
   redis:
     container_name: redis
@@ -153,7 +151,6 @@ services:
     volumes:
       - ./kafka/logs/3:/kafka
 
-
   akhq:
     image: tchiotludo/akhq:latest
     hostname: akhq
@@ -169,26 +166,6 @@ services:
               properties:
                 bootstrap.servers: kafka1:19092,kafka2:29092,kafka3:39092
     ports:
-      - '10000:10000'
+      - "10000:10000"
 
-    # docker-compose up app 을 사용해 서비스만 실행
-  dog-app:
-    container_name: dog-app
-    build: .
-    depends_on:
-      - mongodb
-      - mysql
-      - redis
-      - kafka-1
-      - kafka-2
-      - kafka-3
-    environment:
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MONGO_USER=${MONGO_USER}
-      - MONGO_PASSWORD=${MONGO_PASSWORD}
-    ports:
-      - "80:8080"
-    restart: always
+

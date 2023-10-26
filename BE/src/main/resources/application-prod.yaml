@@ -1,3 +1,5 @@
+server:
+  port: 8000
 
 spring:
   config:
@@ -26,7 +28,6 @@ spring:
     host: redis
     port: 6379
 
-
 logging:
   level:
     p6spy: info
@@ -34,15 +35,9 @@ logging:
       SQL: info
       type: info
 
-
 management:
   endpoints:
     web:
       exposure:
         include: "prometheus"
-
-
-
-
-
 
