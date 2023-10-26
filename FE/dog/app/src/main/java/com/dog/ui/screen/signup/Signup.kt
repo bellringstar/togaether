@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.dog.R
 import com.dog.ui.components.CommonInput
 import com.dog.ui.components.HeadingText
+import com.dog.ui.components.signup.SignUpItem
 import com.dog.ui.theme.DogTheme
 import com.dog.ui.theme.White
 
@@ -40,7 +41,7 @@ fun SignIn() {
                 CommonInput(modifier = Modifier, "핸드폰 번호")
                 CommonInput(modifier = Modifier, "인증 번호", auth = true)
 
-
+                SignUpItem()
             }
         }
     }

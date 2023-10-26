@@ -32,7 +32,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.dog.R
 import com.dog.ui.components.signin.SigninItem
 import com.dog.ui.theme.Pink300
@@ -40,7 +39,7 @@ import com.dog.ui.theme.White
 
 @Preview
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen() {
 
 
     val loginState = false
