@@ -8,7 +8,7 @@ ARG JAR_FILE=build/libs/fileuploadapp.jar
 COPY ${JAR_FILE} fileuploadapp.jar
 
 # target/dependency 디렉토리를 생성하고 app.jar를 해당 디렉토리에 압축 해제합니다.
-RUN mkdir -p target/dependency && (cd target/dependency; jar -xf /app.jar)
+RUN mkdir -p target/dependency && (cd target/dependency; jar -xf /fileuploadapp.jar)
 
 # 스테이지 2: 실행 스테이지
 FROM amazoncorretto:11
