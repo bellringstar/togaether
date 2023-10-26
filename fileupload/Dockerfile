@@ -25,4 +25,4 @@ COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
 
 # 어플리케이션을 실행합니다.
-ENTRYPOINT ["java", "-cp", "app:app/lib/*", "com.dog.fileupload.DogApplication"]
+ENTRYPOINT ["java", "-cp", "app:app/lib/*", "com.dog.fileupload.FileUploadApplication"]
