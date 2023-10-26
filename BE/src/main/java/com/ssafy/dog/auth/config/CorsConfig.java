@@ -1,4 +1,4 @@
-package com.ssafy.dog.domain.chat.config;
+package com.ssafy.dog.auth.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

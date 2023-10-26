@@ -6,7 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ssafy.dog.domain.user.dto.UserForm;
+import com.ssafy.dog.domain.user.dto.UserDto;
 import com.ssafy.dog.domain.user.entity.User;
 import com.ssafy.dog.domain.user.repository.UserRepository;
 
@@ -32,16 +32,16 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public Long signUp(UserForm userForm) throws Exception {
-		if (userRepository.findByUserLoginId(userForm.getUserLoginId()).isPresent()) {
+	public Long signUp(UserDto userDto) throws Exception {
+		if (userRepository.findByUserLoginId(userDto.getUserLoginId()).isPresent()) {
 			throw new Exception("이미 존재하는 아이디(이메일)입니다.");
 		}
 
-		if (userRepository.findByUserNickname(userForm.getUserNickname()).isPresent()) {
+		if (userRepository.findByUserNickname(userDto.getUserNickname()).isPresent()) {
 			throw new Exception("이미 존재하는 닉네임입니다.");
 		}
 
-		User user = userRepository.save(userForm.toEntity());
+		User user = userRepository.save(userDto.toEntity());
 		user.encodePassword(passwordEncoder);
 
 		// user.addUserAuthority();

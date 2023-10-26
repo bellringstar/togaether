@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.dog.domain.user.dto.UserForm;
+import com.ssafy.dog.domain.user.dto.UserDto;
 import com.ssafy.dog.domain.user.repository.UserRepository;
 import com.ssafy.dog.domain.user.service.UserService;
 
@@ -28,7 +28,7 @@ public class UserController {
 
 	@PostMapping("/sign-up")
 	@ResponseStatus(HttpStatus.OK)
-	public Long signUp(@Valid @RequestBody UserForm form) throws Exception {
+	public Long signUp(@Valid @RequestBody UserDto form) throws Exception {
 		return userService.signUp(form);
 	}
 }

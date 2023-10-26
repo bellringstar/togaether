@@ -134,7 +134,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     // https://mvnrepository.com/artifact/com.google.guava/guava
     implementation 'com.google.guava:guava:32.1.2-jre'
-
+    // security
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 //	testImplementation 'org.springframework.batch:spring-batch-test'
