@@ -8,7 +8,7 @@ spring:
       schema-locations: classpath*:mysql/schema.sql
 
   r2dbc:
-    url: r2dbc:pool:mysql://localhost:3306/${MYSQL_DATABASE}
+    url: r2dbc:pool:mysql://localhost:3306/${MYSQL_DATABASE}?serverTimezone=Asia/Seoul
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
 
