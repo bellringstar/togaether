@@ -2,12 +2,9 @@ package com.dog.ui.screen.signup
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,16 +37,10 @@ fun SignIn() {
 //                verticalArrangement = Arrangement.SpaceAround,
             ) {
                 HeadingText(modifier = Modifier, value = stringResource(id = R.string.signup))
-                Row {
-                    CommonInput(modifier = Modifier, "핸드폰 번호")
-                    Button(onClick = { /*TODO*/ }) {
-                        Text(text = "인증")
-                    }
-                }
+                CommonInput(modifier = Modifier, "핸드폰 번호")
+                CommonInput(modifier = Modifier, "인증 번호", auth = true)
 
-                CommonInput(modifier = Modifier, "핸드폰 번호", auth = true)
 
-                
             }
         }
     }

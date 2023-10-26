@@ -19,12 +19,15 @@ import com.dog.ui.components.HeadingText
 import com.dog.ui.components.MainButton
 import com.dog.ui.components.SignInIdInput
 import com.dog.ui.components.SignInPwInput
+import com.dog.ui.components.signin.SigninItem
 import com.dog.ui.theme.DogTheme
 import com.dog.ui.theme.White
 
 @Preview
 @Composable
 fun SignIn() {
+
+
     DogTheme {
         Surface(
             modifier = Modifier
@@ -38,12 +41,14 @@ fun SignIn() {
                     .background(White)
                     .padding(18.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-//                verticalArrangement = Arrangement.SpaceAround,
-            ) {
+                verticalArrangement = Arrangement.Center,
+
+                ) {
                 HeadingText(modifier = Modifier, value = stringResource(id = R.string.signin))
                 SignInIdInput(modifier = Modifier, "id", supportText = "아이디")
                 SignInPwInput(modifier = Modifier, "password", supportText = "비밀번호")
 
+                SigninItem()
 
                 Row(
                     modifier = Modifier

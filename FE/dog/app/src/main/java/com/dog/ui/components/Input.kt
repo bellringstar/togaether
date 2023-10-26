@@ -23,12 +23,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dog.R
 import com.dog.ui.theme.DogTheme
 import com.dog.ui.theme.Pink300
 import com.dog.ui.theme.Pink400
@@ -37,10 +39,9 @@ import com.dog.ui.theme.PinkGray400
 import com.dog.ui.theme.Purple400
 import com.dog.ui.theme.White
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignInIdInput(
+fun CommonInput(
     modifier: Modifier,
     placeHolder: String,
     auth: Boolean? = null,
@@ -82,7 +83,55 @@ fun SignInIdInput(
             }
         )
     }
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SignInIdInput(
+    modifier: Modifier,
+    placeHolder: String,
+    auth: Boolean? = null,
+    supportText: String? = null
+) {
+    DogTheme {
+        var text by remember {
+            mutableStateOf(" ")
+        }
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(White)
+                .border(BorderStroke(1.dp, Purple400)),
+            singleLine = true,
+            value = text, onValueChange = { text = it },
+            label = { Text(text = placeHolder) },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Pink400,
+                focusedLabelColor = Pink300,
+                cursorColor = Pink500,
+
+                ),
+            textStyle = TextStyle(
+                color = PinkGray400, fontWeight = FontWeight.Bold
+            ),
+            keyboardOptions = KeyboardOptions.Default,
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.person_icon),
+                    contentDescription = "아이디"
+                )
+            },
+            trailingIcon = {
+                if (auth === true) {
+                    MainButton(onClick = { /*TODO*/ }, text = "인증")
+                }
+            },
+            supportingText = {
+                if (supportText !== null)
+                    Text(text = "$supportText 찾기")
+            }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
