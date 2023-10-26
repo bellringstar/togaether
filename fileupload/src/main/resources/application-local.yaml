@@ -11,19 +11,10 @@ spring:
       hibernate:
         format_sql: true
 
-  datasource:
-    url: jdbc:mysql://localhost:3306/${MYSQL_DATABASE}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+  r2dbc:
+    url: r2dbc:pool:mysql://localhost:3306/${MYSQL_DATABASE}
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
-
-  data:
-    mongodb:
-      uri: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@localhost:27017/dog?authSource=admin
-
-  redis:
-    host: localhost
-    port: 6379
 
   webflux:
     multipart:
@@ -32,17 +23,6 @@ spring:
       max-disk-usage-per-part: 1024KB
       max-headers-size: 5KB
 
-  kafka:
-    consumer:
-      bootstrap-servers: localhost:19092,localhost:29092,localhost:39092
-      group-id: my-group
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    producer:
-      bootstrap-servers: localhost:19092,localhost:29092,localhost:39092
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-
 
 logging:
   level:
@@ -50,6 +30,7 @@ logging:
     org.hibernate:
       SQL: debug
       type: trace
+    org.springframework.r2dbc.core: debug
 
 
 management:

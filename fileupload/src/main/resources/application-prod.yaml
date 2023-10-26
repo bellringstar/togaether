@@ -11,19 +11,11 @@ spring:
       hibernate:
         format_sql: true
 
-  datasource:
-    url: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+  r2dbc:
+    url: r2dbc:pool:mysql://mysql:3306/${MYSQL_DATABASE}
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
 
-  data:
-    mongodb:
-      uri: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@mongodb:27017/dog?authSource=admin
-
-  redis:
-    host: redis
-    port: 6379
 
 
 logging:

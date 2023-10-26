@@ -7,10 +7,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.dog.fileupload.service.FileStorageService;
-import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.data.r2dbc.config.EnableR2dbcAuditing;
+import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
+
 
 @SpringBootApplication
-@EnableKafka
+@EnableR2dbcAuditing
+@EnableR2dbcRepositories
 public class FileUploadApplication implements CommandLineRunner {
 
 	@Resource
