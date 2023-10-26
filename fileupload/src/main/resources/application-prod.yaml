@@ -2,14 +2,9 @@ spring:
   config:
     activate:
       on-profile: prod
-
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+  sql:
+    init:
+      schema-locations: classpath*:mysql/schema.sql
 
   r2dbc:
     url: r2dbc:pool:mysql://mysql:3306/${MYSQL_DATABASE}
@@ -17,13 +12,18 @@ spring:
     password: ${MYSQL_PASSWORD}
 
 
+  webflux:
+    multipart:
+      max-in-memory-size: 512KB
+      max-parts: 3
+      max-disk-usage-per-part: 1024KB
+      max-headers-size: 5KB
+
 
 logging:
   level:
-    p6spy: info
-    org.hibernate:
-      SQL: info
-      type: info
+    io.r2dbc: DEBUG
+    org.springframework.r2dbc: DEBUG
 
 
 management:

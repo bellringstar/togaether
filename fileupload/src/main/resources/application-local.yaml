@@ -3,13 +3,9 @@ spring:
     activate:
       on-profile: local
 
-  jpa:
-    hibernate:
-      ddl-auto: create
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+  sql:
+    init:
+      schema-locations: classpath*:mysql/schema.sql
 
   r2dbc:
     url: r2dbc:pool:mysql://localhost:3306/${MYSQL_DATABASE}
@@ -26,11 +22,8 @@ spring:
 
 logging:
   level:
-    p6spy: info
-    org.hibernate:
-      SQL: debug
-      type: trace
-    org.springframework.r2dbc.core: debug
+    io.r2dbc: DEBUG
+    org.springframework.r2dbc: DEBUG
 
 
 management:

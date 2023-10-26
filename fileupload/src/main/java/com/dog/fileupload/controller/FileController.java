@@ -1,5 +1,6 @@
 package com.dog.fileupload.controller;
 
+import com.dog.fileupload.common.api.Api;
 import org.springframework.core.io.buffer.DataBuffer;
 import java.util.stream.Stream;
 
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.dog.fileupload.dto.FileResponse;
@@ -23,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class FileController {
 
@@ -41,7 +44,7 @@ public class FileController {
 		Stream<FileInfo> fileInfoStream = fileStorageService.loadAll().map(path -> {
 			String fileName = path.getFileName().toString();
 			String url = UriComponentsBuilder.newInstance().path("/files/{filename}").buildAndExpand(fileName).toUriString();
-			return new FileInfo(fileName, url);
+			return null;
 		});
 
 		Flux<FileInfo> fileInfoFlux = Flux.fromStream(fileInfoStream);
@@ -55,6 +58,12 @@ public class FileController {
 
 		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
 			.contentType(MediaType.APPLICATION_OCTET_STREAM).body(file);
+	}
+
+	@PostMapping("/test")
+	public Mono<Api<FileInfo>> testPostFileInfo(@RequestBody FileInfo fileInfo) {
+		return fileStorageService.saveFileInfo(fileInfo)
+				.map(Api::ok);
 	}
 
 }
