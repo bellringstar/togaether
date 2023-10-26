@@ -10,8 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,9 +53,9 @@ public class User {
 	@NonNull
 	private Boolean userTermsAgreed;
 
-	public void encodePassword(PasswordEncoder passwordEncoder) {
-		this.userPw = passwordEncoder.encode(userPw);
-	}
+	// public void encodePassword(PasswordEncoder passwordEncoder) {
+	// 	this.userPw = passwordEncoder.encode(userPw);
+	// }
 
 	@Builder
 	public User( // 빌더는 UserForm 에도 있어야 하고 여기 User 엔티티에도 있어야 하나?

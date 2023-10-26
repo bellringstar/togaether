@@ -4,20 +4,22 @@ import java.time.LocalDateTime;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-
-import org.hibernate.validator.constraints.Range;
+import javax.validation.constraints.Size;
 
 import com.ssafy.dog.domain.user.entity.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserDto {
 	@NotBlank(message = "아이디는 필수 입력 값입니다.")
 	@Email(message = "로그인 아이디는 이메일 형식이어야 합니다.")
@@ -29,7 +31,7 @@ public class UserDto {
 	private String userPw;
 
 	@NotBlank
-	@Range(min = 2, max = 15)
+	@Size(min = 2, max = 15)
 	private String userNickname;
 
 	private String userPicture;
@@ -42,7 +44,7 @@ public class UserDto {
 
 	private String userGender;
 
-	@NotBlank(message = "약관 동의 여부를 입력해주세요.")
+	@NotNull(message = "약관 동의 여부를 입력해주세요.")
 	private Boolean userTermsAgreed;
 
 	@Builder // 얘는 사라져야 하나?

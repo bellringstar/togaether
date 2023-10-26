@@ -2,7 +2,6 @@ package com.ssafy.dog.domain.user.service;
 
 import java.util.Optional;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
-	private final PasswordEncoder passwordEncoder;
+	// private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public Optional<User> findByUserLoginId(String loginId) {
@@ -42,7 +41,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		User user = userRepository.save(userDto.toEntity());
-		user.encodePassword(passwordEncoder);
+		// user.encodePassword(passwordEncoder);
 
 		// user.addUserAuthority();
 		return user.getUserId();
