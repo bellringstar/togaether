@@ -11,5 +11,5 @@ public interface UserService {
 
 	Optional<User> findByUserNickname(String userNickname);
 
-	public Long signUp(UserDto userDto) throws Exception;
+	public Long create(UserDto userDto) throws Exception;
 }
