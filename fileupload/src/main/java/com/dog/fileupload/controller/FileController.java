@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -29,6 +31,7 @@ import reactor.core.scheduler.Schedulers;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping("/api")
 public class FileController {
 
 	private final FileStorageService fileStorageService;
@@ -42,18 +45,18 @@ public class FileController {
 		);
 	}
 
-//	@GetMapping("/files")
-//	public ResponseEntity<Flux<FileInfo>> getListFiles() {
-//		Stream<FileInfo> fileInfoStream = fileStorageService.loadAll().map(path -> {
-//			String fileName = path.getFileName().toString();
-//			String url = UriComponentsBuilder.newInstance().path("/files/{filename}").buildAndExpand(fileName).toUriString();
-//			return null;
-//		});
-//
-//		Flux<FileInfo> fileInfoFlux = Flux.fromStream(fileInfoStream);
-//
-//		return ResponseEntity.status(HttpStatus.OK).body(fileInfoFlux);
-//	}
+	@GetMapping("/files")
+	public ResponseEntity<Flux<FileInfo>> getListFiles() {
+		Stream<FileInfo> fileInfoStream = fileStorageService.loadAll().map(path -> {
+			String fileName = path.getFileName().toString();
+			String url = UriComponentsBuilder.newInstance().path("/files/{filename}").buildAndExpand(fileName).toUriString();
+			return null;
+		});
+
+		Flux<FileInfo> fileInfoFlux = Flux.fromStream(fileInfoStream);
+
+		return ResponseEntity.status(HttpStatus.OK).body(fileInfoFlux);
+	}
 //
 @GetMapping("/file/{fileName:.+}")
 public ResponseEntity<Flux<DataBuffer>> getFile(@PathVariable String fileName) {

@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,7 @@ import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.server.ServerRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -101,10 +103,21 @@ public class FileStorageServiceImpl implements FileStorageService {
             if (resource.exists() || resource.isReadable()) {
                 return DataBufferUtils.read(resource, new DefaultDataBufferFactory(), 4096);
             } else {
-                throw new RuntimeException("파일을 읽을 수 없습니다.");
+                throw new ApiException(ErrorCode.SERVER_ERROR,"파일을 읽을 수 없습니다.");
             }
         } catch (MalformedURLException e) {
-            throw new RuntimeException("Error: " + e.getMessage());
+            throw new ApiException(ErrorCode.SERVER_ERROR,"Error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public Stream<Path> loadAll() {
+        try {
+            return Files.walk(this.root, 1)
+                    .filter(path -> !path.equals(this.root))
+                    .map(this.root::relativize);
+        } catch (IOException e) {
+            throw new ApiException(ErrorCode.BAD_REQUEST, "파일을 찾을 수 없습니다.");
         }
     }
 
@@ -116,6 +129,7 @@ public class FileStorageServiceImpl implements FileStorageService {
                 .doOnError(e -> log.error("저장 실패", e))
                 .doOnTerminate(() -> log.info("저장 작업 종료"));
     }
+
 }
 
 
