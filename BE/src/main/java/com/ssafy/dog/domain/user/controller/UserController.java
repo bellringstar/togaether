@@ -37,4 +37,9 @@ public class UserController {
 
 		return userService.create(userDto);
 	}
+
+	@PostMapping("/login")
+	public Api<?> login() {
+		return Api.ok("로그인 성공");
+	}
 }
