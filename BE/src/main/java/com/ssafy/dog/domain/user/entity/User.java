@@ -42,6 +42,7 @@ public class User {
 	private String userNickname;
 
 	@NonNull
+	@Column(name = "user_phone")
 	@Size(max = 11)
 	private String userPhone;
 
@@ -66,7 +67,8 @@ public class User {
 
 	@Builder
 	public User( // 빌더는 UserForm 에도 있어야 하고 여기 User 엔티티에도 있어야 하나?
-		String userLoginId, String userPw, String userNickname, String userPicture, LocalDateTime userCreatedAt,
+		String userLoginId, String userPw, String userNickname, String userPhone, String userPicture,
+		LocalDateTime userCreatedAt,
 		LocalDateTime userUpdatedAt, String userAboutMe, String userGender, Boolean userTermsAgreed,
 		Boolean userIsRemoved) {
 		this.userLoginId = userLoginId;
@@ -82,5 +84,3 @@ public class User {
 		this.userIsRemoved = userIsRemoved;
 	}
 }
-
-

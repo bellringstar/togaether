@@ -16,6 +16,10 @@ public class UserSignupDto {
 	@Email(message = "로그인 아이디는 이메일 형식이어야 합니다.")
 	private String userLoginId;
 
+	@NotNull
+	@Size(min = 10, max = 11)
+	private String userPhone;
+
 	@NotBlank
 	@Pattern(regexp = "^(?=.*[A-Z])(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,16}$",
 		message = "대문자 하나 이상, 특수문자 하나 이상, 숫자 하나 이상을 포함한 최소 8자, 최대 16자")
