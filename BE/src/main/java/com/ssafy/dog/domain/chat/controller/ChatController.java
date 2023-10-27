@@ -30,16 +30,19 @@ public class ChatController {
 	private final SimpMessageSendingOperations messagingTemplate;
 	// private final JwtUtil jwtUtil;
 
+	// 채팅방 만들기
 	@PostMapping("/chatroom")
 	public Api<?> createChatRoom(@RequestBody ChatRoomReqDto chatRoomReqDto) {
 		return chatService.createChatRoom(chatRoomReqDto);
 	}
 
+	// 유저의 채팅목록 가져오기 (jwt에서 유저정보)
 	@GetMapping("/chatroom")
 	public Api<?> getChatRoomList() {
 		return chatService.getChatList();
 	}
 
+	//채팅 상세보기
 	@GetMapping("/chatroom/{roomId}")
 	public Api<?> getChatHistory(@PathVariable Long roomId) {
 		return chatService.getChatHistory(roomId);
