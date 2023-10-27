@@ -4,8 +4,11 @@ import com.dog.fileupload.common.api.Api;
 import com.dog.fileupload.dto.FileResponse;
 import com.dog.fileupload.entity.FileInfo;
 import com.dog.fileupload.service.FileStorageService;
+import com.dog.fileupload.utils.FileNameUtils;
 import java.util.stream.Stream;
+import javax.print.attribute.standard.Media;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -25,6 +28,7 @@ import reactor.core.scheduler.Schedulers;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class FileController {
 
 	private final FileStorageService fileStorageService;
@@ -51,13 +55,19 @@ public class FileController {
 //		return ResponseEntity.status(HttpStatus.OK).body(fileInfoFlux);
 //	}
 //
-//	@GetMapping("/file/{filename:.+}")
-//	public ResponseEntity<Flux<DataBuffer>> getFile(@PathVariable String fileName) {
-//		Flux<DataBuffer> file = fileStorageService.load(fileName);
-//
-//		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
-//			.contentType(MediaType.APPLICATION_OCTET_STREAM).body(file);
-//	}
+@GetMapping("/file/{fileName:.+}")
+public ResponseEntity<Flux<DataBuffer>> getFile(@PathVariable String fileName) {
+	Flux<DataBuffer> file = fileStorageService.load(fileName);
+	String fileExtension = FileNameUtils.getBaseOrExtension(fileName, FileNameUtils.EXTENSION);
+	MediaType mediaType = FileNameUtils.getMediaTypeForFileName(fileExtension);
+	log.info("mediaType : {}", mediaType);
+
+	return ResponseEntity.ok()
+			.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fileName + "\"")
+			.contentType(mediaType)
+			.body(file);
+}
+
 
 	@PostMapping("/test")
 	public Mono<Api<FileInfo>> testPostFileInfo(@RequestBody FileInfo fileInfo) {

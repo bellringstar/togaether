@@ -5,13 +5,12 @@ import com.dog.fileupload.common.exception.ApiException;
 import com.dog.fileupload.entity.FileInfo;
 import com.dog.fileupload.repository.FileInfoRepository;
 import com.dog.fileupload.utils.EncodeFile;
-import com.dog.fileupload.utils.FileNameConverter;
+import com.dog.fileupload.utils.FileNameUtils;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +32,8 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @Value("${file.uploadUrl}")
     private String uploadUrl;
+    @Value("${file.downloadApi}")
+    private String downloadApi;
     private final FileInfoRepository fileInfoRepository;
     private final EncodeFile encodeFile;
     private final Path root = Paths.get("uploads");
@@ -54,7 +55,7 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     private Mono<String> saveAndEncodeFile(FilePart filePart) {
-        String filename = FileNameConverter.convert(filePart.filename());
+        String filename = FileNameUtils.convert(filePart.filename());
         Path originalFilePath = root.resolve(filename);
         String mimeType = filePart.headers().getContentType().toString();
         return transferFile(filePart, originalFilePath)
@@ -68,18 +69,18 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     private Mono<String> encodeAndDeleteOriginal(Path originalFilePath, String mimeType) {
         return Mono.fromCallable(() -> {
-            String encodedFilePath;
+            String encodedFileName;
             if (mimeType.startsWith("video/")) {
-                encodedFilePath = encodeFile.encodeVideo(originalFilePath.toString());
+                encodedFileName = encodeFile.encodeVideo(originalFilePath.toString());
             } else if (mimeType.startsWith("image/")) {
-                encodedFilePath = encodeFile.encodeImage(originalFilePath.toString());
+                encodedFileName = encodeFile.encodeImage(originalFilePath.toString());
             } else {
                 throw new ApiException(ErrorCode.BAD_REQUEST, "Unsupported file type");
             }
 
             deleteOriginalFile(originalFilePath);
 
-            return uploadUrl + encodedFilePath;
+            return downloadApi + encodedFileName;
         }).subscribeOn(Schedulers.boundedElastic());
     }
 
@@ -97,7 +98,6 @@ public class FileStorageServiceImpl implements FileStorageService {
         try {
             Path file = root.resolve(filename);
             Resource resource = new UrlResource(file.toUri());
-
             if (resource.exists() || resource.isReadable()) {
                 return DataBufferUtils.read(resource, new DefaultDataBufferFactory(), 4096);
             } else {
@@ -108,16 +108,6 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
     }
 
-    @Override
-    public Stream<Path> loadAll() {
-        try {
-            return Files.walk(this.root, 1)
-                    .filter(path -> !path.equals(this.root))
-                    .map(this.root::relativize);
-        } catch (IOException e) {
-            throw new RuntimeException("피을을 읽을 수 없습니다.");
-        }
-    }
 
     @Override
     public Mono<FileInfo> saveFileInfo(FileInfo fileInfo) {

@@ -18,7 +18,7 @@ public interface FileStorageService {
 
 	public Flux<DataBuffer> load(String filename);
 
-	public Stream<Path> loadAll();
+//	public Stream<Path> loadAll();
 
 	public Mono<FileInfo> saveFileInfo(FileInfo info);
 }
