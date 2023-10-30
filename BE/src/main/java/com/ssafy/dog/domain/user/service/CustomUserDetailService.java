@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
-public class UserSecurityService implements UserDetailsService {
+public class CustomUserDetailService implements UserDetailsService {
 	private final UserRepository userRepository;
 
 	@Override
