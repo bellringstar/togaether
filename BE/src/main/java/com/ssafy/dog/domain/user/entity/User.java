@@ -34,7 +34,7 @@ import lombok.NonNull;
 @AllArgsConstructor
 @Builder
 @Table(name = "user")
-public class User implements UserDetails {
+public class User implements UserDetails { // 주소 속성 아직 안 들어감
 	// Entity 로서의 User 속성 및 메소드들
 	@Id
 	@Column(name = "user_id")
