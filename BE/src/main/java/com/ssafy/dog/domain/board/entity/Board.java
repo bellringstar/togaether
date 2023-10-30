@@ -1,46 +1,69 @@
 package com.ssafy.dog.domain.board.entity;
 
+import static javax.persistence.FetchType.*;
+
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "Board")
+@Getter
+@Setter
 public class Board {
 	@Id
-	@Column(name = "board_id")
-	private BigInteger id;
-	@ManyToOne
+	@GeneratedValue
+	private BigInteger boardId;
+
+	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "user_Id")
-	private Member userId;
-	@Column(name = "board_title")
-	private String title;
-	@Column(name = "board_media_type")
+	private Member member;
+
+	private String boardTitle;
+
+	private String boardContent;
+
+	private int boardLikes;
+
+	private LocalDateTime boardCreatedAt;
+
+	private LocalDateTime boardUpdatedAt;
+
 	@Enumerated(value = EnumType.STRING)
-	private MediaType mediaType;
+	private Scope boardScope;
 
-	@Column(name = "board_content")
-	private String content;
+	// === 연관 관계 메서드 === //
+	@OneToMany(mappedBy = "boardId")
+	private List<Coment> comentListForBoard = new ArrayList<>();
 
-	@Column(name = "board_likes")
-	private int likes;
+	public void setMemberFromBoard(Member member) {
+		this.member = member;
+		member.getBoardList().add(this);
+	}
 
-	@Column(name = "board_created_at")
-	private LocalDateTime created;
-
-	@Column(name = "board_updated_at")
-	private LocalDateTime updated;
-
-	@Column(name = "board_scope")
-	@Enumerated(value = EnumType.STRING)
-	private Scope scope;
+	// === 생성 메서드 === //
+	public static Board createBoard(Member member, String title, String content, Scope scope) {
+		Board board = new Board();
+		board.setBoardTitle(title);
+		board.setMember(member);
+		board.setBoardContent(content);
+		board.setBoardScope(scope);
+		board.setBoardCreatedAt(LocalDateTime.now());
+		return board;
+	}
 
 }
