@@ -49,4 +49,8 @@ public class FileInfo {
     public void changeEncodedFileName(String encodedName) {
         this.encodedName = encodedName;
     }
+
+    public void deleteFile(FileStatus fileStatus) {
+        this.fileStatus = fileStatus;
+    }
 }
