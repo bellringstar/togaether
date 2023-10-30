@@ -2,9 +2,11 @@ package com.ssafy.dog.domain.chat.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.dog.common.api.Api;
-import com.ssafy.dog.domain.chat.dto.ChatMessage;
 import com.ssafy.dog.domain.chat.dto.MessageDto;
 import com.ssafy.dog.domain.chat.dto.req.ChatRoomReqDto;
+import com.ssafy.dog.domain.chat.service.ChatRoomService;
 import com.ssafy.dog.domain.chat.service.ChatService;
 
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ChatController {
 
 	private final ChatService chatService;
+	private final ChatRoomService chatRoomService;
 
 	private final SimpMessageSendingOperations messagingTemplate;
 	// private final JwtUtil jwtUtil;
@@ -48,20 +51,13 @@ public class ChatController {
 		return chatService.getChatHistory(roomId);
 	}
 
-	@CrossOrigin
-	@MessageMapping("/chat/message") //websocket "/pub/chat/message"로 들어오는 메시지 처리
-	// public void message(ChatMessage message, @Header("Authorization") String Authorization) {
-	public void message(ChatMessage message) {
-
-		log.info("메시지" + message);
-		// String authorization = jwtUtil.extractJwt(Authorization);
-		// Object memberId = jwtUtil.parseClaims(authorization).get("memberId");
-		String memberId = "1";
-		message.setSender(memberId);
-
-		// /sub/chatroom/{roomId} - 구독
-		messagingTemplate.convertAndSend("/sub/chatroom/" + message.getRoomId(), message);
-
+	// 채팅방 연결해제
+	@DeleteMapping("/chatroom/{roomId}")
+	public Api<?> disconnectChat(@PathVariable("chatroomNo") Long chatRoomNo,
+		@Header("Authorization") final String accessToken) {
+		Long userId = Long.valueOf(1);
+		chatRoomService.disconnectChatRoom(chatRoomNo, userId);
+		return ResponseEntity.ok(StatusResponseDto.success());
 	}
 
 	// @MessageMapping("/message")
@@ -72,11 +68,6 @@ public class ChatController {
 	@MessageMapping("/message")
 	public void sendMessage(@Valid MessageDto message) {
 		chatService.sendMessage(message, "임시 토큰");
-	}
-
-	@PostMapping("/chat/test")
-	public Api<?> createUser(@RequestBody MessageDto message) {
-		return chatService.createChat(message);
 	}
 
 }
