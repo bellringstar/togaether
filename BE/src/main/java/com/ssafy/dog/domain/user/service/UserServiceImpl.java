@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssafy.dog.common.api.Api;
 import com.ssafy.dog.common.error.UserErrorCode;
 import com.ssafy.dog.common.exception.ApiException;
-import com.ssafy.dog.domain.user.dto.UserDto;
 import com.ssafy.dog.domain.user.dto.UserLoginDto;
+import com.ssafy.dog.domain.user.dto.UserSignupDto;
 import com.ssafy.dog.domain.user.entity.User;
 import com.ssafy.dog.domain.user.repository.UserRepository;
 import com.ssafy.dog.security.JwtTokenProvider;
@@ -28,6 +28,10 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtTokenProvider jwtTokenProvider;
+
+	private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$");
+	private static final Pattern PASSWORD_PATTERN = Pattern.compile(
+		"^(?=.*[A-Z])(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,16}$");
 
 	@Override
 	public Optional<User> findByUserLoginId(String loginId) {
@@ -57,53 +61,61 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public Api<?> create(UserDto dto) {
+	public Api<?> create(UserSignupDto userSignupDto) {
 
-		if (!isValidEmail(dto.getUserLoginId())) {
+		if (!isValidEmail(userSignupDto.getUserLoginId())) {
 			throw new ApiException(UserErrorCode.INVALID_EMAIL);
 		}
 
-		if (!isValidPassword(dto.getUserPw())) {
+		if (!isValidPassword(userSignupDto.getUserPw1())) {
 			throw new ApiException(UserErrorCode.INVALID_PASSWORD);
 		}
 
-		if (userRepository.findByUserLoginId(dto.getUserLoginId()).isPresent()) {
+		if (userRepository.findByUserLoginId(userSignupDto.getUserLoginId()).isPresent()) {
 			throw new ApiException(UserErrorCode.EMAIL_EXISTS);
 		}
 
-		if (userRepository.findByUserNickname(dto.getUserNickname()).isPresent()) {
+		if (userRepository.findByUserNickname(userSignupDto.getUserNickname()).isPresent()) {
 			throw new ApiException(UserErrorCode.NICKNAME_EXISTS);
 		}
 
-		if (!dto.getUserTermsAgreed().equals(true)) {
+		if (!userSignupDto.getUserTermsAgreed().equals(true)) {
 			throw new ApiException(UserErrorCode.TERMS_NOT_AGREED);
 		}
 
-		if (userRepository.findByUserPhone(dto.getUserPhone()).isPresent()) {
+		if (userRepository.findByUserPhone(userSignupDto.getUserPhone()).isPresent()) {
 			throw new ApiException(UserErrorCode.PHONE_EXISTS);
 		}
 
-		dto.setUserPw(passwordEncoder.encode(dto.getUserPw()));
-		User user = userRepository.save(dto.toEntity());
-		return Api.ok(dto.getUserLoginId() + " 회원가입 성공");
+		String encodedPassword = passwordEncoder.encode(userSignupDto.getUserPw1());
+		User user = User.builder()
+			.userLoginId(userSignupDto.getUserLoginId())
+			.userPw(encodedPassword)
+			.userNickname(userSignupDto.getUserNickname())
+			.userPhone(userSignupDto.getUserPhone())
+			.userTermsAgreed(userSignupDto.getUserTermsAgreed())
+			.userIsRemoved(false)
+			.build();
+
+		return Api.ok(userSignupDto.getUserLoginId() + " 회원가입 성공");
 	}
 
 	@Transactional
 	@Override
-	public Api<?> login(UserLoginDto dto) {
+	public Api<?> login(UserLoginDto userLoginDto) {
 
-		if (!isValidEmail(dto.getUserLoginId())) {
+		if (!isValidEmail(userLoginDto.getUserLoginId())) {
 			throw new ApiException(UserErrorCode.INVALID_EMAIL);
 		}
 
-		if (!isValidPassword(dto.getUserPw())) {
+		if (!isValidPassword(userLoginDto.getUserPw())) {
 			throw new ApiException(UserErrorCode.INVALID_PASSWORD);
 		}
 
-		User user = userRepository.findByUserLoginId(dto.getUserLoginId())
+		User user = userRepository.findByUserLoginId(userLoginDto.getUserLoginId())
 			.orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
 
-		if (!passwordEncoder.matches(dto.getUserPw(), user.getPassword())) {
+		if (!passwordEncoder.matches(userLoginDto.getUserPw(), user.getPassword())) {
 			throw new ApiException(UserErrorCode.WRONG_PASSWORD);
 		}
 
@@ -113,12 +125,10 @@ public class UserServiceImpl implements UserService {
 
 	// 이메일 형식 검증 메소드
 	private boolean isValidEmail(String email) {
-		String regex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
-		return Pattern.matches(regex, email);
+		return EMAIL_PATTERN.matcher(email).matches();
 	}
 
 	private boolean isValidPassword(String password) {
-		String regex = "^(?=.*[A-Z])(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,16}$";
-		return Pattern.matches(regex, password);
+		return PASSWORD_PATTERN.matcher(password).matches();
 	}
 }

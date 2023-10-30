@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.dog.common.error.UserErrorCode;
+import com.ssafy.dog.common.exception.ApiException;
 import com.ssafy.dog.domain.user.Model.UserRole;
 import com.ssafy.dog.domain.user.entity.User;
 import com.ssafy.dog.domain.user.repository.UserRepository;
@@ -26,7 +28,7 @@ public class CustomUserDetailService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String userLoginId) throws UsernameNotFoundException {
 		Optional<User> user = this.userRepository.findByUserLoginId(userLoginId);
 		if (user.isEmpty()) {
-			throw new UsernameNotFoundException("사용자를 찾을 수 없습니다."); // 일단 구현 하고 Api Exception 작성하기
+			throw new ApiException(UserErrorCode.USER_NOT_FOUND);
 		}
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		if ("kihong2424@gmail.com".equals(userLoginId)) {

@@ -21,6 +21,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.ssafy.dog.common.auditing.BaseTimeEntity;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,10 +33,10 @@ import lombok.NonNull;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@AllArgsConstructor // 얘 지우기
 @Builder
 @Table(name = "user")
-public class User implements UserDetails { // 주소 속성 아직 안 들어감
+public class User extends BaseTimeEntity implements UserDetails { // 주소 속성 아직 안 들어감
 	// Entity 로서의 User 속성 및 메소드들
 	@Id
 	@Column(name = "user_id")

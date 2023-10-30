@@ -8,14 +8,12 @@ import javax.validation.constraints.Size;
 
 import com.ssafy.dog.domain.user.entity.User;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
 	@NotBlank(message = "아이디는 필수 입력 값입니다.")
