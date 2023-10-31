@@ -44,7 +44,7 @@ public class Dog {
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Builder.Default
-	private LocalDateTime dogBirthdate = LocalDateTime.now();
+	private LocalDateTime dogBirthdate;
 
 	@Size(max = 20, message = "문자 제한은 20개입니다.")
 	private String dogBreed;
