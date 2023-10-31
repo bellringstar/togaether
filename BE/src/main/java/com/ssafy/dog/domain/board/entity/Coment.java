@@ -1,7 +1,5 @@
 package com.ssafy.dog.domain.board.entity;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.ssafy.dog.common.auditing.BaseTimeEntity;
 import com.ssafy.dog.domain.user.entity.User;
 
 import lombok.AccessLevel;
@@ -20,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Coment {
+public class Coment extends BaseTimeEntity {
 	@Id
 	@GeneratedValue
 	@Column(name = "comment_id")
@@ -36,15 +35,13 @@ public class Coment {
 
 	private String comentContent;
 	private int comentLikes;
-	private LocalDateTime comentCreatedAt;
-	private LocalDateTime comentUpdatedAt;
 
 	@Builder
 	public Coment(User user, Board board, String content) {
 		this.comentContent = content;
 		this.user = user;
 		this.board = board;
-		this.comentCreatedAt = LocalDateTime.now();
+		this.comentLikes = 0;
 	}
 
 	// == 연관 관계 메서드 == //

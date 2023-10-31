@@ -1,7 +1,5 @@
 package com.ssafy.dog.domain.board.service;
 
-import java.math.BigInteger;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +21,7 @@ public class BoardService {
 	private final BoardRepository boardRepository;
 
 	// 게시글 작성, media table에 사용할 boardId 반환
-	public BigInteger join(Board board) {
+	public Long join(Board board) {
 		boardRepository.save(board);
 		return board.getBoardId();
 	}

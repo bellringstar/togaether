@@ -2,21 +2,22 @@ package com.ssafy.dog.domain.board.entity;
 
 import static javax.persistence.FetchType.*;
 
-import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.ssafy.dog.common.auditing.BaseTimeEntity;
 import com.ssafy.dog.domain.board.enums.Scope;
 import com.ssafy.dog.domain.user.entity.User;
 
@@ -29,10 +30,11 @@ import lombok.NoArgsConstructor;
 @Table(name = "Board")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Board {
+public class Board extends BaseTimeEntity {
 	@Id
-	@GeneratedValue
-	private BigInteger boardId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "board_id")
+	private Long boardId;
 
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "user_id")
@@ -43,10 +45,6 @@ public class Board {
 	private String boardContent;
 
 	private int boardLikes;
-
-	private LocalDateTime boardCreatedAt;
-
-	private LocalDateTime boardUpdatedAt;
 
 	@Enumerated(value = EnumType.STRING)
 	private Scope boardScope;
@@ -59,8 +57,8 @@ public class Board {
 		this.user = user;
 		this.boardTitle = title;
 		this.boardContent = content;
-		this.boardCreatedAt = LocalDateTime.now();
 		this.boardScope = scope;
+		this.boardLikes = 0;
 	}
 
 	// === 연관 관계 메서드 === //

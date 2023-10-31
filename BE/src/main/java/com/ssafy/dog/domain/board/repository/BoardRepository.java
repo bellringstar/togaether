@@ -21,7 +21,7 @@ public class BoardRepository {
 		em.persist(board);
 	}
 
-	public Board findOne(Long title) {
+	public Board findOneByTitle(Long title) {
 		return em.find(Board.class, title);
 	}
 
