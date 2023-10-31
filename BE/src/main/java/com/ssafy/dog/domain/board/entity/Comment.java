@@ -24,7 +24,7 @@ public class Comment extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "comment_id")
-	private Long id;
+	private Long commentId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "board_id")
@@ -38,8 +38,8 @@ public class Comment extends BaseTimeEntity {
 	private int commentLikes;
 
 	@Builder
-	public Comment(User user, Board board, String content) {
-		this.commentContent = content;
+	public Comment(User user, Board board, String commentContent) {
+		this.commentContent = commentContent;
 		this.user = user;
 		this.board = board;
 		this.commentLikes = 0;

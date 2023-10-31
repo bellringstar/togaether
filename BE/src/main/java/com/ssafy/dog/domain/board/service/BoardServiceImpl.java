@@ -27,9 +27,9 @@ public class BoardServiceImpl implements BoardService {
 
 		Board board = Board.builder()
 			.user(curUser)
-			.title(boardDto.getBoardTitle())
-			.content(boardDto.getBoardContent())
-			.scope(boardDto.getBoardScope())
+			.boardTitle(boardDto.getBoardTitle())
+			.boardContent(boardDto.getBoardContent())
+			.boardScope(boardDto.getBoardScope())
 			.build();
 		boardRepository.save(board);
 

@@ -27,7 +27,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "Board")
+@Table(name = "board")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board extends BaseTimeEntity {
@@ -53,11 +53,11 @@ public class Board extends BaseTimeEntity {
 	private List<Comment> commentListForBoard = new ArrayList<>();
 
 	@Builder
-	public Board(User user, String title, String content, Scope scope) {
+	public Board(User user, String boardTitle, String boardContent, Scope boardScope) {
 		this.user = user;
-		this.boardTitle = title;
-		this.boardContent = content;
-		this.boardScope = scope;
+		this.boardTitle = boardTitle;
+		this.boardContent = boardContent;
+		this.boardScope = boardScope;
 		this.boardLikes = 0;
 	}
 

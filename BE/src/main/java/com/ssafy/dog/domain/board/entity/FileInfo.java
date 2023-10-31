@@ -2,8 +2,13 @@ package com.ssafy.dog.domain.board.entity;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import com.ssafy.dog.domain.board.enums.FileStatus;
@@ -17,8 +22,12 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @ToString
+@Entity
+@Table(name = "file_info")
 public class FileInfo {
+
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private Long userId;
 	private Long articleId;
@@ -35,7 +44,7 @@ public class FileInfo {
 	private LocalDateTime updatedAt;
 
 	@Builder
-	private FileInfo(Long userId, Long articleId, String originalName, String encodedName, FileType fileType,
+	public FileInfo(Long userId, Long articleId, String originalName, String encodedName, FileType fileType,
 		FileStatus fileStatus,
 		String url) {
 		this.userId = userId;
