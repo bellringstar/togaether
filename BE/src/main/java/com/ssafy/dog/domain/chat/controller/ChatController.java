@@ -2,7 +2,6 @@ package com.ssafy.dog.domain.chat.controller;
 
 import javax.validation.Valid;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -53,11 +52,11 @@ public class ChatController {
 
 	// 채팅방 연결해제
 	@DeleteMapping("/chatroom/{roomId}")
-	public Api<?> disconnectChat(@PathVariable("chatroomNo") Long chatRoomNo,
+	public Api<?> disconnectChat(@PathVariable("roomId") Long chatRoomId,
 		@Header("Authorization") final String accessToken) {
 		Long userId = Long.valueOf(1);
-		chatRoomService.disconnectChatRoom(chatRoomNo, userId);
-		return ResponseEntity.ok(StatusResponseDto.success());
+		chatRoomService.disconnectChatRoom(chatRoomId, userId);
+		return Api.ok(chatRoomId + " 번 채팅방 " + userId + "나감");
 	}
 
 	// @MessageMapping("/message")

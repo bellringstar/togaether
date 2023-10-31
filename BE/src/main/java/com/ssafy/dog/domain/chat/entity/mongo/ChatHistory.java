@@ -1,4 +1,4 @@
-package com.ssafy.dog.domain.chat.entity;
+package com.ssafy.dog.domain.chat.entity.mongo;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Document(collection = "chatting")
-// MongoDB Chatting 모델
+// MongoDB Chatting 내역 모델
 public class ChatHistory {
 
 	@Id

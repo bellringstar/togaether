@@ -11,7 +11,7 @@ import com.ssafy.dog.domain.chat.entity.redis.ChatRoomUsers;
 @Repository
 public interface ChatRoomUsersRepository extends CrudRepository<ChatRoomUsers, Long> {
 
-	List<ChatRoomUsers> findByChatroomNo(Long chatRoomNo);
+	List<ChatRoomUsers> findByChatRoomId(Long chatRoomNo);
 
-	Optional<ChatRoomUsers> findByChatroomNoAndUserId(Long chatRoomNo, Long userId);
+	Optional<ChatRoomUsers> findByChatRoomIdAndUserId(Long chatRoomNo, Long userId);
 }

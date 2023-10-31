@@ -7,7 +7,7 @@ import java.time.ZoneId;
 
 import javax.validation.constraints.NotNull;
 
-import com.ssafy.dog.domain.chat.entity.ChatHistory;
+import com.ssafy.dog.domain.chat.entity.mongo.ChatHistory;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

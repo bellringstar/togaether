@@ -16,15 +16,15 @@ public class ChatRoomUsers {
 	private Long id;
 
 	@Indexed
-	private Long chatroomNo;
+	private Long chatRoomId;
 
 	@Indexed
 	private Long userId;
 	// private String email;
 
 	@Builder
-	public ChatRoomUsers(Long chatroomNo, Long userId) {
-		this.chatroomNo = chatroomNo;
+	public ChatRoomUsers(Long chatRoomId, Long userId) {
+		this.chatRoomId = chatRoomId;
 		this.userId = userId;
 	}
 }

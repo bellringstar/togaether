@@ -1,5 +1,6 @@
 package com.ssafy.dog.domain.chat.filter;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.core.Ordered;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Component;
 
 import com.ssafy.dog.common.error.ChatErrorCode;
 import com.ssafy.dog.common.exception.ApiException;
+import com.ssafy.dog.domain.chat.entity.redis.ChatRoomUsers;
 import com.ssafy.dog.domain.chat.service.ChatRoomService;
+import com.ssafy.dog.domain.chat.service.ChatService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Order(Ordered.HIGHEST_PRECEDENCE + 99)// 우선 순위를 높게 설정해서 SecurityFilter들 보다 앞서 실행되게 해준다.
 public class StompHandler implements ChannelInterceptor {
 
+	private final ChatService chatService;
 	private final ChatRoomService chatRoomService;
 
 	// private final JwtUtil jwtUtil;
@@ -74,18 +78,21 @@ public class StompHandler implements ChannelInterceptor {
 
 	private void connectToChatRoom(StompHeaderAccessor accessor, Long userId) {
 		// 채팅방 번호를 가져온다.
-		Integer chatRoomNo = getChatRoomNo(accessor);
+		Long chatRoomId = getChatRoomNo(accessor);
 
 		// 채팅방 입장 처리 -> Redis에 입장 내역 저장
-		chatRoomService.connectChatRoom(chatRoomNo, email);
-		// 읽지 않은 채팅을 전부 읽음 처리
-		chatService.updateCountAllZero(chatRoomNo, email);
-		// 현재 채팅방에 접속중인 인원이 있는지 확인한다.
-		boolean isConnected = chatRoomService.isConnected(chatRoomNo);
+		chatRoomService.connectChatRoom(chatRoomId, userId);
 
-		if (isConnected) {
-			chatService.updateMessage(email, chatRoomNo);
-		}
+		// 읽지 않은 채팅을 전부 읽음 처리
+		// chatService.updateCountAllZero(chatRoomNo, email);
+
+		// 현재 채팅방에 접속중인 인원이 있는지 확인한다.
+		List<ChatRoomUsers> connectedList = chatRoomService.isConnected(chatRoomId);
+
+		int headCnt = connectedList.size();
+		// if (isConnected) {
+		// 	chatService.updateMessage(email, chatRoomNo);
+		// }
 	}
 
 	private Long verifyAccessToken(String accessToken) {
@@ -109,9 +116,9 @@ public class StompHandler implements ChannelInterceptor {
 		return authToken;
 	}
 
-	private Integer getChatRoomNo(StompHeaderAccessor accessor) {
+	private Long getChatRoomNo(StompHeaderAccessor accessor) {
 		return
-			Integer.valueOf(
+			Long.valueOf(
 				Objects.requireNonNull(
 					accessor.getFirstNativeHeader("chatRoomNo")
 				));
