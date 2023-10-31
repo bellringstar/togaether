@@ -6,8 +6,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import com.ssafy.dog.domain.user.entity.User;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -42,17 +40,9 @@ public class UserDto {
 	@NotNull(message = "약관 동의 여부를 입력해주세요.")
 	private Boolean userTermsAgreed;
 
-	public User toEntity() {
-		return User.builder()
-			.userLoginId(userLoginId)
-			.userPw(userPw)
-			.userNickname(userNickname)
-			.userPhone(userPhone)
-			.userPicture(userPicture)
-			.userAboutMe(userAboutMe)
-			.userGender(userGender)
-			.userTermsAgreed(userTermsAgreed)
-			.userIsRemoved(false)
-			.build();
-	}
+	private Double userLongitude;
+
+	private Double userLatitude;
+
+	private String userAddress;
 }

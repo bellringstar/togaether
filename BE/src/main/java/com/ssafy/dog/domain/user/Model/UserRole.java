@@ -1,4 +1,4 @@
-package com.ssafy.dog.domain.user.Model;
+package com.ssafy.dog.domain.user.model;
 
 import lombok.Getter;
 

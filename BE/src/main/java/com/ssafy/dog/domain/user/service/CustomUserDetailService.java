@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.dog.common.error.UserErrorCode;
 import com.ssafy.dog.common.exception.ApiException;
-import com.ssafy.dog.domain.user.Model.UserRole;
 import com.ssafy.dog.domain.user.entity.User;
+import com.ssafy.dog.domain.user.model.UserRole;
 import com.ssafy.dog.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;

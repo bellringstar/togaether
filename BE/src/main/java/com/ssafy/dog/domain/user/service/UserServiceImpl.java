@@ -88,14 +88,16 @@ public class UserServiceImpl implements UserService {
 		}
 
 		String encodedPassword = passwordEncoder.encode(userSignupDto.getUserPw1());
-		User user = User.builder()
-			.userLoginId(userSignupDto.getUserLoginId())
-			.userPw(encodedPassword)
-			.userNickname(userSignupDto.getUserNickname())
-			.userPhone(userSignupDto.getUserPhone())
-			.userTermsAgreed(userSignupDto.getUserTermsAgreed())
-			.userIsRemoved(false)
+		User user = User.UserBuilder.anUser()
+			.withUserLoginId(userSignupDto.getUserLoginId())
+			.withUserPw(encodedPassword)
+			.withUserNickname(userSignupDto.getUserNickname())
+			.withUserPhone(userSignupDto.getUserPhone())
+			.withUserTermsAgreed(userSignupDto.getUserTermsAgreed())
+			.withUserIsRemoved(false)
 			.build();
+
+		userRepository.save(user);
 
 		return Api.ok(userSignupDto.getUserLoginId() + " 회원가입 성공");
 	}
@@ -119,7 +121,7 @@ public class UserServiceImpl implements UserService {
 			throw new ApiException(UserErrorCode.WRONG_PASSWORD);
 		}
 
-		return Api.ok(jwtTokenProvider.createToken(user.getUserLoginId(), user.getUserRoles()));
+		return Api.ok(jwtTokenProvider.createToken(user.getUserLoginId(), user.getUserRole()));
 		// return jwtTokenProvider.createToken(user.getUserLoginId(), user.getUserRoles());
 	}
 
