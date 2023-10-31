@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -19,9 +20,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Coment extends BaseTimeEntity {
+public class Comment extends BaseTimeEntity {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "comment_id")
 	private Long id;
 
@@ -33,25 +34,25 @@ public class Coment extends BaseTimeEntity {
 	@JoinColumn(name = "member_id")
 	private User user;
 
-	private String comentContent;
-	private int comentLikes;
+	private String commentContent;
+	private int commentLikes;
 
 	@Builder
-	public Coment(User user, Board board, String content) {
-		this.comentContent = content;
+	public Comment(User user, Board board, String content) {
+		this.commentContent = content;
 		this.user = user;
 		this.board = board;
-		this.comentLikes = 0;
+		this.commentLikes = 0;
 	}
 
 	// == 연관 관계 메서드 == //
 	public void setMember(User user) {
 		this.user = user;
-		user.getComentListForUser().add(this);
+		user.getCommentListForUser().add(this);
 	}
 
 	public void setBoard(Board board) {
 		this.board = board;
-		board.getComentListForBoard().add(this);
+		board.getCommentListForBoard().add(this);
 	}
 }

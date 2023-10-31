@@ -50,7 +50,7 @@ public class Board extends BaseTimeEntity {
 	private Scope boardScope;
 
 	@OneToMany(mappedBy = "board")
-	private List<Coment> comentListForBoard = new ArrayList<>();
+	private List<Comment> commentListForBoard = new ArrayList<>();
 
 	@Builder
 	public Board(User user, String title, String content, Scope scope) {

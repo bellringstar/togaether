@@ -16,7 +16,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
 import com.ssafy.dog.domain.board.entity.Board;
-import com.ssafy.dog.domain.board.entity.Coment;
+import com.ssafy.dog.domain.board.entity.Comment;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -95,5 +95,5 @@ public class User {
 	private List<Board> boardList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
-	private List<Coment> comentListForUser = new ArrayList<>();
+	private List<Comment> commentListForUser = new ArrayList<>();
 }
