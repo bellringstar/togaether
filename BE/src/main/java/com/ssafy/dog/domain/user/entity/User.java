@@ -91,9 +91,9 @@ public class User {
 	}
 
 	// === 연결 === //
-	@OneToMany(mappedBy = "member")
+	@OneToMany(mappedBy = "user")
 	private List<Board> boardList = new ArrayList<>();
 
-	@OneToMany(mappedBy = "member")
+	@OneToMany(mappedBy = "user")
 	private List<Coment> comentListForUser = new ArrayList<>();
 }

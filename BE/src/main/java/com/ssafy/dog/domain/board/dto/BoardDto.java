@@ -3,13 +3,12 @@ package com.ssafy.dog.domain.board.dto;
 import java.time.LocalDateTime;
 
 import com.ssafy.dog.domain.board.enums.Scope;
-import com.ssafy.dog.domain.user.entity.User;
 
 import lombok.Getter;
 
 @Getter
 public class BoardDto {
-	private User user;
+	private Long userId;
 	private String boardTitle;
 	private String boardContent;
 	private LocalDateTime boardCreatedAt;

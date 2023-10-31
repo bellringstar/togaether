@@ -51,7 +51,7 @@ public class Board {
 	@Enumerated(value = EnumType.STRING)
 	private Scope boardScope;
 
-	@OneToMany(mappedBy = "boardId")
+	@OneToMany(mappedBy = "board")
 	private List<Coment> comentListForBoard = new ArrayList<>();
 
 	@Builder
