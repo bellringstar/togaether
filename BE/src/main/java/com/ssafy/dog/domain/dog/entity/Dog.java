@@ -36,6 +36,7 @@ public class Dog {
 	private Long dogId;
 
 	@NonNull
+	@Size(max = 10)
 	private String dogName;
 
 	@Lob
