@@ -3,12 +3,11 @@ package com.ssafy.dog.domain.user.entity;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,6 +21,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.ssafy.dog.common.auditing.BaseTimeEntity;
+import com.ssafy.dog.domain.user.model.UserRole;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -55,9 +55,9 @@ public class User extends BaseTimeEntity implements UserDetails { // 주소 속�
 	@NonNull
 	private String userNickname;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	@Builder.Default
-	private List<String> userRoles = new ArrayList<>();
+	@Column(name = "user_role")
+	@Enumerated(EnumType.STRING)
+	private UserRole userRole;
 
 	@NonNull
 	@Column(name = "user_phone")
@@ -77,12 +77,19 @@ public class User extends BaseTimeEntity implements UserDetails { // 주소 속�
 	@NonNull
 	private Boolean userIsRemoved;
 
+	private Double userLatitude;
+
+	private Double userLongitude;
+
+	@Column(length = 255)
+	private String userAddress;
+
 	// UserDetails 로서의 User 속성 및 메소드들
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return this.userRoles.stream()
-			.map(SimpleGrantedAuthority::new)
-			.collect(Collectors.toList());
+		List<GrantedAuthority> authorities = new ArrayList<>();
+		authorities.add(new SimpleGrantedAuthority(userRole.getValue()));
+		return authorities;
 	}
 
 	@Override
