@@ -17,21 +17,26 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.ssafy.dog.domain.board.enums.Scope;
+import com.ssafy.dog.domain.user.entity.User;
+
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "Board")
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board {
 	@Id
 	@GeneratedValue
 	private BigInteger boardId;
 
 	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "user_Id")
-	private Member member;
+	@JoinColumn(name = "user_id")
+	private User user;
 
 	private String boardTitle;
 
@@ -46,24 +51,22 @@ public class Board {
 	@Enumerated(value = EnumType.STRING)
 	private Scope boardScope;
 
-	// === 연관 관계 메서드 === //
 	@OneToMany(mappedBy = "boardId")
 	private List<Coment> comentListForBoard = new ArrayList<>();
 
-	public void setMemberFromBoard(Member member) {
-		this.member = member;
-		member.getBoardList().add(this);
+	@Builder
+	public Board(User user, String title, String content, Scope scope) {
+		this.user = user;
+		this.boardTitle = title;
+		this.boardContent = content;
+		this.boardCreatedAt = LocalDateTime.now();
+		this.boardScope = scope;
 	}
 
-	// === 생성 메서드 === //
-	public static Board createBoard(Member member, String title, String content, Scope scope) {
-		Board board = new Board();
-		board.setBoardTitle(title);
-		board.setMember(member);
-		board.setBoardContent(content);
-		board.setBoardScope(scope);
-		board.setBoardCreatedAt(LocalDateTime.now());
-		return board;
+	// === 연관 관계 메서드 === //
+	public void setMemberFromBoard(User user) {
+		this.user = user;
+		user.getBoardList().add(this);
 	}
 
 }

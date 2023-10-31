@@ -10,12 +10,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.ssafy.dog.domain.user.entity.User;
+
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Coment {
 	@Id
 	@GeneratedValue
@@ -24,35 +28,33 @@ public class Coment {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "board_id")
-	private Board boardId;
+	private Board board;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private Member memberId;
+	@JoinColumn(name = "member_id")
+	private User user;
 
 	private String comentContent;
 	private int comentLikes;
 	private LocalDateTime comentCreatedAt;
 	private LocalDateTime comentUpdatedAt;
 
-	// === 생성 메서드 === //
-	public static Coment createComent(Member member, Board board, String content) {
-		Coment coment = new Coment();
-		coment.setMemberId(member);
-		coment.setBoardId(board);
-		coment.setComentContent(content);
-		coment.setComentCreatedAt(LocalDateTime.now());
-		return coment;
+	@Builder
+	public Coment(User user, Board board, String content) {
+		this.comentContent = content;
+		this.user = user;
+		this.board = board;
+		this.comentCreatedAt = LocalDateTime.now();
 	}
 
 	// == 연관 관계 메서드 == //
-	public void setMemberFromComent(Member member) {
-		this.memberId = member;
-		member.getComentListForUser().add(this);
+	public void setMember(User user) {
+		this.user = user;
+		user.getComentListForUser().add(this);
 	}
 
-	public void setBoardFromComent(Board board) {
-		this.boardId = board;
+	public void setBoard(Board board) {
+		this.board = board;
 		board.getComentListForBoard().add(this);
 	}
 }
