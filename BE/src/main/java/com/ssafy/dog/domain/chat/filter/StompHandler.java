@@ -12,8 +12,6 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
 
-import com.ssafy.dog.common.error.ChatErrorCode;
-import com.ssafy.dog.common.exception.ApiException;
 import com.ssafy.dog.domain.chat.entity.redis.ChatRoomUsers;
 import com.ssafy.dog.domain.chat.service.ChatRoomService;
 import com.ssafy.dog.domain.chat.service.ChatService;
@@ -41,6 +39,7 @@ public class StompHandler implements ChannelInterceptor {
 	public Message<?> preSend(Message<?> message, MessageChannel channel) {
 		StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 
+		// AccessToken 유효성 검증
 		Long userId = verifyAccessToken(getAccessToken(accessor));
 		log.info("StompAccessor = {}", accessor);
 		// StompCommand에 따라서 로직을 분기해서 처리하는 메서드를 호출
@@ -65,11 +64,14 @@ public class StompHandler implements ChannelInterceptor {
 	}
 
 	public void handleMessage(StompCommand stompCommand, StompHeaderAccessor accessor, Long userId) {
+		log.info("Command 종류 = {}", stompCommand);
 		switch (stompCommand) {
 			case CONNECT:
 				connectToChatRoom(accessor, userId);
 				break;
 			case SUBSCRIBE:
+				log.info("SUB 시작");
+				break;
 			case SEND:
 				verifyAccessToken(getAccessToken(accessor));
 				break;
@@ -107,11 +109,8 @@ public class StompHandler implements ChannelInterceptor {
 
 	private String getAccessToken(StompHeaderAccessor accessor) {
 		String authToken = accessor.getFirstNativeHeader("Authorization");
+		log.info("토큰 추출 : {}", authToken);
 		// if (authToken == null || !jwtProvider.validateJwt(authToken)) {
-
-		if (authToken == null) {
-			throw new ApiException(ChatErrorCode.JWT_NOT_FOUND);
-		}
 
 		return authToken;
 	}
@@ -120,7 +119,7 @@ public class StompHandler implements ChannelInterceptor {
 		return
 			Long.valueOf(
 				Objects.requireNonNull(
-					accessor.getFirstNativeHeader("chatRoomNo")
+					accessor.getFirstNativeHeader("Chatroomno")
 				));
 	}
 

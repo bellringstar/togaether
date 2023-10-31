@@ -11,7 +11,9 @@ import com.ssafy.dog.domain.chat.entity.redis.ChatRoomUsers;
 import com.ssafy.dog.domain.chat.repository.ChatRoomUsersRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
@@ -26,6 +28,7 @@ public class ChatRoomService {
 			.chatRoomId(chatRoomId)
 			.build();
 
+		log.info("Redis 접속 저장 : {}", chatRoomUsers.toString());
 		chatRoomUsersRepository.save(chatRoomUsers);
 	}
 
