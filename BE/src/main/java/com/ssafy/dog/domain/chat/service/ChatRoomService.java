@@ -1,5 +1,6 @@
 package com.ssafy.dog.domain.chat.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -8,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssafy.dog.common.error.ChatErrorCode;
 import com.ssafy.dog.common.exception.ApiException;
 import com.ssafy.dog.domain.chat.entity.redis.ChatRoomUsers;
-import com.ssafy.dog.domain.chat.repository.ChatRoomUsersRepository;
+import com.ssafy.dog.domain.chat.repository.redis.ChatRoomUsersRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,8 +40,30 @@ public class ChatRoomService {
 		chatRoomUsersRepository.delete(chatRoomUsers);
 	}
 
-	public List<ChatRoomUsers> isConnected(Long chatRoomId) {
+	// public Set<Long> isConnected(Long chatRoomId) {
+	//
+	// 	List<ChatRoomUsers> connectedUser = chatRoomUsersRepository.findByChatRoomId(chatRoomId);
+	//
+	// 	Set<Long> userIdList = new HashSet<>();
+	//
+	// 	for (ChatRoomUsers conUser : connectedUser) {
+	// 		userIdList.add(conUser.getUserId());
+	// 	}
+	// 	// return chatRoomUsersRepository.findByChatRoomId(chatRoomId);
+	// 	return userIdList;
+	// }
 
-		return chatRoomUsersRepository.findByChatRoomId(chatRoomId);
+	public List<Long> isConnected(Long chatRoomId) {
+
+		List<ChatRoomUsers> connectedUser = chatRoomUsersRepository.findByChatRoomId(chatRoomId);
+
+		List<Long> userIdList = new ArrayList<>();
+
+		for (ChatRoomUsers conUser : connectedUser) {
+			userIdList.add(conUser.getUserId());
+		}
+		// return chatRoomUsersRepository.findByChatRoomId(chatRoomId);
+		return userIdList;
 	}
+
 }

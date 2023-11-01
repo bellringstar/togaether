@@ -1,4 +1,4 @@
-package com.ssafy.dog.domain.chat.repository;
+package com.ssafy.dog.domain.chat.repository.redis;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package com.ssafy.dog.domain.chat.repository;
+package com.ssafy.dog.domain.chat.repository.mongo;
 
 import java.util.Optional;
 

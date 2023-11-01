@@ -12,7 +12,6 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
 
-import com.ssafy.dog.domain.chat.entity.redis.ChatRoomUsers;
 import com.ssafy.dog.domain.chat.service.ChatRoomService;
 import com.ssafy.dog.domain.chat.service.ChatService;
 
@@ -80,7 +79,7 @@ public class StompHandler implements ChannelInterceptor {
 
 	private void connectToChatRoom(StompHeaderAccessor accessor, Long userId) {
 		// 채팅방 번호를 가져온다.
-		Long chatRoomId = getChatRoomNo(accessor);
+		Long chatRoomId = getChatRoomId(accessor);
 
 		// 채팅방 입장 처리 -> Redis에 입장 내역 저장
 		chatRoomService.connectChatRoom(chatRoomId, userId);
@@ -89,7 +88,7 @@ public class StompHandler implements ChannelInterceptor {
 		// chatService.updateCountAllZero(chatRoomNo, email);
 
 		// 현재 채팅방에 접속중인 인원이 있는지 확인한다.
-		List<ChatRoomUsers> connectedList = chatRoomService.isConnected(chatRoomId);
+		List<Long> connectedList = chatRoomService.isConnected(chatRoomId);
 
 		int headCnt = connectedList.size();
 		// if (isConnected) {
@@ -104,7 +103,7 @@ public class StompHandler implements ChannelInterceptor {
 		// }
 		//
 		// return jwtUtil.getUid(accessToken);
-		return Long.valueOf(1);
+		return Long.valueOf(accessToken);
 	}
 
 	private String getAccessToken(StompHeaderAccessor accessor) {
@@ -115,7 +114,7 @@ public class StompHandler implements ChannelInterceptor {
 		return authToken;
 	}
 
-	private Long getChatRoomNo(StompHeaderAccessor accessor) {
+	private Long getChatRoomId(StompHeaderAccessor accessor) {
 		return
 			Long.valueOf(
 				Objects.requireNonNull(

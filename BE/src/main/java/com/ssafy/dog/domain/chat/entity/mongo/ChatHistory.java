@@ -13,12 +13,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Document(collection = "chatting")
+@Document(collection = "chat_history")
 // MongoDB Chatting 내역 모델
 public class ChatHistory {
 
 	@Id
-	private String id;
+	private String historyId;
 
 	private Long roomId;
 
