@@ -16,7 +16,7 @@ import com.ssafy.dog.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 @RestController
 public class UserController {
