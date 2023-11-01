@@ -116,12 +116,13 @@ public class ChatService {
 		// 메시지 전송 요청 헤더에 포함된 Access Token에서 email로 회원을 조회한다.
 		// Member findMember = memberRepository.findByEmail(jwtUtil.getUid(accessToken))
 		// 	.orElseThrow(IllegalStateException::new);
-
+		log.info("채팅전송 토큰 : {}", accessToken);
 		/*
 		AccessToken 검증 후 userId로 보내주기
 		 */
 		// read 한 사람들 추가
-		message.setSendTimeAndSenderAndRead(LocalDateTime.now(), Long.valueOf(accessToken), message.getSenderName(), 10,
+		message.setSendTimeAndSenderAndRead(LocalDateTime.now(), Long.parseLong(accessToken), message.getSenderName(),
+			10,
 			chatRoomService.isConnected(message.getRoomId()));
 
 		kafkaProducerService.send(KafkaConstants.KAFKA_TOPIC, message);

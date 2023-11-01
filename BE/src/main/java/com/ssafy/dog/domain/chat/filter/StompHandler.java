@@ -103,7 +103,9 @@ public class StompHandler implements ChannelInterceptor {
 		// }
 		//
 		// return jwtUtil.getUid(accessToken);
-		return Long.valueOf(accessToken);
+		// return Long.parseLong(accessToken);
+		return Long.valueOf(1);
+
 	}
 
 	private String getAccessToken(StompHeaderAccessor accessor) {
