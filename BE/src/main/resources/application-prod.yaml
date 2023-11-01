@@ -8,7 +8,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -44,3 +44,6 @@ management:
 jwt:
   header: Authorization
   secret: ${JWT_SECRET_KEY}
+
+my:
+  kafkabroker: kafka1:19092,kafka2:29092,kafka3:39092

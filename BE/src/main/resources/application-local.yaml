@@ -43,3 +43,6 @@ management:
 jwt:
   header: Authorization
   secret: ${JWT_SECRET_KEY}
+
+my:
+  kafkabroker: localhost:19092,localhost:29092,localhost:39092

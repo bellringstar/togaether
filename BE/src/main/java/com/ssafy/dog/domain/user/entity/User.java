@@ -27,6 +27,8 @@ import com.ssafy.dog.common.auditing.BaseTimeEntity;
 import com.ssafy.dog.domain.dog.entity.Dog;
 import com.ssafy.dog.domain.user.model.UserGender;
 import com.ssafy.dog.domain.user.model.UserRole;
+import com.ssafy.dog.domain.board.entity.Board;
+import com.ssafy.dog.domain.board.entity.Comment;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -262,4 +264,11 @@ public class User extends BaseTimeEntity implements UserDetails { // 주소 속�
 			return user;
 		}
 	}
+
+	// === 연결 === //
+	@OneToMany(mappedBy = "user")
+	private List<Board> boardList = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user")
+	private List<Comment> commentListForUser = new ArrayList<>();
 }
