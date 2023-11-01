@@ -1,6 +1,7 @@
 package com.ssafy.dog.domain.gps.controller;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +20,7 @@ public class GpsTrackingController {
 	private final GpsTrackingService gpsTrackingService;
 
 	@PostMapping("/gps")
-	public Api<GpsTrackingResponse> saveGpsDate(GpsTrackingSaveRequest request) {
+	public Api<GpsTrackingResponse> saveGpsDate(@RequestBody GpsTrackingSaveRequest request) {
 		GpsTrackingResponse response = gpsTrackingService.saveGpsTrackingData(request);
 		return Api.ok(response);
 	}
