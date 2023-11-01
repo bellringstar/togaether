@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.ssafy.dog.common.api.Api;
-import com.ssafy.dog.common.error.ErrorCode;
 import com.ssafy.dog.common.exception.ApiException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -32,14 +31,16 @@ public class CustomExceptionHandler {
 	}
 
 	@ExceptionHandler(value = JsonMappingException.class)
-	public ResponseEntity<Api<Object>> jsonMappingException(JsonMappingException exception) {
+	public ResponseEntity<Api<Object>> jsonMappingException(ApiException apiException) {
 
-		log.error("", exception);
+		log.error("", apiException);
+
+		var errorCode = apiException.getErrorCodeIfs();
 
 		return ResponseEntity
-			.status(ErrorCode.BAD_REQUEST.getErrorCode())
+			.status(errorCode.getHttpStatusCode())
 			.body(
-				Api.error(ErrorCode.BAD_REQUEST, exception.getMessage())
+				Api.error(errorCode, apiException.getErrorDescription())
 			);
 	}
 
