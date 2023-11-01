@@ -2,6 +2,7 @@ package com.ssafy.dog.domain.gps.repository;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +43,7 @@ class GpsTrackingRepositoryTest {
 		List<Double> point1 = Arrays.asList(40.712, 74.23);
 		List<Double> point2 = Arrays.asList(41.712, 73.23);
 		List<List<Double>> gpsList = Arrays.asList(point1, point2);
-		GpsTracking gpsTracking = new GpsTracking(gpsList);
+		GpsTracking gpsTracking = new GpsTracking(LocalDateTime.now(), gpsList);
 		//when
 		GpsTracking savedEntity = gpsTrackingRepository.save(gpsTracking);
 		Optional<GpsTracking> getEntity = gpsTrackingRepository.findById(savedEntity.getId());
@@ -50,7 +51,5 @@ class GpsTrackingRepositoryTest {
 		System.out.println(savedEntity.getCreatedDate());
 		assertThat(getEntity).isNotEmpty();
 		assertThat(getEntity.get().getGpsList()).isEqualTo(gpsList);
-
 	}
-
 }
