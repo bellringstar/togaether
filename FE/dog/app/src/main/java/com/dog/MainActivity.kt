@@ -1,4 +1,4 @@
-package com.dog
+package com.dog;
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,9 +9,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.dog.ui.navigation.BottomNavigationBar
 import com.dog.ui.theme.DogTheme
-
+import com.dog.util.common.StompManager
 
 class MainActivity : ComponentActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -21,9 +23,19 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     BottomNavigationBar()
+
                 }
             }
         }
+
+
     }
+
+//    override fun onDestroy() {
+//        stompManager.onDestroy()
+//        super.onDestroy()
+//    }
+
 }
+
 
