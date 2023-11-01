@@ -5,4 +5,6 @@ import com.ssafy.dog.domain.board.dto.BoardDto;
 
 public interface BoardService {
 	public Api<?> createBoard(BoardDto boardDto);
+
+	public Api<?> findBoardbyNickname(String userLoginId);
 }

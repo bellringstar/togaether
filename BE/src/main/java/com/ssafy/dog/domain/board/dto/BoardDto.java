@@ -14,4 +14,18 @@ public class BoardDto {
 	private Scope boardScope;
 	private int boardLikes;
 	private List<String> fileUrlLists;
+
+	public BoardDto(Long userId, String boardTitle, String boardContent, Scope boardScope, int boardLikes,
+		List<String> fileUrlLists) {
+		this.userId = userId;
+		this.boardTitle = boardTitle;
+		this.boardContent = boardContent;
+		this.boardScope = boardScope;
+		this.boardLikes = boardLikes;
+		this.fileUrlLists = fileUrlLists;
+	}
+
+	public BoardDto() {
+		// 기본 생성자 구현 (빈 생성자)
+	}
 }

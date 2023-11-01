@@ -1,5 +1,9 @@
 package com.ssafy.dog.domain.board.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +50,27 @@ public class BoardServiceImpl implements BoardService {
 		}
 
 		return Api.ok(board.getBoardId() + " 번 게시글 등록 성공");
+	}
+
+	@Transactional
+	public Api<?> findBoardbyNickname(String userLoginId) {
+		List<Board> boardList = boardRepository.findBoardByUser_UserLoginId(userLoginId);
+		List<BoardDto> boardDtoList = new ArrayList<>();
+
+		for (Board board : boardList) {
+			BoardDto boardDto = new BoardDto(
+				board.getUser().getUserId(),
+				board.getBoardTitle(),
+				board.getBoardContent(),
+				board.getBoardScope(),
+				board.getBoardLikes(),
+				board.getFileUrlLists().stream().map(FileUrl::getFileUrl).collect(Collectors.toList())
+			);
+
+			boardDtoList.add(boardDto);
+		}
+
+		return Api.ok(boardDtoList);
 	}
 
 }
