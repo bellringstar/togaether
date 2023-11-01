@@ -18,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 import com.ssafy.dog.common.exception.ApiException;
 import com.ssafy.dog.domain.gps.dto.GpsTrackingResponse;
 import com.ssafy.dog.domain.gps.dto.GpsTrackingSaveRequest;
+import com.ssafy.dog.domain.gps.entity.GpsPoints;
 import com.ssafy.dog.domain.gps.entity.GpsTracking;
 import com.ssafy.dog.domain.gps.repository.GpsTrackingRepository;
 
@@ -42,8 +43,9 @@ class GpsTrackingServiceImpTest {
 		List<Double> point1 = Arrays.asList(40.712, 74.23);
 		List<Double> point2 = Arrays.asList(41.712, 73.23);
 		List<List<Double>> gpsList = Arrays.asList(point1, point2);
+		GpsPoints gpsPoints = new GpsPoints(gpsList);
 		GpsTrackingSaveRequest request = GpsTrackingSaveRequest.builder()
-			.gpsList(gpsList)
+			.gpsPoints(gpsPoints)
 			.trackingDate(LocalDateTime.now().minusDays(1))
 			.build();
 		GpsTracking gpsTracking = GpsTracking.toEntity(request);
@@ -53,8 +55,8 @@ class GpsTrackingServiceImpTest {
 
 		GpsTrackingResponse actualResponse = gpsTrackingServiceImp.saveGpsTrackingData(request);
 
-		log.info("expected = {} : actual = {}", expectedResponse.getGpsList(), actualResponse.getGpsList());
-		assertEquals(expectedResponse.getGpsList(), actualResponse.getGpsList());
+		log.info("expected = {} : actual = {}", expectedResponse.getGpsPoints(), actualResponse.getGpsPoints());
+		assertEquals(expectedResponse.getGpsPoints(), actualResponse.getGpsPoints());
 		assertEquals(expectedResponse.getTrackingDate(), actualResponse.getTrackingDate());
 	}
 

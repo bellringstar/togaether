@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.Import;
 
+import com.ssafy.dog.domain.gps.entity.GpsPoints;
 import com.ssafy.dog.domain.gps.entity.GpsTracking;
 import com.ssafy.dog.domain.gps.util.GpsTrackingModelListener;
 
@@ -43,13 +44,14 @@ class GpsTrackingRepositoryTest {
 		List<Double> point1 = Arrays.asList(40.712, 74.23);
 		List<Double> point2 = Arrays.asList(41.712, 73.23);
 		List<List<Double>> gpsList = Arrays.asList(point1, point2);
-		GpsTracking gpsTracking = new GpsTracking(LocalDateTime.now(), gpsList);
+		GpsPoints gpsPoints = new GpsPoints(gpsList);
+		GpsTracking gpsTracking = new GpsTracking(LocalDateTime.now(), gpsPoints);
 		//when
 		GpsTracking savedEntity = gpsTrackingRepository.save(gpsTracking);
 		Optional<GpsTracking> getEntity = gpsTrackingRepository.findById(savedEntity.getId());
 		//then
 		System.out.println(savedEntity.getCreatedDate());
 		assertThat(getEntity).isNotEmpty();
-		assertThat(getEntity.get().getGpsList()).isEqualTo(gpsList);
+		assertThat(getEntity.get().getGpsPoints()).isEqualTo(gpsPoints);
 	}
 }

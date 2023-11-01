@@ -1,7 +1,6 @@
 package com.ssafy.dog.domain.gps.entity;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -24,12 +23,12 @@ public class GpsTracking {
 	private LocalDateTime trackingDate;
 	private LocalDateTime createdDate;
 	private LocalDateTime modifiedDate;
-	private List<List<Double>> gpsList;
+	private GpsPoints gpsPoints;
 
 	@Builder
-	public GpsTracking(LocalDateTime trackingDate, List<List<Double>> gpsList) {
+	public GpsTracking(LocalDateTime trackingDate, GpsPoints gpsPoints) {
 		this.trackingDate = trackingDate;
-		this.gpsList = gpsList;
+		this.gpsPoints = gpsPoints;
 		// TODO : 토큰에서 검증해서 자동으로 삽입되도록 Listener에서 처리;
 		this.userLoginId = "test@mail.com";
 	}
@@ -44,7 +43,7 @@ public class GpsTracking {
 
 	public static GpsTracking toEntity(GpsTrackingSaveRequest request) {
 		return GpsTracking.builder()
-			.gpsList(request.getGpsList())
+			.gpsPoints(request.getGpsPoints())
 			.trackingDate(request.getTrackingDate())
 			.build();
 	}
