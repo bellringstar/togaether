@@ -1,8 +1,14 @@
 package com.ssafy.dog.domain.user.service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +19,9 @@ import com.ssafy.dog.common.exception.ApiException;
 import com.ssafy.dog.domain.user.dto.UserLoginDto;
 import com.ssafy.dog.domain.user.dto.UserSignupDto;
 import com.ssafy.dog.domain.user.entity.User;
+import com.ssafy.dog.domain.user.model.UserRole;
 import com.ssafy.dog.domain.user.repository.UserRepository;
+import com.ssafy.dog.security.JwtToken;
 import com.ssafy.dog.security.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
@@ -35,27 +43,18 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Optional<User> findByUserLoginId(String loginId) {
-		log.info("Calling findByUserLoginId with loginId: {}", loginId); // 호출 전 로깅
 		Optional<User> result = userRepository.findByUserLoginId(loginId);
-		log.info("Result for findByUserLoginId with loginId {}: {}", loginId,
-			result.isPresent() ? "Found" : "Not Found"); // 호출 후 로깅
 		return result;
 	}
 
 	@Override
 	public Optional<User> findByUserNickname(String nickname) {
-		log.info("Calling findByUserNickname with nickname: {}", nickname); // 호출 전 로깅
 		Optional<User> result = userRepository.findByUserNickname(nickname);
-		log.info("Result for findByUserNickname with nickname {}: {}", nickname,
-			result.isPresent() ? "Found" : "Not Found"); // 호출 후 로깅
 		return result;
 	}
 
 	public Optional<User> findByUserPhone(String phone) {
-		log.info("Calling findByUserPhone with phone: {}", phone); // 호출 전 로깅
 		Optional<User> result = userRepository.findByUserPhone(phone);
-		log.info("Result for findByUserPhone with phone {}: {}", phone,
-			result.isPresent() ? "Found" : "Not Found"); // 호출 후 로깅
 		return result;
 	}
 
@@ -95,6 +94,7 @@ public class UserServiceImpl implements UserService {
 			.withUserPhone(userSignupDto.getUserPhone())
 			.withUserTermsAgreed(userSignupDto.getUserTermsAgreed())
 			.withUserIsRemoved(false)
+			.withUserRole(UserRole.USER)
 			.build();
 
 		userRepository.save(user);
@@ -121,8 +121,17 @@ public class UserServiceImpl implements UserService {
 			throw new ApiException(UserErrorCode.WRONG_PASSWORD);
 		}
 
-		return Api.ok(jwtTokenProvider.createToken(user.getUserLoginId(), user.getUserRole()));
-		// return jwtTokenProvider.createToken(user.getUserLoginId(), user.getUserRoles());
+		// Authentication 객체 생성
+		GrantedAuthority authority = new SimpleGrantedAuthority(user.getUserRole().getValue());
+		List<GrantedAuthority> authorities = Collections.singletonList(authority);
+
+		Authentication auth = new UsernamePasswordAuthenticationToken(
+			user.getUserLoginId(), user.getPassword(), authorities
+		);
+
+		JwtToken jwtToken = jwtTokenProvider.generateToken(auth);
+
+		return Api.ok(jwtToken.getAccessToken()); // jwtToken 전체를 전달 해야하나?
 	}
 
 	// 이메일 형식 검증 메소드

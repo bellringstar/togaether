@@ -106,7 +106,7 @@ public class User extends BaseTimeEntity implements UserDetails { // 주소 속�
 
 	@Override
 	public String getPassword() {
-		return "Calling Wrong methods";
+		return userPw;
 	}
 
 	@Override

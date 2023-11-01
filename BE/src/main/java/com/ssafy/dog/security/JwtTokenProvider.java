@@ -1,78 +1,103 @@
 package com.ssafy.dog.security;
 
-import java.util.Base64;
+import java.security.Key;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
+import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.DatatypeConverter;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.RequiredArgsConstructor;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SecurityException;
+import lombok.extern.slf4j.Slf4j;
 
-@RequiredArgsConstructor
+@Slf4j
 @Component
 public class JwtTokenProvider {
 
-	private String secretKey = "dog";
+	private final Key key;
+	private final long tokenValidTime = 60 * 60 * 24 * 365 * 1000L; // 1년
 
-	// 토큰 유효시간 1년
-	private long tokenValidTime = 60 * 60 * 24 * 365 * 1000L;
-
-	private final UserDetailsService userDetailsService;
-
-	// 객체 초기화, secretKey 를 Base64 로 인코딩한다.
-	@PostConstruct
-	protected void init() {
-		secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+	public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
+		byte[] secretByteKey = DatatypeConverter.parseBase64Binary(secretKey);
+		this.key = Keys.hmacShaKeyFor(secretByteKey);
 	}
 
-	// JWT 토큰 생성
-	public String createToken(String userPk, List<String> roles) {
-		Claims claims = Jwts.claims().setSubject(userPk); // JWT payload 에 저장되는 정보단위
-		claims.put("roles", roles); // 정보는 key / value 쌍으로 저장된다.
-		Date now = new Date();
-		return Jwts.builder()
-			.setClaims(claims) // 정보 저장
-			.setIssuedAt(now) // 토큰 발행 시간 정보
-			.setExpiration(new Date(now.getTime() + tokenValidTime)) // set Expire Time
-			.signWith(SignatureAlgorithm.HS256, secretKey) // 사용할 암호화 알고리즘화
-			// signature 에 들어갈 secret 값 세팅
+	public JwtToken generateToken(Authentication authentication) {
+		String authorities = authentication.getAuthorities().stream()
+			.map(GrantedAuthority::getAuthority)
+			.collect(Collectors.joining(","));
+
+		// Access Token 생성
+		String accessToken = Jwts.builder()
+			.setSubject(authentication.getName())
+			.claim("auth", authorities)
+			.setExpiration(new Date(System.currentTimeMillis() + tokenValidTime))
+			.signWith(key, SignatureAlgorithm.HS256)
 			.compact();
+
+		// RefreshToken은 AccessToken이 만료됐을 때 보내는거니까 안 만들어줘도 된다.
+
+		return JwtToken.builder()
+			.grantType("Bearer")
+			.accessToken(accessToken)
+			.build();
 	}
 
-	// JWT 토큰에서 인증 정보 조회
-	public Authentication getAuthentication(String token) {
-		UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
-		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+	public Authentication getAuthentication(String accessToken) {
+		Claims claims = parseClaims(accessToken);
+
+		if (claims.get("auth") == null) { // generateToken() 에서 새긴 "auth"가 JWT 의 Payload 안의 claims 에 있는지 확인
+			throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+		}
+
+		Collection<? extends GrantedAuthority> authorities =
+			Arrays.stream(claims.get("auth").toString().split(","))
+				.map(SimpleGrantedAuthority::new)
+				.collect(Collectors.toList());
+
+		UserDetails principal = new org.springframework.security.core.userdetails.User(
+			claims.getSubject(), "", authorities);
+
+		return new UsernamePasswordAuthenticationToken(principal, "", authorities);
 	}
 
-	// 토큰에서 회원 정보 추출
-	public String getUserPk(String token) {
-		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-	}
-
-	// Request 의 Header 에서 token 값을 가져옵니다. "X-AUTH-TOKEN" : "TOKEN 값"
-	public String resolveToken(HttpServletRequest request) {
-		return request.getHeader("X-AUTH-TOKEN");
-	}
-
-	// 토큰의 유효성 + 만료일자 확인
-	public boolean validateToken(String jwtToken) {
+	public boolean validateToken(String token) { // 에러 내보고 ApiException 으로 오류 처리해야 하는지 확인하기
 		try {
-			Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
-			return !claims.getBody().getExpiration().before(new Date());
-		} catch (Exception e) { // Api Exception 써야하나?
-			return false;
+			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+			return true;
+		} catch (SecurityException | MalformedJwtException e) {
+			log.info("Invalid JWT Token", e);
+		} catch (ExpiredJwtException e) {
+			log.info("Expired JWT Token", e);
+		} catch (UnsupportedJwtException e) {
+			log.info("Unsupported JWT Token", e);
+		} catch (IllegalArgumentException e) {
+			log.info("JWT claims string is empty.", e);
+		}
+		return false;
+	}
+
+	private Claims parseClaims(String accessToken) {
+		try {
+			return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
+		} catch (ExpiredJwtException e) {
+			return e.getClaims();
 		}
 	}
 }
