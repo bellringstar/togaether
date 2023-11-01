@@ -118,9 +118,8 @@ public class StompHandler implements ChannelInterceptor {
 		return
 			Long.valueOf(
 				Objects.requireNonNull(
-					// accessor.getFirstNativeHeader("Chat-room-no")
-					accessor.getFirstNativeHeader("Chatroomno")
-					
+					accessor.getFirstNativeHeader("Chatroom-no")
+
 				));
 	}
 
