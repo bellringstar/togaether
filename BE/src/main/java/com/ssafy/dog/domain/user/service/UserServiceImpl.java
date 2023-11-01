@@ -2,7 +2,6 @@ package com.ssafy.dog.domain.user.service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,23 +39,6 @@ public class UserServiceImpl implements UserService {
 	private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$");
 	private static final Pattern PASSWORD_PATTERN = Pattern.compile(
 		"^(?=.*[A-Z])(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,16}$");
-
-	@Override
-	public Optional<User> findByUserLoginId(String loginId) {
-		Optional<User> result = userRepository.findByUserLoginId(loginId);
-		return result;
-	}
-
-	@Override
-	public Optional<User> findByUserNickname(String nickname) {
-		Optional<User> result = userRepository.findByUserNickname(nickname);
-		return result;
-	}
-
-	public Optional<User> findByUserPhone(String phone) {
-		Optional<User> result = userRepository.findByUserPhone(phone);
-		return result;
-	}
 
 	@Transactional
 	@Override

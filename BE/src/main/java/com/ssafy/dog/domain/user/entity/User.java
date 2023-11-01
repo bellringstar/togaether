@@ -24,11 +24,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.ssafy.dog.common.auditing.BaseTimeEntity;
+import com.ssafy.dog.domain.board.entity.Board;
+import com.ssafy.dog.domain.board.entity.Comment;
 import com.ssafy.dog.domain.dog.entity.Dog;
 import com.ssafy.dog.domain.user.model.UserGender;
 import com.ssafy.dog.domain.user.model.UserRole;
-import com.ssafy.dog.domain.board.entity.Board;
-import com.ssafy.dog.domain.board.entity.Comment;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -254,10 +254,8 @@ public class User extends BaseTimeEntity implements UserDetails { // 주소 속�
 			user.userPicture = this.userPicture;
 			user.dogs = this.dogs;
 			user.userPw = this.userPw;
-			user.modifiedDate = this.modifiedDate;
 			user.userId = this.userId;
 			user.userTermsAgreed = this.userTermsAgreed;
-			user.createdDate = this.createdDate;
 			user.userAddress = this.userAddress;
 			user.userAboutMe = this.userAboutMe;
 			user.userIsRemoved = this.userIsRemoved;
