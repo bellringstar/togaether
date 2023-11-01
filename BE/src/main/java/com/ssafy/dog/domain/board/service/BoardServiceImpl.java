@@ -27,7 +27,7 @@ public class BoardServiceImpl implements BoardService {
 	private final FileUrlRepository fileUrlRepository;
 
 	@Transactional
-	public Api<?> createBoard(BoardDto boardDto) {
+	public Api<String> createBoard(BoardDto boardDto) {
 
 		// user1 -> userId를 통해 user1 객체를 받아온다
 		User curUser = userRepository.findByUserId(boardDto.getUserId());
@@ -53,19 +53,19 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Transactional
-	public Api<?> findBoardbyNickname(String userLoginId) {
+	public Api<List<BoardDto>> findBoardbyNickname(String userLoginId) {
 		List<Board> boardList = boardRepository.findBoardByUser_UserLoginId(userLoginId);
 		List<BoardDto> boardDtoList = new ArrayList<>();
 
 		for (Board board : boardList) {
-			BoardDto boardDto = new BoardDto(
-				board.getUser().getUserId(),
-				board.getBoardTitle(),
-				board.getBoardContent(),
-				board.getBoardScope(),
-				board.getBoardLikes(),
-				board.getFileUrlLists().stream().map(FileUrl::getFileUrl).collect(Collectors.toList())
-			);
+			BoardDto boardDto = BoardDto.builder()
+				.userId(board.getUser().getUserId())
+				.boardTitle(board.getBoardTitle())
+				.boardContent(board.getBoardContent())
+				.boardScope(board.getBoardScope())
+				.boardLikes(board.getBoardLikes())
+				.fileUrlLists(board.getFileUrlLists().stream().map(FileUrl::getFileUrl).collect(Collectors.toList()))
+				.build();
 
 			boardDtoList.add(boardDto);
 		}
