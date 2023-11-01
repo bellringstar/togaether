@@ -41,3 +41,6 @@ management:
       exposure:
         include: "prometheus"
 
+jwt:
+  header: Authorization
+  secret: ${JWT_SECRET_KEY}
