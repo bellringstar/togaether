@@ -19,7 +19,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	List<User> findAll();
 
-	User findByUserId(Long userId);
+	Optional<User> findByUserId(Long userId);
+
+	Optional<User> findUserByUserLoginId(String userLoginId);
 
 	// @EntityGraph(attributePaths = "authorities")
 	// Optional<User> findOneWithAuthoritiesByUsername(String username);
