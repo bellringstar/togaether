@@ -19,9 +19,6 @@ public class GpsTrackingModelListener extends AbstractMongoEventListener<GpsTrac
 		if (gpsTracking.getCreatedDate() == null) {
 			gpsTracking.setCreatedDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
 		}
-		if (gpsTracking.getTrackingDate() == null) {
-			gpsTracking.setTrackingDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
-		}
 	}
 
 	@Override

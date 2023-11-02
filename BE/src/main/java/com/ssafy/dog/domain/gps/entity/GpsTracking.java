@@ -1,6 +1,7 @@
 package com.ssafy.dog.domain.gps.entity;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -33,10 +34,6 @@ public class GpsTracking {
 		this.userLoginId = "test@mail.com";
 	}
 
-	public void setTrackingDate(LocalDateTime trackingDate) {
-		this.trackingDate = trackingDate;
-	}
-
 	public void setCreatedDate(LocalDateTime createdDate) {
 		this.createdDate = createdDate;
 	}
@@ -47,6 +44,7 @@ public class GpsTracking {
 
 	public static GpsTracking toEntity(GpsTrackingSaveRequest request) {
 		return GpsTracking.builder()
+			.trackingDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
 			.gpsPoints(request.getGpsPoints())
 			.build();
 	}
