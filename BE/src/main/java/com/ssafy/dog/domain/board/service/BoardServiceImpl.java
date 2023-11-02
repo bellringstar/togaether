@@ -92,11 +92,24 @@ public class BoardServiceImpl implements BoardService {
 				.boardLikes(board.getBoardLikes())
 				.fileUrlLists(board.getFileUrlLists().stream().map(FileUrl::getFileUrl).collect(Collectors.toList()))
 				.build();
-
 			boardDtoList.add(boardDto);
 		}
 
 		return Api.ok(boardDtoList);
 	}
 
+	@Transactional
+	public Api<String> deleteBoard(Long boardId) {
+		Optional<Board> boardOptional = boardRepository.findById(boardId);
+		Board board = boardOptional.orElseThrow(() -> new ApiException(BoardErrorCode.BOARD_LIST_IS_EMPTY));
+
+		List<FileUrl> fileUrls = board.getFileUrlLists();
+		for (FileUrl fileUrl : fileUrls) {
+			fileUrl.removeBoard();
+		}
+
+		// 게시글을 삭제한다.
+		boardRepository.delete(board);
+		return Api.ok(boardId + " 번 게시글 삭제 완료");
+	}
 }
