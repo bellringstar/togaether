@@ -15,6 +15,7 @@ import com.ssafy.dog.common.exception.ApiException;
 import com.ssafy.dog.domain.board.dto.BoardDto;
 import com.ssafy.dog.domain.board.entity.Board;
 import com.ssafy.dog.domain.board.entity.FileUrl;
+import com.ssafy.dog.domain.board.enums.fileStatus;
 import com.ssafy.dog.domain.board.repository.BoardRepository;
 import com.ssafy.dog.domain.board.repository.FileUrlRepository;
 import com.ssafy.dog.domain.user.entity.User;
@@ -58,6 +59,7 @@ public class BoardServiceImpl implements BoardService {
 			.boardTitle(boardDto.getBoardTitle())
 			.boardContent(boardDto.getBoardContent())
 			.boardScope(boardDto.getBoardScope())
+			.boardStatus(fileStatus.USE)
 			.build();
 		boardRepository.save(board);
 
@@ -80,10 +82,14 @@ public class BoardServiceImpl implements BoardService {
 		List<Board> boardList = boardRepository.findBoardByUser_UserLoginId(userLoginId);
 		List<BoardDto> boardDtoList = new ArrayList<>();
 
-		if (boardList.isEmpty())
+		if (boardList.isEmpty()) {
 			throw new ApiException(BoardErrorCode.BOARD_LIST_IS_EMPTY);
+		}
 
 		for (Board board : boardList) {
+			if (board.getBoardStatus() == fileStatus.DELETE) {
+				continue;
+			}
 			BoardDto boardDto = BoardDto.builder()
 				.userId(board.getUser().getUserId())
 				.boardTitle(board.getBoardTitle())
@@ -102,14 +108,16 @@ public class BoardServiceImpl implements BoardService {
 	public Api<String> deleteBoard(Long boardId) {
 		Optional<Board> boardOptional = boardRepository.findById(boardId);
 		Board board = boardOptional.orElseThrow(() -> new ApiException(BoardErrorCode.BOARD_LIST_IS_EMPTY));
-
+		if (board.getBoardStatus() == fileStatus.DELETE) {
+			throw new ApiException(BoardErrorCode.BOARD_LIST_IS_EMPTY);
+		}
 		List<FileUrl> fileUrls = board.getFileUrlLists();
 		for (FileUrl fileUrl : fileUrls) {
 			fileUrl.removeBoard();
 		}
 
 		// 게시글을 삭제한다.
-		boardRepository.delete(board);
+		board.removeBoard();
 		return Api.ok(boardId + " 번 게시글 삭제 완료");
 	}
 }
