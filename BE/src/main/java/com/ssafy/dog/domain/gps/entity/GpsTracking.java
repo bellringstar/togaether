@@ -33,6 +33,10 @@ public class GpsTracking {
 		this.userLoginId = "test@mail.com";
 	}
 
+	public void setTrackingDate(LocalDateTime trackingDate) {
+		this.trackingDate = trackingDate;
+	}
+
 	public void setCreatedDate(LocalDateTime createdDate) {
 		this.createdDate = createdDate;
 	}
@@ -44,7 +48,6 @@ public class GpsTracking {
 	public static GpsTracking toEntity(GpsTrackingSaveRequest request) {
 		return GpsTracking.builder()
 			.gpsPoints(request.getGpsPoints())
-			.trackingDate(request.getTrackingDate())
 			.build();
 	}
 
