@@ -140,7 +140,7 @@ public class ChatService {
 
 		// Set<Long> connectedList = chatRoomService.isConnected(message.getRoomId());
 		List<Long> connectedList = chatRoomService.isConnected(message.getRoomId());
-
+		log.info("채팅 읽은 사람들 : {}", connectedList);
 		ChatRead curRead = ChatRead.builder()
 			.historyId(curChatHistory.getHistoryId())
 			.readList(connectedList)
