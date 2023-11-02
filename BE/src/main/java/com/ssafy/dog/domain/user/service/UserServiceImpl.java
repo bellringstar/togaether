@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public Api<?> create(UserSignupRequestDto userSignupRequestDto) {
+	public Api<String> create(UserSignupRequestDto userSignupRequestDto) {
 
 		if (!isValidEmail(userSignupRequestDto.getUserLoginId())) {
 			throw new ApiException(UserErrorCode.INVALID_EMAIL);
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public Api<?> login(UserLoginRequestDto userLoginRequestDto) {
+	public Api<UserLoginResponseDto> login(UserLoginRequestDto userLoginRequestDto) {
 
 		if (!isValidEmail(userLoginRequestDto.getUserLoginId())) {
 			throw new ApiException(UserErrorCode.INVALID_EMAIL);
