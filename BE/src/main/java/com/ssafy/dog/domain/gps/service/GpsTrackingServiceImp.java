@@ -2,6 +2,7 @@ package com.ssafy.dog.domain.gps.service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -9,9 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.dog.common.error.ErrorCode;
 import com.ssafy.dog.common.exception.ApiException;
+import com.ssafy.dog.domain.gps.dto.GpsTrackingDeleteRequest;
 import com.ssafy.dog.domain.gps.dto.GpsTrackingResponse;
 import com.ssafy.dog.domain.gps.dto.GpsTrackingSaveRequest;
 import com.ssafy.dog.domain.gps.entity.GpsTracking;
+import com.ssafy.dog.domain.gps.entity.enums.Status;
 import com.ssafy.dog.domain.gps.repository.GpsTrackingRepository;
 
 import io.jsonwebtoken.lang.Collections;
@@ -32,8 +35,10 @@ public class GpsTrackingServiceImp implements GpsTrackingService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<GpsTrackingResponse> findTrackingDataByUserLoginId(String userLoginId, String order) {
-		List<GpsTracking> trackingList = gpsTrackingRepository.findAllByUserLoginId(userLoginId);
+		List<GpsTracking> trackingList = gpsTrackingRepository.findAllByUserLoginIdAndStatus(userLoginId,
+			Status.AVAILABLE);
 
 		if (Collections.isEmpty(trackingList)) {
 			return java.util.Collections.emptyList();
@@ -56,4 +61,18 @@ public class GpsTrackingServiceImp implements GpsTrackingService {
 		throw new ApiException(ErrorCode.BAD_REQUEST, "올바른 정렬 기준을 요청해주세요. asc, desc");
 	}
 
+	@Override
+	@Transactional
+	public boolean deleteTrackingRecord(GpsTrackingDeleteRequest request) {
+		Optional<GpsTracking> record = gpsTrackingRepository.findById(request.getTrackingId());
+		if (record.isEmpty()) {
+			throw new ApiException(ErrorCode.BAD_REQUEST, "올바른 요청을 해주세요");
+		}
+		if (!record.get().getUserLoginId().equals("test@mail.com")) { //TODO:추후 컨텍스트 홀더 내의 아이디 가져올 예정
+			throw new ApiException(ErrorCode.BAD_REQUEST, "작성자 본인만 기록을 삭제할 수 있습니다.");
+		}
+		record.get().changeStatus(Status.DELETED);
+		gpsTrackingRepository.save(record.get());
+		return true;
+	}
 }
