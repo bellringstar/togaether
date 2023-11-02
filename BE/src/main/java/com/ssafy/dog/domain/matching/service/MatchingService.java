@@ -6,5 +6,5 @@ import com.ssafy.dog.domain.user.entity.User;
 
 public interface MatchingService {
 
-	List<User> matchingUserList(String userLoginId);
+	List<User> matchingUser(String userLoginId);
 }

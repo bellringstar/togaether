@@ -34,7 +34,7 @@ public class MatchingServiceImp implements MatchingService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<User> matchingUserList(String userLoginId) {
+	public List<User> matchingUser(String userLoginId) {
 		//TODO 추후 contextHolder에 저장된 userLonginID 사용
 		Optional<User> user = userRepository.findByUserLoginId(userLoginId);
 		if (user.isEmpty()) {
@@ -46,13 +46,13 @@ public class MatchingServiceImp implements MatchingService {
 		}
 
 		String[] address = userAddress.split(" ");
-		List<User> matchingCandidateList = userRepository.findAllByUserAddressContains(address[0]);
-		if (matchingCandidateList.isEmpty()) {
+		List<User> matchingCandidates = userRepository.findAllByUserAddressContains(address[0]);
+		if (matchingCandidates.isEmpty()) {
 			throw new ApiException(ErrorCode.BAD_REQUEST, "같은 지역에 매칭할 수 있는 유저가 없습니다.");
 		}
-		List<User> filteredByDistance3kmUserList = filteredByDistance3km(user.get(), matchingCandidateList);
+		List<User> filteredByDistance3kmUsers = filteredByDistance3km(user.get(), matchingCandidates);
 
-		return sortByDogDisposition(user.get(), filteredByDistance3kmUserList);
+		return sortByDogDisposition(user.get(), filteredByDistance3kmUsers);
 	}
 
 	private List<User> filteredByDistance3km(User user, List<User> candidates) {
@@ -67,8 +67,8 @@ public class MatchingServiceImp implements MatchingService {
 	}
 
 	private List<User> sortByDogDisposition(User user, List<User> candidates) {
-		List<Dog> dogList = user.getDogs();
-		Set<DogDisposition> userDogDispositionSet = createDogDispositionSet(dogList);
+		List<Dog> dogs = user.getDogs();
+		Set<DogDisposition> userDogDispositionSet = createDogDispositionSet(dogs);
 		return candidates.stream()
 			.sorted((user1, user2) -> {
 				Set<DogDisposition> user1DispositionSet = createDogDispositionSet(user1.getDogs());
@@ -82,17 +82,17 @@ public class MatchingServiceImp implements MatchingService {
 			.collect(Collectors.toList());
 	}
 
-	private int countIntersection(Set<DogDisposition> dogSet1, Set<DogDisposition> dogSet2) {
-		dogSet1.retainAll(dogSet2);
-		return dogSet1.size();
+	private int countIntersection(Set<DogDisposition> dog1, Set<DogDisposition> dog2) {
+		dog1.retainAll(dog2);
+		return dog1.size();
 	}
 
 	private Set<DogDisposition> createDogDispositionSet(List<Dog> dogs) {
-		Set<DogDisposition> dogDispositionSet = new HashSet<>();
+		Set<DogDisposition> dogDispositions = new HashSet<>();
 		for (Dog dog : dogs) {
-			dogDispositionSet.addAll(dog.getDogDispositionList());
+			dogDispositions.addAll(dog.getDogDispositionList());
 		}
-		return dogDispositionSet;
+		return dogDispositions;
 	}
 
 }
