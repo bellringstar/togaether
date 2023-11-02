@@ -3,6 +3,7 @@ package com.ssafy.dog.domain.chat.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import com.ssafy.dog.common.error.UserErrorCode;
 import com.ssafy.dog.common.exception.ApiException;
 import com.ssafy.dog.domain.chat.dto.MessageDto;
 import com.ssafy.dog.domain.chat.dto.req.ChatRoomReqDto;
+import com.ssafy.dog.domain.chat.dto.res.ChatHistoriesResDto;
 import com.ssafy.dog.domain.chat.dto.res.ChatListResDto;
 import com.ssafy.dog.domain.chat.entity.ChatMembers;
 import com.ssafy.dog.domain.chat.entity.ChatRoom;
@@ -82,10 +84,7 @@ public class ChatService {
 
 		for (User user : users) {
 
-			ChatMembers chatMembers = ChatMembers.builder()
-				.chatRoom(chatRoom)
-				.user(user)
-				.build();
+			ChatMembers chatMembers = ChatMembers.builder().chatRoom(chatRoom).user(user).build();
 
 			chatMembersList.add(chatMembers);
 		}
@@ -108,8 +107,36 @@ public class ChatService {
 		return Api.ok(roomLists);
 	}
 
-	public Api<?> getChatHistory(Long roomId) {
-		return Api.ok("채팅 내역");
+	public Api<List<ChatHistoriesResDto>> getChatHistory(Long roomId, String accessToken) {
+
+		Long userId = Long.parseLong(accessToken);
+		log.info("유저 PK : {}", userId);
+		// 채팅 내역 불러오기
+		List<ChatHistory> chatHistories = chatHistoryRepository.findAllByRoomId(roomId);
+		log.info("채팅 history : {}", chatHistories.size());
+		List<ChatHistoriesResDto> chatHistoriesResDtos = new ArrayList<>();
+
+		for (ChatHistory history : chatHistories) {
+
+			// ChatRead 정보 조회
+			Optional<ChatRead> chatRead = chatReadRepository.findByHistoryId(history.getHistoryId().toString());
+			// history와 readList로 Dto 생성
+			chatRead.ifPresent(read -> {
+				List<Long> readList = readCheck(read.getReadList(), userId);
+				chatHistoriesResDtos.add(new ChatHistoriesResDto(history, readList));
+			});
+
+		}
+
+		return Api.ok(chatHistoriesResDtos);
+	}
+
+	public List<Long> readCheck(List<Long> readList, Long userId) {
+
+		if (!readList.contains(userId)) {
+			readList.add(userId);
+		}
+		return readList;
 	}
 
 	public void sendMessage(MessageDto message, String accessToken) {
@@ -122,8 +149,7 @@ public class ChatService {
 		 */
 		// read 한 사람들 추가
 		message.setSendTimeAndSenderAndRead(LocalDateTime.now(), Long.parseLong(accessToken), message.getSenderName(),
-			10,
-			chatRoomService.isConnected(message.getRoomId()));
+			10, chatRoomService.isConnected(message.getRoomId()));
 
 		kafkaProducerService.send(KafkaConstants.KAFKA_TOPIC, message);
 
@@ -133,18 +159,20 @@ public class ChatService {
 	}
 
 	// MongoDB ChatHistory 저장
+	@Transactional
 	public void saveChat(MessageDto message) {
-		// chatHistoryRepository.save(message.convertEntity());
+
 		ChatHistory curChatHistory = message.convertEntity();
 		chatHistoryRepository.save(curChatHistory);
 
-		// Set<Long> connectedList = chatRoomService.isConnected(message.getRoomId());
+		String historyId = curChatHistory.getHistoryId();
+
 		List<Long> connectedList = chatRoomService.isConnected(message.getRoomId());
 		log.info("채팅 읽은 사람들 : {}", connectedList);
-		ChatRead curRead = ChatRead.builder()
-			.historyId(curChatHistory.getHistoryId())
-			.readList(connectedList)
-			.build();
+		log.info("히스토리 PK 값 : {}", historyId);
+		ChatRead curRead = ChatRead.builder().
+			historyId(historyId).
+			readList(connectedList).build();
 
 		chatReadRepository.save(curRead);
 

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.dog.common.api.Api;
 import com.ssafy.dog.domain.chat.dto.MessageDto;
 import com.ssafy.dog.domain.chat.dto.req.ChatRoomReqDto;
+import com.ssafy.dog.domain.chat.dto.res.ChatHistoriesResDto;
 import com.ssafy.dog.domain.chat.dto.res.ChatListResDto;
 import com.ssafy.dog.domain.chat.service.ChatRoomService;
 import com.ssafy.dog.domain.chat.service.ChatService;
@@ -52,8 +53,9 @@ public class ChatController {
 
 	//채팅 상세보기
 	@GetMapping("/chatroom/{roomId}")
-	public Api<?> getChatHistory(@PathVariable Long roomId) {
-		return chatService.getChatHistory(roomId);
+	public Api<List<ChatHistoriesResDto>> getChatHistory(@PathVariable Long roomId,
+		@RequestHeader("Authorization") final String accessToken) {
+		return chatService.getChatHistory(roomId, accessToken);
 	}
 
 	// 채팅방 연결해제
