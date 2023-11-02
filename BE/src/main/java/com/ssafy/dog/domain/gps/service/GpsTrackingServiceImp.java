@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.dog.common.error.ErrorCode;
 import com.ssafy.dog.common.exception.ApiException;
@@ -28,14 +27,12 @@ public class GpsTrackingServiceImp implements GpsTrackingService {
 	private final GpsTrackingRepository gpsTrackingRepository;
 
 	@Override
-	@Transactional
 	public GpsTrackingResponse saveGpsTrackingData(GpsTrackingSaveRequest request) {
 		GpsTracking savedEntity = gpsTrackingRepository.save(GpsTracking.toEntity(request));
 		return GpsTrackingResponse.toResponse(savedEntity);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
 	public List<GpsTrackingResponse> findTrackingDataByUserLoginId(String userLoginId, String order) {
 		List<GpsTracking> trackingList = gpsTrackingRepository.findAllByUserLoginIdAndStatus(userLoginId,
 			Status.AVAILABLE);
@@ -62,7 +59,6 @@ public class GpsTrackingServiceImp implements GpsTrackingService {
 	}
 
 	@Override
-	@Transactional
 	public boolean deleteTrackingRecord(GpsTrackingDeleteRequest request) {
 		Optional<GpsTracking> record = gpsTrackingRepository.findById(request.getTrackingId());
 		if (record.isEmpty()) {
