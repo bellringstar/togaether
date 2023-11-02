@@ -15,7 +15,7 @@ import com.ssafy.dog.common.exception.ApiException;
 import com.ssafy.dog.domain.board.dto.BoardDto;
 import com.ssafy.dog.domain.board.entity.Board;
 import com.ssafy.dog.domain.board.entity.FileUrl;
-import com.ssafy.dog.domain.board.enums.fileStatus;
+import com.ssafy.dog.domain.board.enums.FileStatus;
 import com.ssafy.dog.domain.board.repository.BoardRepository;
 import com.ssafy.dog.domain.board.repository.FileUrlRepository;
 import com.ssafy.dog.domain.user.entity.User;
@@ -59,7 +59,7 @@ public class BoardServiceImpl implements BoardService {
 			.boardTitle(boardDto.getBoardTitle())
 			.boardContent(boardDto.getBoardContent())
 			.boardScope(boardDto.getBoardScope())
-			.boardStatus(fileStatus.USE)
+			.boardStatus(FileStatus.USE)
 			.build();
 		boardRepository.save(board);
 
@@ -87,7 +87,7 @@ public class BoardServiceImpl implements BoardService {
 		}
 
 		for (Board board : boardList) {
-			if (board.getBoardStatus() == fileStatus.DELETE) {
+			if (board.getBoardStatus() == FileStatus.DELETE) {
 				continue;
 			}
 			BoardDto boardDto = BoardDto.builder()
@@ -108,7 +108,7 @@ public class BoardServiceImpl implements BoardService {
 	public Api<String> deleteBoard(Long boardId) {
 		Optional<Board> boardOptional = boardRepository.findById(boardId);
 		Board board = boardOptional.orElseThrow(() -> new ApiException(BoardErrorCode.BOARD_LIST_IS_EMPTY));
-		if (board.getBoardStatus() == fileStatus.DELETE) {
+		if (board.getBoardStatus() == FileStatus.DELETE) {
 			throw new ApiException(BoardErrorCode.BOARD_LIST_IS_EMPTY);
 		}
 		List<FileUrl> fileUrls = board.getFileUrlLists();

@@ -1,5 +1,5 @@
 package com.ssafy.dog.domain.board.enums;
 
-public enum fileStatus {
+public enum FileStatus {
 	USE, DELETE
 }

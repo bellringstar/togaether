@@ -18,8 +18,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.ssafy.dog.common.auditing.BaseTimeEntity;
+import com.ssafy.dog.domain.board.enums.FileStatus;
 import com.ssafy.dog.domain.board.enums.Scope;
-import com.ssafy.dog.domain.board.enums.fileStatus;
 import com.ssafy.dog.domain.user.entity.User;
 
 import lombok.AccessLevel;
@@ -57,10 +57,10 @@ public class Board extends BaseTimeEntity {
 	private List<FileUrl> fileUrlLists = new ArrayList<>();
 
 	@Enumerated(EnumType.STRING)
-	private fileStatus boardStatus;
+	private FileStatus boardStatus;
 
 	@Builder
-	public Board(User user, String boardTitle, String boardContent, Scope boardScope, fileStatus boardStatus) {
+	public Board(User user, String boardTitle, String boardContent, Scope boardScope, FileStatus boardStatus) {
 		this.user = user;
 		this.boardTitle = boardTitle;
 		this.boardContent = boardContent;
@@ -76,7 +76,7 @@ public class Board extends BaseTimeEntity {
 	}
 
 	public void removeBoard() {
-		this.boardStatus = fileStatus.DELETE;
+		this.boardStatus = FileStatus.DELETE;
 	}
 
 }
