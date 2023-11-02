@@ -1,12 +1,12 @@
 package com.ssafy.dog.domain.user.service;
 
 import com.ssafy.dog.common.api.Api;
-import com.ssafy.dog.domain.user.dto.UserLoginDto;
-import com.ssafy.dog.domain.user.dto.UserSignupDto;
+import com.ssafy.dog.domain.user.dto.request.UserLoginRequestDto;
+import com.ssafy.dog.domain.user.dto.request.UserSignupRequestDto;
 
 public interface UserService {
 
-	Api<?> create(UserSignupDto userSignupDto);
+	Api<?> create(UserSignupRequestDto userSignupRequestDto);
 
-	Api<?> login(UserLoginDto userLoginDto);
+	Api<?> login(UserLoginRequestDto userLoginRequestDto);
 }
