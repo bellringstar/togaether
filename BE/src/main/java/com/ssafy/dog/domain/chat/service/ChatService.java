@@ -139,6 +139,7 @@ public class ChatService {
 		return readList;
 	}
 
+	@Transactional
 	public void sendMessage(MessageDto message, String accessToken) {
 		// 메시지 전송 요청 헤더에 포함된 Access Token에서 email로 회원을 조회한다.
 		// Member findMember = memberRepository.findByEmail(jwtUtil.getUid(accessToken))
@@ -154,16 +155,41 @@ public class ChatService {
 		kafkaProducerService.send(KafkaConstants.KAFKA_TOPIC, message);
 
 		// kafka producer -> consumer -> stomp converAndSend 까지 된 후 DB 저장로직
-		saveChat(message);
-
+		// saveChat(message);
+		ChatHistory curChatHistory = saveChatHistory(message);
+		saveChatRead(message, curChatHistory);
 	}
 
 	// MongoDB ChatHistory 저장
-	@Transactional
 	public void saveChat(MessageDto message) {
 
 		ChatHistory curChatHistory = message.convertEntity();
+		ChatHistory savedEntity = chatHistoryRepository.save(curChatHistory);
+		log.info("저장된 ChatHistory : {}", savedEntity.toString());
+		String historyId = savedEntity.getHistoryId();
+
+		List<Long> connectedList = chatRoomService.isConnected(message.getRoomId());
+		log.info("채팅 읽은 사람들 : {}", connectedList);
+		log.info("히스토리 PK 값 : {}", historyId);
+		ChatRead curRead = ChatRead.builder().
+			historyId(historyId).
+			readList(connectedList).build();
+
+		chatReadRepository.save(curRead);
+
+	}
+
+	public ChatHistory saveChatHistory(MessageDto message) {
+
+		ChatHistory curChatHistory = message.convertEntity();
 		chatHistoryRepository.save(curChatHistory);
+		log.info("저장된 ChatHistory : {}", curChatHistory.toString());
+
+		return curChatHistory;
+
+	}
+
+	public void saveChatRead(MessageDto message, ChatHistory curChatHistory) {
 
 		String historyId = curChatHistory.getHistoryId();
 
