@@ -1,7 +1,8 @@
 package com.ssafy.dog.domain.user.dto.response;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,8 @@ public class UserLoginResponseDto {
 		regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
 	private String userLoginId;
 
-	@Size(min = 2, max = 15)
+	@Min(value = 2, message = "닉네임은 2글자 이상, 15글자 이하여야 합니다.")
+	@Max(value = 15, message = "닉네임은 2글자 이상, 15글자 이하여야 합니다.")
 	private String userNickname;
 
 	private String userPicture;
