@@ -155,9 +155,12 @@ public class ChatService {
 		kafkaProducerService.send(KafkaConstants.KAFKA_TOPIC, message);
 
 		// kafka producer -> consumer -> stomp converAndSend 까지 된 후 DB 저장로직
-		// saveChat(message);
-		ChatHistory curChatHistory = saveChatHistory(message);
-		saveChatRead(message, curChatHistory);
+		saveChat(message);
+	}
+
+	public ChatHistory getTest() {
+		List<ChatHistory> histories = chatHistoryRepository.findAll();
+		return histories.get(0);
 	}
 
 	// MongoDB ChatHistory 저장
@@ -167,31 +170,6 @@ public class ChatService {
 		ChatHistory savedEntity = chatHistoryRepository.save(curChatHistory);
 		log.info("저장된 ChatHistory : {}", savedEntity.toString());
 		String historyId = savedEntity.getHistoryId();
-
-		List<Long> connectedList = chatRoomService.isConnected(message.getRoomId());
-		log.info("채팅 읽은 사람들 : {}", connectedList);
-		log.info("히스토리 PK 값 : {}", historyId);
-		ChatRead curRead = ChatRead.builder().
-			historyId(historyId).
-			readList(connectedList).build();
-
-		chatReadRepository.save(curRead);
-
-	}
-
-	public ChatHistory saveChatHistory(MessageDto message) {
-
-		ChatHistory curChatHistory = message.convertEntity();
-		chatHistoryRepository.save(curChatHistory);
-		log.info("저장된 ChatHistory : {}", curChatHistory.toString());
-
-		return curChatHistory;
-
-	}
-
-	public void saveChatRead(MessageDto message, ChatHistory curChatHistory) {
-
-		String historyId = curChatHistory.getHistoryId();
 
 		List<Long> connectedList = chatRoomService.isConnected(message.getRoomId());
 		log.info("채팅 읽은 사람들 : {}", connectedList);

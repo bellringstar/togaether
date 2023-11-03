@@ -75,4 +75,9 @@ public class ChatController {
 		chatService.sendMessage(message, accessToken);
 	}
 
+	@GetMapping("/chatroom/test")
+	public Api<?> getTest() {
+
+		return Api.ok(chatService.getTest());
+	}
 }
