@@ -5,11 +5,11 @@ import java.util.List;
 
 import com.ssafy.dog.domain.chat.entity.mongo.ChatHistory;
 
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 import lombok.ToString;
 
 @ToString
-@NoArgsConstructor
+@Getter
 public class ChatHistoriesResDto {
 	private String historyId;
 
