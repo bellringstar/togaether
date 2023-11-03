@@ -80,17 +80,6 @@ public class ChatController {
 
 	}
 
-	// @MessageMapping("/notice")
-	// // public void sendMessage(@Valid MessageDto message, @Header("Authorization") final String accessToken) {
-	// public void sendNotice(@Valid MessageDto message) {
-	//
-	// 	// chatService.sendMessage(message, accessToken);
-	//
-	// 	//임시 구현
-	// 	chatService.sendMessage(message, String.valueOf(message.getSenderId()));
-	//
-	// }
-
 	@GetMapping("/chatroom/test")
 	public Api<?> getTest() {
 
