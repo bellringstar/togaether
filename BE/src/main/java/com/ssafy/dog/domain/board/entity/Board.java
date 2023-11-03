@@ -51,7 +51,7 @@ public class Board extends BaseTimeEntity {
 	private Scope boardScope;
 
 	@OneToMany(mappedBy = "board")
-	private List<Comment> commentListForBoard = new ArrayList<>();
+	private List<Comment> commentList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "board")
 	private List<FileUrl> fileUrlLists = new ArrayList<>();
