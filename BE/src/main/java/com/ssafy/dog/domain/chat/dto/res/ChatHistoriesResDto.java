@@ -6,7 +6,9 @@ import java.util.List;
 import com.ssafy.dog.domain.chat.entity.mongo.ChatHistory;
 
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+@ToString
 @NoArgsConstructor
 public class ChatHistoriesResDto {
 	private String historyId;
