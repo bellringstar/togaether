@@ -7,21 +7,25 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class CommentDto {
+public class CommentResDto {
 	private Long boardId;
+	private Long commentId;
 	@NotBlank
-	@Max(value = 50)
+	@Max(value = 100)
 	private String commentContent;
 	private String userNickname;
+	private int commentLikes;
 
 	@Builder
-	public CommentDto(Long boardId, String commentContent, String userNickname) {
+	public CommentResDto(Long boardId, Long commentId, String commentContent, String userNickname, int commentLikes) {
 		this.boardId = boardId;
 		this.commentContent = commentContent;
 		this.userNickname = userNickname;
+		this.commentLikes = commentLikes;
+		this.commentId = commentId;
 	}
 
-	public CommentDto() {
+	public CommentResDto() {
 
 	}
 }

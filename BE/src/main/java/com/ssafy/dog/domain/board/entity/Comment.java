@@ -63,4 +63,8 @@ public class Comment extends BaseTimeEntity {
 		this.board = board;
 		board.getCommentList().add(this);
 	}
+
+	public void removeComment() {
+		this.commentStatus = FileStatus.DELETE;
+	}
 }
