@@ -24,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.ssafy.dog.common.auditing.BaseTimeEntity;
 import com.ssafy.dog.domain.board.entity.Board;
 import com.ssafy.dog.domain.board.entity.Comment;
+import com.ssafy.dog.domain.dog.entity.Dog;
 import com.ssafy.dog.domain.user.model.UserGender;
 import com.ssafy.dog.domain.user.model.UserRole;
 
@@ -130,6 +131,9 @@ public class User extends BaseTimeEntity implements UserDetails { // 주소 속�
 
 	@OneToMany(mappedBy = "user")
 	private List<Comment> commentListForUser = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user")
+	private List<Dog> dogs = new ArrayList<>();
 
 	// === 빌더 === //
 	public static final class UserBuilder {
