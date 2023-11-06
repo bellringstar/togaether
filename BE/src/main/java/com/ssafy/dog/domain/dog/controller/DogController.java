@@ -1,0 +1,30 @@
+package com.ssafy.dog.domain.dog.controller;
+
+import javax.validation.Valid;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ssafy.dog.common.api.Api;
+import com.ssafy.dog.domain.dog.dto.DogCreateReq;
+import com.ssafy.dog.domain.dog.entity.Dog;
+import com.ssafy.dog.domain.dog.service.DogService;
+
+import lombok.RequiredArgsConstructor;
+
+@RequestMapping("/api/dog")
+@RequiredArgsConstructor
+@RestController
+public class DogController {
+
+	private final DogService dogService;
+
+	@PostMapping
+	public Api<?> createNewDog(@Valid @RequestBody DogCreateReq dogCreateReq) {
+		System.out.println("WARN Debug : DogController createNewDog()");
+		Dog newDog = dogService.create(dogCreateReq);
+		return Api.ok(newDog);
+	}
+}
