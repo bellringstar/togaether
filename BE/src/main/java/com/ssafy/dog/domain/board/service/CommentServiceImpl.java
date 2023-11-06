@@ -41,6 +41,10 @@ public class CommentServiceImpl implements CommentService {
 			throw new ApiException(BoardErrorCode.BOARD_LIST_IS_EMPTY);
 		}
 		Board curBoard = board.get();
+		if (curBoard.getBoardStatus() == FileStatus.DELETE) {
+			throw new ApiException(BoardErrorCode.BOARD_LIST_IS_EMPTY);
+		}
+
 		Optional<User> user = userRepository.findByUserNickname(commentDto.getUserNickname());
 		if (user.isEmpty()) {
 			throw new ApiException(UserErrorCode.USER_NOT_FOUND);
@@ -52,9 +56,6 @@ public class CommentServiceImpl implements CommentService {
 		}
 		if (commentDto.getCommentContent().isEmpty()) {
 			throw new ApiException(CommentErrorCode.COMMENT_NOT_FOUND);
-		}
-		if (curBoard.getBoardStatus() == FileStatus.DELETE) {
-			throw new ApiException(BoardErrorCode.BOARD_LIST_IS_EMPTY);
 		}
 
 		Comment comment = Comment.builder()
@@ -81,7 +82,7 @@ public class CommentServiceImpl implements CommentService {
 		}
 
 		List<CommentResDto> commentList = new ArrayList<>();
-		for (Comment comment : board.get().getCommentList()) {
+		for (Comment comment : curBoard.getCommentList()) {
 			if (comment.getCommentStatus() == FileStatus.USE) {
 				CommentResDto comment1 = CommentResDto.builder()
 					.boardId(comment.getBoard().getBoardId())

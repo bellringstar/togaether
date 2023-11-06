@@ -75,9 +75,10 @@ public class BoardServiceImpl implements BoardService {
 		List<Board> boardList = boardRepository.findBoardByUserUserNickname(userNickname);
 		List<BoardDto> boardDtoList = new ArrayList<>();
 
-		if (boardList.isEmpty()) {
-			throw new ApiException(BoardErrorCode.BOARD_LIST_IS_EMPTY);
-		}
+		// 게시물 없을시 빈배열 보내기로 합의함. 11.06 09:25
+		// if (boardList.isEmpty()) {
+		// 	throw new ApiException(BoardErrorCode.BOARD_LIST_IS_EMPTY);
+		// }
 
 		for (Board board : boardList) {
 			if (board.getBoardStatus() == FileStatus.DELETE) {
