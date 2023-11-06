@@ -97,6 +97,10 @@ public class ChatService {
 		log.info("채팅 history : {}", chatHistories.size());
 		List<ChatHistoriesResDto> chatHistoriesResDtos = new ArrayList<>();
 
+		if (chatHistories.isEmpty()) { // 채팅방 내역이 존재하지 않을 경우 비어있는 리스트
+			return Api.ok(chatHistoriesResDtos);
+		}
+
 		for (ChatHistory history : chatHistories) {
 
 			// ChatRead 정보 조회
