@@ -2,6 +2,8 @@ package com.ssafy.dog.domain.dog.mapper;
 
 import org.springframework.stereotype.Component;
 
+import com.ssafy.dog.common.error.UserErrorCode;
+import com.ssafy.dog.common.exception.ApiException;
 import com.ssafy.dog.domain.dog.dto.DogCreateReq;
 import com.ssafy.dog.domain.dog.entity.Dog;
 import com.ssafy.dog.domain.user.repository.UserRepository;
@@ -14,9 +16,9 @@ public class DogMapper {
 	private final UserRepository userRepository; // 언제 static 이 붙고 언제 final 이 붙어야 하는가
 
 	public Dog toEntity(DogCreateReq dogCreateReq) {
-		System.out.println("WARN DogMapper : toEntity()");
 		return Dog.DogBuilder.aDog()
-			.withUser(userRepository.findByUserId(dogCreateReq.getUserId()))
+			.withUser(userRepository.findByUserId(dogCreateReq.getUserId())
+				.orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND)))
 			.withDogName(dogCreateReq.getDogName())
 			.withDogPicture(dogCreateReq.getDogPicture())
 			.withDogBirthdate(dogCreateReq.getDogBirthdate())
