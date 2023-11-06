@@ -27,7 +27,6 @@ public class DogDispositionListConverter implements AttributeConverter<List<DogD
 					// 공백 제거 및 대문자를 변환하여 문자열로부터 Enum 상수를 반환.
 					return DogDisposition.valueOf(key.trim().toUpperCase());
 				} catch (IllegalArgumentException e) {
-					System.out.println("WARN Debug : DogDispositionListConverter");
 					throw new IllegalArgumentException(e);
 				}
 			})

@@ -1,4 +1,4 @@
-package com.ssafy.dog.domain.dog.dto;
+package com.ssafy.dog.domain.dog.dto.request;
 
 import java.time.LocalDateTime;
 import java.util.List;

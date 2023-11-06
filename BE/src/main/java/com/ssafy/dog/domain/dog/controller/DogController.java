@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.dog.common.api.Api;
-import com.ssafy.dog.domain.dog.dto.DogCreateReq;
+import com.ssafy.dog.domain.dog.dto.request.DogCreateReq;
 import com.ssafy.dog.domain.dog.entity.Dog;
 import com.ssafy.dog.domain.dog.service.DogService;
 
@@ -25,8 +25,8 @@ public class DogController {
 	@PostMapping
 	@Operation(summary = "개 생성")
 	public Api<?> createNewDog(@Valid @RequestBody DogCreateReq dogCreateReq) {
-		System.out.println("WARN Debug : DogController createNewDog()");
 		Dog newDog = dogService.create(dogCreateReq);
-		return Api.ok(newDog);
+
+		return Api.ok("강아지 생성 dog_id: " + newDog.getDogId());
 	}
 }

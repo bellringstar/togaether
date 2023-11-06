@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 import com.ssafy.dog.common.error.UserErrorCode;
 import com.ssafy.dog.common.exception.ApiException;
-import com.ssafy.dog.domain.dog.dto.DogCreateReq;
+import com.ssafy.dog.domain.dog.dto.request.DogCreateReq;
 import com.ssafy.dog.domain.dog.entity.Dog;
 import com.ssafy.dog.domain.user.repository.UserRepository;
 
