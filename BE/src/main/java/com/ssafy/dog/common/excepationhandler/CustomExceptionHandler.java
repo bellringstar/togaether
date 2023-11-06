@@ -7,6 +7,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.ssafy.dog.common.api.Api;
 import com.ssafy.dog.common.error.ErrorCode;
 import com.ssafy.dog.common.exception.ApiException;
@@ -38,4 +39,19 @@ public class CustomExceptionHandler {
 			.status(HttpStatus.FORBIDDEN)
 			.body(Api.error(ErrorCode.FORBIDDEN, e.getMessage()));
 	}
+
+	@ExceptionHandler(value = JsonMappingException.class)
+	public ResponseEntity<Api<Object>> jsonMappingException(ApiException apiException) {
+
+		log.error("", apiException);
+
+		var errorCode = apiException.getErrorCodeIfs();
+
+		return ResponseEntity
+			.status(errorCode.getHttpStatusCode())
+			.body(
+				Api.error(errorCode, apiException.getErrorDescription())
+			);
+	}
+
 }

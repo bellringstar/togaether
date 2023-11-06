@@ -2,6 +2,7 @@ package com.ssafy.dog.domain.chat.filter;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -37,12 +38,12 @@ public class StompHandler implements ChannelInterceptor {
 	@Override
 	public Message<?> preSend(Message<?> message, MessageChannel channel) {
 		StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-
 		// AccessToken 유효성 검증
-		Long userId = verifyAccessToken(getAccessToken(accessor));
-		log.info("StompAccessor = {}", accessor);
+		// Long userId = verifyAccessToken(getAccessToken(accessor));
+		// log.info("StompAccessor = {}", accessor);
 		// StompCommand에 따라서 로직을 분기해서 처리하는 메서드를 호출
-		handleMessage(Objects.requireNonNull(accessor.getCommand()), accessor, userId);
+		// handleMessage(Objects.requireNonNull(accessor.getCommand()), accessor, userId);
+		handleMessage(Objects.requireNonNull(accessor.getCommand()), accessor);
 
 		// // websocket 연결시 헤더의 jwt token 유효성 검증
 		// if (StompCommand.CONNECT == accessor.getCommand()) {
@@ -62,24 +63,31 @@ public class StompHandler implements ChannelInterceptor {
 		return message;
 	}
 
-	public void handleMessage(StompCommand stompCommand, StompHeaderAccessor accessor, Long userId) {
+	public void handleMessage(StompCommand stompCommand, StompHeaderAccessor accessor) {
 		log.info("Command 종류 = {}", stompCommand);
 		switch (stompCommand) {
 			case CONNECT:
+				// AccessToken 유효성 검증
+				// Long userId = verifyAccessToken(getAccessToken(accessor));
+				// 임시로 랜덤생성
+				Long userId = Long.valueOf(ThreadLocalRandom.current().nextInt(1, 4));
 				connectToChatRoom(accessor, userId);
 				break;
 			case SUBSCRIBE:
-				log.info("SUB 시작");
 				break;
 			case SEND:
-				verifyAccessToken(getAccessToken(accessor));
+				// verifyAccessToken(getAccessToken(accessor));
 				break;
 		}
 	}
 
 	private void connectToChatRoom(StompHeaderAccessor accessor, Long userId) {
 		// 채팅방 번호를 가져온다.
-		Long chatRoomId = getChatRoomId(accessor);
+		// Long chatRoomId = getChatRoomId(accessor);
+
+		//임시 구현
+		Long chatRoomId = Long.valueOf(1);
+		log.info("채팅방 접속 성공 : {}, 유저Id : {}", chatRoomId, userId);
 
 		// 채팅방 입장 처리 -> Redis에 입장 내역 저장
 		chatRoomService.connectChatRoom(chatRoomId, userId);
@@ -89,8 +97,12 @@ public class StompHandler implements ChannelInterceptor {
 
 		// 현재 채팅방에 접속중인 인원이 있는지 확인한다.
 		List<Long> connectedList = chatRoomService.isConnected(chatRoomId);
-
 		int headCnt = connectedList.size();
+
+		// 나 자신을 제외하고 1명보다 많을경우에 Notice 알림
+		if (headCnt > 1) {
+			chatService.sendNotice(chatRoomId, userId);
+		}
 		// if (isConnected) {
 		// 	chatService.updateMessage(email, chatRoomNo);
 		// }
@@ -103,7 +115,9 @@ public class StompHandler implements ChannelInterceptor {
 		// }
 		//
 		// return jwtUtil.getUid(accessToken);
-		return Long.valueOf(accessToken);
+		return Long.parseLong(accessToken);
+		// return Long.valueOf(1);
+
 	}
 
 	private String getAccessToken(StompHeaderAccessor accessor) {
@@ -118,7 +132,8 @@ public class StompHandler implements ChannelInterceptor {
 		return
 			Long.valueOf(
 				Objects.requireNonNull(
-					accessor.getFirstNativeHeader("Chatroomno")
+					accessor.getFirstNativeHeader("Chatroom-no")
+
 				));
 	}
 
