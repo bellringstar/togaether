@@ -9,33 +9,19 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dog.R
-import com.dog.data.model.Person
-import com.dog.data.model.user.MatchingApiResponse
 import com.dog.data.model.user.MatchingUserResponse
 import com.dog.data.repository.MatchingRepository
-import com.dog.util.common.RetrofitClient
 import com.dog.util.common.RetrofitLocalClient
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Response
-import javax.security.auth.callback.Callback
 
 class MatchingViewModel : ViewModel() {
-    //    private val _users = mutableStateListOf(
-//        Person(1, "김1",R.drawable.person_icon, "유저 픽처", "사용자 주소 1"),
-//        Person(2, "김2",R.drawable.person_icon, "유저 픽처", "사용자 주소 2"),
-//        Person(3, "이3",R.drawable.person_icon, "유저 픽처", "사용자 주소 3"),
-//        Person(4, "박4",R.drawable.person_icon, "유저 픽처", "사용자 주소 4"),
-//        Person(5, "김5",R.drawable.person_icon, "유저 픽처", "사용자 주소 5"),
-//        Person(6, "이6",R.drawable.person_icon, "유저 픽처", "사용자 주소 6")
-//    )
+
     private val _users = mutableStateListOf<MatchingUserResponse>()
     val users: List<MatchingUserResponse> get() = _users
     private val _selectedUserId = mutableStateOf<String?>(null)
     val selectedUserId: State<String?> get() = _selectedUserId
+    private val _isDataLoaded = mutableStateOf(false)
+    val isDataLoaded: State<Boolean> get() = _isDataLoaded
 
     var lazyListState: LazyListState = LazyListState()
         private set
@@ -54,9 +40,11 @@ class MatchingViewModel : ViewModel() {
                     response.body()?.body?.let { usersFromApi ->
                         _users.clear()
                         _users.addAll(usersFromApi)
+                        _isDataLoaded.value = true
                     }
                 } else {
                     Log.e("MatchingViewModel", "Error: ${response.errorBody()?.string()}")
+                    _isDataLoaded.value = false
                 }
             } catch (e: Exception) {
                 Log.e("MatchingViewModel", "Exception", e)
