@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MatchingUserResponse {
-
+	
 	private String userLoginId;
 
 	private String userNickname;
