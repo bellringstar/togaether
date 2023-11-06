@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MatchingUserResponse {
-	
+
 	private String userLoginId;
 
 	private String userNickname;
@@ -57,6 +57,7 @@ public class MatchingUserResponse {
 			.userGender(user.getUserGender())
 			.userLatitude(user.getUserLatitude())
 			.userLongitude(user.getUserLongitude())
+			.dogs(user.getDogs())
 			.build();
 	}
 }
