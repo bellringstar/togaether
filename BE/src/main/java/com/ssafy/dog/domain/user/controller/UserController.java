@@ -14,6 +14,7 @@ import com.ssafy.dog.domain.user.dto.request.UserSignupReq;
 import com.ssafy.dog.domain.user.repository.UserRepository;
 import com.ssafy.dog.domain.user.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
 @RequestMapping("/api/user")
@@ -25,11 +26,13 @@ public class UserController {
 	private final UserRepository userRepository;
 
 	@PostMapping("/signup")
+	@Operation(summary = "회원가입")
 	public Api<?> signUp(@Valid @RequestBody UserSignupReq userSignupReq) {
 		return userService.create(userSignupReq);
 	}
 
 	@PostMapping("/login")
+	@Operation(summary = "로그인")
 	public Api<?> login(@Valid @RequestBody UserLoginReq userLoginReq) {
 
 		return userService.login(userLoginReq);

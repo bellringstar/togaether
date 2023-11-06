@@ -12,6 +12,7 @@ import com.ssafy.dog.domain.dog.dto.DogCreateReq;
 import com.ssafy.dog.domain.dog.entity.Dog;
 import com.ssafy.dog.domain.dog.service.DogService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
 @RequestMapping("/api/dog")
@@ -22,6 +23,7 @@ public class DogController {
 	private final DogService dogService;
 
 	@PostMapping
+	@Operation(summary = "개 생성")
 	public Api<?> createNewDog(@Valid @RequestBody DogCreateReq dogCreateReq) {
 		System.out.println("WARN Debug : DogController createNewDog()");
 		Dog newDog = dogService.create(dogCreateReq);
