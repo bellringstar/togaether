@@ -18,7 +18,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,10 +25,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.dog.R
-import com.dog.data.viewmodel.chat.ChatViewModel
 import com.dog.ui.components.IconComponentDrawable
 import com.dog.ui.theme.Pink400
 
@@ -37,13 +34,7 @@ import com.dog.ui.theme.Pink400
 @Composable
 fun ChatListScreen(navController: NavController) {
     // Chat 목록 데이터를 가져오는 함수 또는 ViewModel을 사용하여 데이터를 로드합니다.
-    var chatList = remember { generateDummyChatList() }
-    val chatViewModel: ChatViewModel = viewModel()
-
-
-    LaunchedEffect(Unit) {
-        chatViewModel.getChatList()
-    }
+    val chatList = remember { generateDummyChatList() }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -53,7 +44,7 @@ fun ChatListScreen(navController: NavController) {
             modifier = Modifier.fillMaxSize(),
         ) {
             TopAppBar(
-                title = { Text(text = "채팅 목록") },
+                title = { Text(text = "Chats") },
                 Modifier.background(Pink400)
             )
 
@@ -70,53 +61,51 @@ fun ChatListScreen(navController: NavController) {
 }
 
 @Composable
-fun ChatItem(chatroom: Chatroom, navController: NavController) {
+fun ChatItem(chat: Chat, navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
                 // 해당 채팅방으로 이동하는 코드
-                navController.navigate("chatroom/${chatroom.roomId}")
+                navController.navigate("chatroom/${chat.roomId}")
             }
             .padding(16.dp)
     ) {
-        IconComponentDrawable(icon = R.drawable.person_icon, size = 56.dp)
+        IconComponentDrawable(icon = chat.icon, size = 56.dp)
         Spacer(modifier = Modifier.width(16.dp))
         Column {
             Text(
-                text = chatroom.roomMembers.toString(),
+                text = chat.name,
                 style = TextStyle(
                     color = Color.Black,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp
                 )
             )
-//            Text(
-//                text = chatroom.lastMessage,
-//                style = TextStyle(
-//                    color = Color.Gray,
-//                    fontSize = 14.sp
-//                )
-//            )
+            Text(
+                text = chat.lastMessage,
+                style = TextStyle(
+                    color = Color.Gray,
+                    fontSize = 14.sp
+                )
+            )
         }
     }
 }
 
-data class Chatroom(
+data class Chat(
     val roomId: Int,
-    val roomMembers: List<String>,
-//    val icon: Int, // Drawable resource ID
-//    val lastMessage: String
+    val name: String,
+    val icon: Int, // Drawable resource ID
+    val lastMessage: String
 )
 
 // Chat 목록의 더미 데이터 생성 함수
-fun generateDummyChatList(): List<Chatroom> {
+fun generateDummyChatList(): List<Chat> {
     return listOf(
-        Chatroom(1, listOf("User1", "User2")),
-        Chatroom(2, listOf("User1", "User2")),
-//        Chat(1, "User 1", R.drawable.ic_launcher, "Hello, how are you?"),
-//        Chat(2, "User 2", R.drawable.ic_launcher, "Good! How about you?"),
-//        Chat(3, "User 3", R.drawable.ic_launcher, "I'm doing great."),
-//        Chat(4, "User 4", R.drawable.ic_launcher, "Let's catch up soon!")
+        Chat(1, "User 1", R.drawable.ic_launcher, "Hello, how are you?"),
+        Chat(2, "User 2", R.drawable.ic_launcher, "Good! How about you?"),
+        Chat(3, "User 3", R.drawable.ic_launcher, "I'm doing great."),
+        Chat(4, "User 4", R.drawable.ic_launcher, "Let's catch up soon!")
     )
 }

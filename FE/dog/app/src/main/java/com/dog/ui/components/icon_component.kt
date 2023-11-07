@@ -40,3 +40,10 @@ fun IconComponentDrawable(
 
     )
 }
+
+@Composable
+fun UserNameRow(
+    modifier: Modifier = Modifier,
+
+    ) {
+}
