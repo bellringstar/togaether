@@ -10,7 +10,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,7 +19,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import com.dog.data.model.user.Dog
 import com.dog.data.model.user.MatchingUserResponse
 import com.dog.data.viewmodel.MatchingViewModel
+import com.dog.util.common.ImageLoader
 import com.google.accompanist.pager.*
 
 @Composable
@@ -107,8 +108,7 @@ fun UserThumbnail(user: MatchingUserResponse, isSelected: Boolean, onSelect: () 
     }
 
     Box(modifier = thumbnailModifier) {
-        // TODO: 이미지 로드 코드로 변경
-        Text(text = user.nickname.first().toString(), modifier = Modifier.align(Alignment.Center))
+        Text(text = "섬네일")
     }
 }
 
@@ -132,7 +132,7 @@ fun UserDetailsView(user: MatchingUserResponse) {
                     .fillMaxWidth()
                     .weight(4f)
             ) {
-                Text(text = user.picture, modifier = Modifier.padding(16.dp))
+                ImageLoader(imageUrl = user.picture)
             }
             Column(
                 modifier = Modifier
@@ -179,7 +179,7 @@ fun DogsListView(dogs: List<Dog>?) {
     dogs?.let {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "User's Dogs:",
+                text = "Dogs:",
                 style = MaterialTheme.typography.titleMedium
             )
             it.forEach { dog ->
@@ -189,19 +189,22 @@ fun DogsListView(dogs: List<Dog>?) {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DogItemView(dog: Dog) {
-    // You can customize this composable to display dog details in a card or a row.
+
     Text(
         text = "Dog Name: ${dog.dogName}",
         style = MaterialTheme.typography.bodyMedium
     )
-    Row(
+
+    FlowRow(
         modifier = Modifier
             .padding(top = 4.dp)
-            .wrapContentWidth(),
-        horizontalArrangement = Arrangement.Start
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
+
         dog.dogDispositionList.forEach { disposition ->
             DispositionChip(disposition = disposition)
         }
