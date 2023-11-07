@@ -114,4 +114,5 @@ dependencies {
 
     runtimeOnly("com.google.accompanist:accompanist-pager:0.32.0")
     runtimeOnly("com.google.accompanist:accompanist-flowlayout:0.32.0")
+    implementation ("com.google.accompanist:accompanist-pager-indicators:0.32.0")
 }

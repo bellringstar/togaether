@@ -22,6 +22,7 @@ import com.dog.data.Screens
 import com.dog.ui.screen.ChatListScreen
 import com.dog.ui.screen.ChattingScreen
 import com.dog.ui.screen.HomeScreen
+import com.dog.ui.screen.MatchingScreen
 import com.dog.ui.screen.MypageScreen
 import com.dog.ui.screen.WalkingLogScreen
 import com.dog.ui.screen.WalkingScreen
@@ -81,8 +82,8 @@ fun BottomNavigationBar(startRoute: String) {
                     navController
                 )
             }
-            composable(Screens.WalkingLog.route) {
-                WalkingLogScreen(
+            composable(Screens.Matching.route) {
+                MatchingScreen(
                     navController
                 )
             }
