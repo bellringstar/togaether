@@ -1,7 +1,6 @@
 package com.ssafy.dog.domain.fcm.config;
 
 import java.io.FileInputStream;
-import java.io.InputStream;
 
 import javax.annotation.PostConstruct;
 
@@ -17,14 +16,17 @@ public class FirebaseConfig {
 	@PostConstruct
 	public void initialize() {
 		try {
-			InputStream serviceAccount = new FileInputStream("src/main/resources/serviceAccountKey.json");
+			FileInputStream serviceAccount = new FileInputStream("src/main/resources/firebase-admin-sdk.json");
 			FirebaseOptions options = new FirebaseOptions.Builder()
 				.setCredentials(GoogleCredentials.fromStream(serviceAccount))
 				.build();
 
-			if (FirebaseApp.getApps().isEmpty()) {
-				FirebaseApp.initializeApp(options);
-			}
+			// if (FirebaseApp.getApps().isEmpty()) {
+			// 	FirebaseApp.initializeApp(options);
+			// }
+
+			FirebaseApp.initializeApp(options);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
