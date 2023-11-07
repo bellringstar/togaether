@@ -74,13 +74,7 @@ public class ChatService {
 		return Api.ok(chatRoom.getRoomId() + "채팅방 생성 성공");
 	}
 
-	public Api<List<ChatListResDto>> getChatList(String accessToken) {
-		log.info("getChatList 메소드");
-		log.info("Access 토큰 : {}", accessToken);
-		// 임시, accessToken 으로 userId 받을 예정
-		// Long curUserId = Long.parseLong(accessToken);
-		// log.info("userID 값 : {}", curUserId);
-		Long curUserId = Long.valueOf(1);
+	public Api<List<ChatListResDto>> getChatList(Long curUserId) {
 		List<ChatListResDto> roomLists = chatRoomRepository.getUserChatRoomsAndUserNicknames(curUserId);
 		// log.info("RoomID :{}", (chatMembersList.get(0).getChatRoom().getRoomId()));
 		log.info("RoomID :{}", (roomLists.size()));
@@ -88,9 +82,8 @@ public class ChatService {
 		return Api.ok(roomLists);
 	}
 
-	public Api<List<ChatHistoriesResDto>> getChatHistory(Long roomId, String accessToken) {
-
-		Long userId = Long.parseLong(accessToken);
+	public Api<List<ChatHistoriesResDto>> getChatHistory(Long roomId, Long userId) {
+		
 		log.info("유저 PK : {}", userId);
 		// 채팅 내역 불러오기
 		List<ChatHistory> chatHistories = chatHistoryRepository.findAllByRoomId(roomId);
