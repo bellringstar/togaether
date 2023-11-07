@@ -9,4 +9,6 @@ public interface FriendService {
     Api<FriendRequestResDto> declineFriendRequest(Long declinerId, String requesterNickname);
 
     Api<FriendRequestResDto> acceptFriendRequest(Long accepterId, String requesterNickname);
+
+    Api<String> unfriend(Long userId, String friendNickname);
 }

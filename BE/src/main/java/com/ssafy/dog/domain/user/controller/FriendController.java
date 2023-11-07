@@ -38,4 +38,10 @@ public class FriendController {
 
         return friendService.acceptFriendRequest(SecurityUtils.getUserId(), requesterNickname);
     }
+
+    @DeleteMapping("/unfriend/{friendNickname}")
+    @Operation(summary = "친구 끊기")
+    public Api<String> unfriend(@RequestParam String friendNickname) {
+        return friendService.unfriend(SecurityUtils.getUserId(), friendNickname);
+    }
 }

@@ -37,7 +37,9 @@ public enum UserErrorCode implements ErrorCodeIfs {
     THEIR_PREVIOUSLY_DECLINED(409, 1421, "상대방이 이미 거절을 당했습니다."),
     THEIR_WRONG_STATUS_TYPE(400, 1422, "상대방이 ENUM 에 없는 status 입니다."),
     REQUEST_NOT_FOUND(404, 1423, "신청자가 보낸 친구 요청을 찾을 수 없음."),
-    CANNOT_DECLINE_PROCESSED_REQUEST(409, 1424, "이미 수락되었거나 거절한 요청에 대해서는 처리할 수 없음.");
+    CANNOT_DECLINE_PROCESSED_REQUEST(409, 1424, "이미 수락되었거나 거절한 요청에 대해서는 처리할 수 없음."),
+    NOT_FRIENDS(409, 1425, "서로 친구가 아닙니다.");
+
     private final Integer httpStatusCode;
     private final Integer errorCode;
     private final String description;

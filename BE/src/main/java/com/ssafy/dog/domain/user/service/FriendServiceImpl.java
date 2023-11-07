@@ -32,11 +32,9 @@ public class FriendServiceImpl implements FriendService { // 리팩토링 시 �
     @Override
     public Api<FriendRequestResDto> sendFriendRequest(Long senderId, String receiverNickname) {
         // 1. 입력값으로부터 발신자와 수신자를 찾음
-        User sender = userRepository.findByUserId(senderId)
-                .orElseThrow(() -> new ApiException(UserErrorCode.SENDER_NOT_FOUND));
+        User sender = userRepository.findByUserId(senderId).orElseThrow(() -> new ApiException(UserErrorCode.SENDER_NOT_FOUND));
 
-        User receiver = userRepository.findByUserNickname(receiverNickname)
-                .orElseThrow(() -> new ApiException(UserErrorCode.RECEIVER_NOT_FOUND));
+        User receiver = userRepository.findByUserNickname(receiverNickname).orElseThrow(() -> new ApiException(UserErrorCode.RECEIVER_NOT_FOUND));
 
         if (sender.equals(receiver)) { // 2. 발신자와 수신자가 동일한지 검사
             throw new ApiException(UserErrorCode.I_AM_MY_OWN_FRIEND);
@@ -93,14 +91,11 @@ public class FriendServiceImpl implements FriendService { // 리팩토링 시 �
     @Override
     public Api<FriendRequestResDto> declineFriendRequest(Long declinerId, String requesterNickname) {
         // 1. 입력값으로 거부자와 신청자 User 가져오기
-        User decliner = userRepository.findByUserId(declinerId)
-                .orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
-        User requester = userRepository.findByUserNickname(requesterNickname)
-                .orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
+        User decliner = userRepository.findByUserId(declinerId).orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
+        User requester = userRepository.findByUserNickname(requesterNickname).orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
 
         // 2. 신청자가 보낸 친구 요청 찾기
-        Optional<FriendRequest> friendRequestOptional = friendRequestRepository
-                .findBySenderUserIdAndReceiverUserId(requester.getUserId(), decliner.getUserId());
+        Optional<FriendRequest> friendRequestOptional = friendRequestRepository.findBySenderUserIdAndReceiverUserId(requester.getUserId(), decliner.getUserId());
 
         if (!friendRequestOptional.isPresent()) {
             throw new ApiException(UserErrorCode.REQUEST_NOT_FOUND);
@@ -118,11 +113,7 @@ public class FriendServiceImpl implements FriendService { // 리팩토링 시 �
         }
 
         // 4. 결과 반환
-        FriendRequestResDto friendRequestResDto = new FriendRequestResDto(
-                friendRequest.getSender().getUserNickname(),
-                friendRequest.getReceiver().getUserNickname(),
-                friendRequest.getStatus()
-        );
+        FriendRequestResDto friendRequestResDto = new FriendRequestResDto(friendRequest.getSender().getUserNickname(), friendRequest.getReceiver().getUserNickname(), friendRequest.getStatus());
 
         return Api.ok(friendRequestResDto);
     }
@@ -130,14 +121,11 @@ public class FriendServiceImpl implements FriendService { // 리팩토링 시 �
     @Transactional
     @Override
     public Api<FriendRequestResDto> acceptFriendRequest(Long accepterId, String requesterNickname) {
-        User accepter = userRepository.findByUserId(accepterId)
-                .orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
+        User accepter = userRepository.findByUserId(accepterId).orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
 
-        User requester = userRepository.findByUserNickname(requesterNickname)
-                .orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
+        User requester = userRepository.findByUserNickname(requesterNickname).orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
 
-        Optional<FriendRequest> friendRequestOptional = friendRequestRepository
-                .findBySenderUserIdAndReceiverUserId(requester.getUserId(), accepter.getUserId());
+        Optional<FriendRequest> friendRequestOptional = friendRequestRepository.findBySenderUserIdAndReceiverUserId(requester.getUserId(), accepter.getUserId());
 
         if (!friendRequestOptional.isPresent()) {
             throw new ApiException(UserErrorCode.REQUEST_NOT_FOUND);
@@ -154,25 +142,38 @@ public class FriendServiceImpl implements FriendService { // 리팩토링 시 �
         friendRequestRepository.save(friendRequest);
 
         // Add each other as friends in the friendship table
-        Friendship accepterToRequesterFriendship = Friendship.builder()
-                .user(requester)
-                .friend(accepter)
-                .build();
+        Friendship accepterToRequesterFriendship = Friendship.builder().user(accepter).friend(requester).build();
 
-        Friendship requesterToAccepterFriendship = Friendship.builder()
-                .user(requester)
-                .friend(accepter)
-                .build();
+        Friendship requesterToAccepterFriendship = Friendship.builder().user(requester).friend(accepter).build();
 
         friendshipRepository.save(accepterToRequesterFriendship);
         friendshipRepository.save(requesterToAccepterFriendship);
 
-        FriendRequestResDto friendRequestResDto = new FriendRequestResDto(
-                friendRequest.getSender().getUserNickname(),
-                friendRequest.getReceiver().getUserNickname(),
-                friendRequest.getStatus()
-        );
+        FriendRequestResDto friendRequestResDto = new FriendRequestResDto(friendRequest.getSender().getUserNickname(), friendRequest.getReceiver().getUserNickname(), friendRequest.getStatus());
 
         return Api.ok(friendRequestResDto);
+    }
+
+    @Transactional
+    @Override
+    public Api<String> unfriend(Long userId, String friendNickname) {
+        User user = userRepository.findByUserId(userId).orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
+
+        User friend = userRepository.findByUserNickname(friendNickname).orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
+
+        // Attempt to find the friendships in both directions
+        Optional<Friendship> userToFriendFriendship = friendshipRepository.findByUserAndFriend(user, friend);
+        Optional<Friendship> friendToUserFriendship = friendshipRepository.findByUserAndFriend(friend, user);
+
+        // If either friendship is not found, throw an exception
+        if (!userToFriendFriendship.isPresent() || !friendToUserFriendship.isPresent()) {
+            throw new ApiException(UserErrorCode.NOT_FRIENDS);
+        }
+
+        // Delete both friendships
+        userToFriendFriendship.ifPresent(friendshipRepository::delete);
+        friendToUserFriendship.ifPresent(friendshipRepository::delete);
+
+        return Api.ok(user.getUserNickname() + " and " + friend.getUserNickname() + "'s Friendship ended successfully.");
     }
 }
