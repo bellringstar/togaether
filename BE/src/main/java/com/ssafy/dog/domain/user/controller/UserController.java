@@ -5,8 +5,10 @@ import com.ssafy.dog.domain.user.dto.request.UserLoginReq;
 import com.ssafy.dog.domain.user.dto.request.UserSignupReq;
 import com.ssafy.dog.domain.user.dto.request.UserUpdateReq;
 import com.ssafy.dog.domain.user.service.UserService;
+import com.ssafy.dog.util.SecurityUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -14,6 +16,7 @@ import javax.validation.Valid;
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 public class UserController {
     private final UserService userService;
 
@@ -30,9 +33,12 @@ public class UserController {
         return userService.login(userLoginReq);
     }
 
-    @PatchMapping("/update/{nickname}")
-    @Operation(summary = "유저 업데이트 (전달 안 한 속성은 업데이트 안함)")
-    Api<?> update(@PathVariable("nickname") String nickname, @Valid @RequestBody UserUpdateReq userUpdateReq) {
+    @PatchMapping("/update")
+    @Operation(summary = "유저 업데이트 (우선 전달 안 한 값은 null로 들어감)")
+    Api<?> update(@Valid @RequestBody UserUpdateReq userUpdateReq) {
+        String nickname = SecurityUtils.getUser().getUserNickname();
+
+        log.info("nickname : {}", nickname);
 
         return userService.updateByUserNickname(nickname, userUpdateReq);
     }
