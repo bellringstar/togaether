@@ -8,10 +8,7 @@ import com.ssafy.dog.util.SecurityUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/friend")
 @RequiredArgsConstructor
@@ -21,17 +18,24 @@ public class FriendController {
     private final FriendService friendService;
     private final UserService userService;
 
-    @PostMapping("/requests/{receiverNickname}")
+    @PostMapping("/request/{receiverNickname}")
     @Operation(summary = "친구 신청")
     public Api<FriendRequestResDto> sendFriendRequest(@RequestParam String receiverNickname) {
 
         return friendService.sendFriendRequest(SecurityUtils.getUserId(), receiverNickname);
     }
 
-    @PostMapping("/requests/decline/{requesterNickname}")
+    @PostMapping("/decline/{requesterNickname}")
     @Operation(summary = "친구 신청 거절")
     public Api<FriendRequestResDto> declineFriendRequest(@RequestParam String requesterNickname) {
 
         return friendService.declineFriendRequest(SecurityUtils.getUserId(), requesterNickname);
+    }
+
+    @PutMapping("/accept/{requesterNickname}")
+    @Operation(summary = "친구 신청 승낙")
+    public Api<FriendRequestResDto> acceptFriendRequest(@RequestParam String requesterNickname) {
+
+        return friendService.acceptFriendRequest(SecurityUtils.getUserId(), requesterNickname);
     }
 }

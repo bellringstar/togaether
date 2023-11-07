@@ -6,9 +6,11 @@ import com.ssafy.dog.common.exception.ApiException;
 import com.ssafy.dog.domain.user.dto.request.FriendRequestReqDto;
 import com.ssafy.dog.domain.user.dto.response.FriendRequestResDto;
 import com.ssafy.dog.domain.user.entity.FriendRequest;
+import com.ssafy.dog.domain.user.entity.Friendship;
 import com.ssafy.dog.domain.user.entity.User;
 import com.ssafy.dog.domain.user.model.FriendRequestStatus;
 import com.ssafy.dog.domain.user.repository.FriendRequestRepository;
+import com.ssafy.dog.domain.user.repository.FriendshipRepository;
 import com.ssafy.dog.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +23,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional
 @Service
-public class FriendServiceImpl implements FriendService {
+public class FriendServiceImpl implements FriendService { // 리팩토링 시 거절 당하면 다시 친추 가능하게 하기
     private final UserRepository userRepository;
     private final FriendRequestRepository friendRequestRepository;
+    private final FriendshipRepository friendshipRepository;
 
     @Transactional
     @Override
@@ -115,6 +118,55 @@ public class FriendServiceImpl implements FriendService {
         }
 
         // 4. 결과 반환
+        FriendRequestResDto friendRequestResDto = new FriendRequestResDto(
+                friendRequest.getSender().getUserNickname(),
+                friendRequest.getReceiver().getUserNickname(),
+                friendRequest.getStatus()
+        );
+
+        return Api.ok(friendRequestResDto);
+    }
+
+    @Transactional
+    @Override
+    public Api<FriendRequestResDto> acceptFriendRequest(Long accepterId, String requesterNickname) {
+        User accepter = userRepository.findByUserId(accepterId)
+                .orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
+
+        User requester = userRepository.findByUserNickname(requesterNickname)
+                .orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
+
+        Optional<FriendRequest> friendRequestOptional = friendRequestRepository
+                .findBySenderUserIdAndReceiverUserId(requester.getUserId(), accepter.getUserId());
+
+        if (!friendRequestOptional.isPresent()) {
+            throw new ApiException(UserErrorCode.REQUEST_NOT_FOUND);
+        }
+
+        FriendRequest friendRequest = friendRequestOptional.get();
+
+        if (friendRequest.getStatus() != FriendRequestStatus.PENDING) {
+            throw new ApiException(UserErrorCode.REQUEST_NOT_FOUND);
+        }
+
+        // Accept the friend request
+        friendRequest.changeStatus(FriendRequestStatus.ACCEPTED);
+        friendRequestRepository.save(friendRequest);
+
+        // Add each other as friends in the friendship table
+        Friendship accepterToRequesterFriendship = Friendship.builder()
+                .user(requester)
+                .friend(accepter)
+                .build();
+
+        Friendship requesterToAccepterFriendship = Friendship.builder()
+                .user(requester)
+                .friend(accepter)
+                .build();
+
+        friendshipRepository.save(accepterToRequesterFriendship);
+        friendshipRepository.save(requesterToAccepterFriendship);
+
         FriendRequestResDto friendRequestResDto = new FriendRequestResDto(
                 friendRequest.getSender().getUserNickname(),
                 friendRequest.getReceiver().getUserNickname(),

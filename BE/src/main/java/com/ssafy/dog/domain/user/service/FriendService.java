@@ -7,4 +7,6 @@ public interface FriendService {
     Api<FriendRequestResDto> sendFriendRequest(Long senderId, String receiverNickname);
 
     Api<FriendRequestResDto> declineFriendRequest(Long declinerId, String requesterNickname);
+
+    Api<FriendRequestResDto> acceptFriendRequest(Long accepterId, String requesterNickname);
 }
