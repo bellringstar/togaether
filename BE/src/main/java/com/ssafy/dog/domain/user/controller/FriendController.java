@@ -50,7 +50,19 @@ public class FriendController {
 
     @GetMapping("/request/sent")
     @Operation(summary = "내가 친구 신청한 유저 목록 가져오기")
-    public Api<List<UserReadRes>> getSentFriendRequests() {
+    public Api<List<UserReadRes>> getSentFriendRequests() { // 리팩토링 시 함수 명 변경 (UserReadRes 가져오는 것 표시)
         return friendService.getUsersSentFriendRequests(SecurityUtils.getUserId());
+    }
+
+    @GetMapping("/request/received")
+    @Operation(summary = "나한테 친구 신청한 유저 목록 가져오기")
+    public Api<List<UserReadRes>> getReceivedFriendRequests() { // 리팩토링 시 함수 명 변경 (UserReadRes 가져오는 것 표시)
+        return friendService.getUsersReceivedFriendRequests(SecurityUtils.getUserId());
+    }
+
+    @GetMapping("/friendlist")
+    @Operation(summary = "친구 목록 불러오기")
+    public Api<List<UserReadRes>> getFriendsList() {
+        return friendService.getFriendsList(SecurityUtils.getUserId());
     }
 }

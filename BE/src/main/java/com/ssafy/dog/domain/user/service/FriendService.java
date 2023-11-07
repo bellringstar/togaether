@@ -16,4 +16,8 @@ public interface FriendService {
     Api<String> unfriend(Long userId, String friendNickname);
 
     Api<List<UserReadRes>> getUsersSentFriendRequests(Long userId);
+
+    Api<List<UserReadRes>> getUsersReceivedFriendRequests(Long userId);
+
+    Api<List<UserReadRes>> getFriendsList(Long userId);
 }

@@ -205,4 +205,55 @@ public class FriendServiceImpl implements FriendService { // 리팩토링 시 �
 
         return Api.ok(sentRequestDto);
     }
+
+    @Transactional
+    @Override
+    public Api<List<UserReadRes>> getUsersReceivedFriendRequests(Long userId) {
+        // Retrieve all users who requested this user
+        List<FriendRequest> receivedRequests = friendRequestRepository.findAllByReceiverUserId(userId);
+
+        // Transform the list of FriendRequest entities into UserReadREs DTOs
+        List<UserReadRes> receivedRequestDto = receivedRequests.stream()
+                .filter(request -> request.getStatus() == FriendRequestStatus.PENDING)
+                .map(request -> UserReadRes.builder()
+                        .userId(request.getSender().getUserId())
+                        .userLoginId(request.getSender().getUserLoginId())
+                        .userNickname(request.getSender().getUserNickname())
+                        .userPhone(request.getSender().getUserPhone())
+                        .userPicture(request.getSender().getUserPicture())
+                        .userAboutMe(request.getSender().getUserAboutMe())
+                        .userGender(request.getSender().getUserGender())
+                        .userLatitude(request.getSender().getUserLatitude())
+                        .userLongitude(request.getSender().getUserLongitude())
+                        .userAddress(request.getSender().getUserAddress())
+                        .build())
+                .collect(Collectors.toList());
+
+        return Api.ok(receivedRequestDto);
+    }
+
+    @Transactional
+    @Override
+    public Api<List<UserReadRes>> getFriendsList(Long userId) {
+        List<Friendship> friendships = friendshipRepository.findAllByUserUserId(userId);
+
+        List<UserReadRes> friendsList = friendships.stream()
+                .map(friendship -> {
+                    User friend = friendship.getFriend();
+                    return UserReadRes.builder()
+                            .userId(friend.getUserId())
+                            .userLoginId(friend.getUserLoginId())
+                            .userNickname(friend.getUserNickname())
+                            .userPhone(friend.getUserPhone())
+                            .userPicture(friend.getUserPicture())
+                            .userAboutMe(friend.getUserAboutMe())
+                            .userGender(friend.getUserGender())
+                            .userLatitude(friend.getUserLatitude())
+                            .userLongitude(friend.getUserLongitude())
+                            .userAddress(friend.getUserAddress())
+                            .build();
+                })
+                .collect(Collectors.toList());
+        return Api.ok(friendsList);
+    }
 }
