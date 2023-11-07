@@ -5,6 +5,7 @@ import com.ssafy.dog.common.error.UserErrorCode;
 import com.ssafy.dog.common.exception.ApiException;
 import com.ssafy.dog.domain.user.dto.request.FriendRequestReqDto;
 import com.ssafy.dog.domain.user.dto.response.FriendRequestResDto;
+import com.ssafy.dog.domain.user.dto.response.UserReadRes;
 import com.ssafy.dog.domain.user.entity.FriendRequest;
 import com.ssafy.dog.domain.user.entity.Friendship;
 import com.ssafy.dog.domain.user.entity.User;
@@ -17,7 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -175,5 +178,31 @@ public class FriendServiceImpl implements FriendService { // 리팩토링 시 �
         friendToUserFriendship.ifPresent(friendshipRepository::delete);
 
         return Api.ok(user.getUserNickname() + " and " + friend.getUserNickname() + "'s Friendship ended successfully.");
+    }
+
+    @Transactional
+    @Override
+    public Api<List<UserReadRes>> getUsersSentFriendRequests(Long userId) {
+        // Retrieve all friend requests sent by the user
+        List<FriendRequest> sentRequests = friendRequestRepository.findAllBySenderUserId(userId);
+
+        // Transform the list of FriendRequest entities into UserReadRes DTOs
+        List<UserReadRes> sentRequestDto = sentRequests.stream()
+                .filter(request -> request.getStatus() == FriendRequestStatus.PENDING)
+                .map(request -> UserReadRes.builder()
+                        .userId(request.getReceiver().getUserId())
+                        .userLoginId(request.getReceiver().getUserLoginId())
+                        .userNickname(request.getReceiver().getUserNickname())
+                        .userPhone(request.getReceiver().getUserPhone())
+                        .userPicture(request.getReceiver().getUserPicture())
+                        .userAboutMe(request.getReceiver().getUserAboutMe())
+                        .userGender(request.getReceiver().getUserGender())
+                        .userLatitude(request.getReceiver().getUserLatitude())
+                        .userLongitude(request.getReceiver().getUserLongitude())
+                        .userAddress(request.getReceiver().getUserAddress())
+                        .build())
+                .collect(Collectors.toList());
+
+        return Api.ok(sentRequestDto);
     }
 }
