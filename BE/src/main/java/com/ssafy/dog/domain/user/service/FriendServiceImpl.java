@@ -58,7 +58,7 @@ public class FriendServiceImpl implements FriendService {
 
         // 4. 양방향 검사
         Optional<FriendRequest> theirFriendRequest = friendRequestRepository.findBySenderUserIdAndReceiverUserId(receiver.getUserId(), sender.getUserId());
-        if (myFriendRequest.isPresent()) {
+        if (theirFriendRequest.isPresent()) {
             // 4.1 상태에 따른 분기 처리
             FriendRequestStatus status = myFriendRequest.get().getStatus();
             switch (status) {
@@ -84,6 +84,43 @@ public class FriendServiceImpl implements FriendService {
         FriendRequestResDto friendRequestResDto = new FriendRequestResDto(friendRequest.getSender().getUserNickname(), friendRequest.getReceiver().getUserNickname(), friendRequest.getStatus());
 
         return Api.ok(friendRequestResDto);
+    }
 
+    @Transactional
+    @Override
+    public Api<FriendRequestResDto> declineFriendRequest(Long declinerId, String requesterNickname) {
+        // 1. 입력값으로 거부자와 신청자 User 가져오기
+        User decliner = userRepository.findByUserId(declinerId)
+                .orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
+        User requester = userRepository.findByUserNickname(requesterNickname)
+                .orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
+
+        // 2. 신청자가 보낸 친구 요청 찾기
+        Optional<FriendRequest> friendRequestOptional = friendRequestRepository
+                .findBySenderUserIdAndReceiverUserId(requester.getUserId(), decliner.getUserId());
+
+        if (!friendRequestOptional.isPresent()) {
+            throw new ApiException(UserErrorCode.REQUEST_NOT_FOUND);
+        }
+
+        FriendRequest friendRequest = friendRequestOptional.get();
+
+        // 3. 상태 확인 및 변경
+        if (friendRequest.getStatus() == FriendRequestStatus.PENDING) {
+            friendRequest.changeStatus(FriendRequestStatus.DECLINED);
+            friendRequestRepository.save(friendRequest);
+        } else {
+            // 이미 수락되었거나 거절된 요청에 대해서는 처리할 수 없음
+            throw new ApiException(UserErrorCode.CANNOT_DECLINE_PROCESSED_REQUEST);
+        }
+
+        // 4. 결과 반환
+        FriendRequestResDto friendRequestResDto = new FriendRequestResDto(
+                friendRequest.getSender().getUserNickname(),
+                friendRequest.getReceiver().getUserNickname(),
+                friendRequest.getStatus()
+        );
+
+        return Api.ok(friendRequestResDto);
     }
 }

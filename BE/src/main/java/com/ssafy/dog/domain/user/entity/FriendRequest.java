@@ -28,10 +28,16 @@ public class FriendRequest extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private FriendRequestStatus status; // PENDING, ACCEPTED, DECLINED
 
+    public void changeStatus(FriendRequestStatus status) {
+        this.status = status;
+    }
+
     @Builder
     public FriendRequest(User sender, User receiver, FriendRequestStatus status) {
         this.sender = sender;
         this.receiver = receiver;
         this.status = status;
     }
+
+
 }

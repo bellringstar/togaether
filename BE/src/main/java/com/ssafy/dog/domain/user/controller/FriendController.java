@@ -27,4 +27,11 @@ public class FriendController {
 
         return friendService.sendFriendRequest(SecurityUtils.getUserId(), receiverNickname);
     }
+
+    @PostMapping("/requests/decline/{requesterNickname}")
+    @Operation(summary = "친구 신청 거절")
+    public Api<FriendRequestResDto> declineFriendRequest(@RequestParam String requesterNickname) {
+
+        return friendService.declineFriendRequest(SecurityUtils.getUserId(), requesterNickname);
+    }
 }
