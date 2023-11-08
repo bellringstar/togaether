@@ -16,7 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RequestMapping("/api/dog")
@@ -30,10 +32,11 @@ public class DogController {
 
     @PostMapping
     @Operation(summary = "개 생성")
-    public Api<?> createNewDog(@Valid @RequestBody DogCreateReq dogCreateReq) {
+    public Api<Map<String, Long>> createNewDog(@Valid @RequestBody DogCreateReq dogCreateReq) {
         Dog newDog = dogService.create(dogCreateReq);
-
-        return Api.ok("강아지 생성 dog_id: " + newDog.getDogId());
+        Map<String, Long> ret = new HashMap<String, Long>();
+        ret.put("dog_id", newDog.getDogId());
+        return Api.ok(ret);
     }
 
     @GetMapping("/mine")
@@ -44,7 +47,7 @@ public class DogController {
 
     @GetMapping("/bynick/{nickname}")
     @Operation(summary = "닉네임으로 개 정보 불러오기")
-    public Api<List<DogGetRes>> readDogs(@RequestParam String nickname) {
+    public Api<List<DogGetRes>> readDogs(@PathVariable String nickname) {
         Optional<User> user = userRepository.findByUserNickname(nickname);
         if (user.isEmpty()) {
             throw new ApiException(UserErrorCode.USER_NOT_FOUND);
