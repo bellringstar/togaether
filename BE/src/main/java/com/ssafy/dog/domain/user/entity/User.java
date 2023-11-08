@@ -25,6 +25,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.ssafy.dog.common.auditing.BaseTimeEntity;
 import com.ssafy.dog.domain.board.entity.Board;
 import com.ssafy.dog.domain.board.entity.Comment;
+import com.ssafy.dog.domain.board.entity.LikeEntity;
 import com.ssafy.dog.domain.dog.entity.Dog;
 import com.ssafy.dog.domain.user.dto.response.UserUpdateRes;
 import com.ssafy.dog.domain.user.model.UserGender;
@@ -137,6 +138,9 @@ public class User extends BaseTimeEntity implements UserDetails { // 주소 속�
 
 	@OneToMany(mappedBy = "user")
 	private List<Dog> dogs = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user")
+	private List<LikeEntity> likeEntityBoardList = new ArrayList<>();
 
 	// === update 메소드 === //
 	public void updateUser(String userNickname, String userPhone, String userPicture, String userAboutMe,
