@@ -163,8 +163,9 @@ dependencies {
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
     // Json In Java
     implementation group: 'org.json', name: 'json', version: '20160810'
-    // 메일 인증용
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    // thymeleaf
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 //	testImplementation 'org.springframework.batch:spring-batch-test'
