@@ -31,9 +31,9 @@ public class BoardController {
 	}
 
 	@GetMapping("/board")
-	@Operation(summary = "UserNickname을 이용한 유저가 작성한 게시글 목록 불러오기")
-	public Api<List<BoardDto>> getBoardList(@RequestParam String userNickname) {
-		return boardService.findBoardbyNickname(userNickname);
+	@Operation(summary = "UserNickname이 작성한 게시글 목록 불러오기 viewUser = 보는사람")
+	public Api<List<BoardDto>> getBoardList(@RequestParam String userNickname, @RequestParam String viewUserNickname) {
+		return boardService.findBoardbyNickname(userNickname, viewUserNickname);
 	}
 
 	@DeleteMapping("/board")
@@ -43,9 +43,9 @@ public class BoardController {
 	}
 
 	@GetMapping("/boardnear")
-	@Operation(summary = "주변 사용자들 게시글목록 가져오기")
+	@Operation(summary = "내 주변 사용자들 게시글목록 가져오기")
 	public Api<List<BoardDto>> getBoardListNearby(@RequestParam double userLatitude,
-		@RequestParam double userLongitude) {
-		return boardService.findBoardNeararea(userLatitude, userLongitude);
+		@RequestParam double userLongitude, @RequestParam String UserNickname) {
+		return boardService.findBoardNeararea(userLatitude, userLongitude, UserNickname);
 	}
 }

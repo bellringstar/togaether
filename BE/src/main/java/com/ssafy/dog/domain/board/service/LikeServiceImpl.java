@@ -66,23 +66,6 @@ public class LikeServiceImpl implements LikeService {
 		likeReposiotry.save(likeEntity);
 		board.increaseBoardLikes();
 
-		// if (likeReqDto.isChangeStatus()) {
-		// 	LikeEntity likeEntity = LikeEntity.builder()
-		// 		.board(board)
-		// 		.user(user)
-		// 		.build();
-		// 	likeReposiotry.save(likeEntity);
-		// 	board.increaseBoardLikes();
-		// } else {
-		// 	Optional<LikeEntity> curlike = likeReposiotry.findById(likeReqDto.getLikeId());
-		// 	if (curlike.isEmpty()) {
-		// 		throw new ApiException(BoardErrorCode.BOARD_LIST_IS_EMPTY);
-		// 	}
-		// 	LikeEntity likeEntity = curlike.get();
-		// 	likeEntity.changeLikeStatus();
-		// 	board.decreaseBoardLikes();
-		// }
-
 		return Api.ok("좋아요 적용 완료");
 	}
 }

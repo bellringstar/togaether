@@ -20,7 +20,7 @@ public class LikeController {
 	private final LikeService likeService;
 
 	@PostMapping("/like")
-	@Operation(summary = "True : 좋아요 적용 / False : 좋아요 취소")
+	@Operation(summary = "좋아요 추가/삭제 할 BoardId 와 사용 userNickname")
 	public Api<String> applyLike(@RequestBody LikeReqDto likeReqDto) {
 		return likeService.likeChange(likeReqDto);
 	}
