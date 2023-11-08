@@ -2,22 +2,24 @@ package com.dog.data.viewmodel
 
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dog.data.model.common.Response
+import com.dog.data.model.common.ResponseBodyResult
 import com.dog.data.model.matching.MatchingUserResponse
+import com.dog.data.repository.FriendRepository
 import com.dog.data.repository.MatchingRepository
-import com.dog.util.common.FriendRequestManager
 import com.dog.util.common.RetrofitLocalClient
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
 
 class MatchingViewModel : ViewModel() {
-
-    private val friendRequestManager = FriendRequestManager()
 
     private val _users = mutableStateListOf<MatchingUserResponse>()
     val users: List<MatchingUserResponse> get() = _users
@@ -75,15 +77,33 @@ class MatchingViewModel : ViewModel() {
 
     fun senFriendRequest(receiverNickname: String) {
         viewModelScope.launch {
-            val response = friendRequestManager.sendFriendRequest(receiverNickname)
-            if (response != null) {
-                _toastMessage.value = "친구 신청이 성공."
-            } else {
-                Log.e("MatchingViewModel", "친구신청 실패")
-                _toastMessage.value = "친구 신청에 실패했습니다."
+            try {
+                val apiService = RetrofitLocalClient.instance.create(FriendRepository::class.java)
+                val retrofitResponse = apiService.sendFriendRequest(receiverNickname)
+                if (retrofitResponse.isSuccessful) {
+                    // 처리 성공 시
+                    val responseBody = retrofitResponse.body()
+                    _toastMessage.value = "친구 신청이 성공적으로 전송되었습니다."
+                } else {
+                    // 처리 실패 시
+                    val errorBody = retrofitResponse.errorBody()?.string()
+                    val gson = Gson()
+                    val typeToken = object : TypeToken<Response<ResponseBodyResult>>() {}.type
+                    try {
+                        val errorResponse: Response<ResponseBodyResult> = gson.fromJson(errorBody, typeToken)
+                        Log.e("senFriendRequest", "${errorResponse.result.message}")
+                        _toastMessage.value = errorResponse.result.description
+                    } catch (e: JsonSyntaxException) {
+                        Log.e("senFriendRequest", "JSON 파싱 에러", e)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("senFriendRequest", "네트워크 요청 에러", e)
+                _toastMessage.value = "친구 신청 중 오류가 발생했습니다."
             }
         }
     }
+
 
     fun clearToastMessage() {
         _toastMessage.value = null
