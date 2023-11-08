@@ -30,6 +30,9 @@ fun BottomNavigationBar() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+
+
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {

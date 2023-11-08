@@ -1,44 +1,92 @@
 package com.dog.data.model
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.toMutableStateList
+
+data class Comment(
+    val id: Int,
+    val username: String,
+    val text: String
+)
+
 data class FeedItem(
     val id: Int,
     val username: String,
     val userProfileImageUrl: String,
-    val postImageUrl: String,
+    val postImageUrl: List<String>,
     val content: String,
-    val likes: Int,
-    val comments: Int
+    var likes: MutableState<Int>,
+    var comments: Int,
+    var isLiked: MutableState<Boolean>,
+    var commentsList: MutableState<MutableList<Comment>>,
 )
 
+
+fun generateComments(): List<Comment> {
+    return listOf(
+        Comment(1, "User1", "Great photo!"),
+        Comment(2, "User2", "Love it!"),
+        Comment(3, "User3", "Awesome!"),
+        Comment(4, "User4", "Amazing!"),
+        Comment(5, "User5", "Fantastic!")
+    )
+}
+
 fun generateFeedItems(): List<FeedItem> {
-    // 가상의 피드 아이템 데이터를 생성하거나 가져온다고 가정합니다.
+    val commentsList = generateComments().toMutableStateList()
+
     return listOf(
         FeedItem(
             1,
-            "23423",
-            "https://icons8.kr/icon/Ued8ZrxZYzBS/%EC%BB%A4%EB%AF%B8%ED%8A%B8-%EA%B0%9C%EA%B5%AC%EB%A6%AC",
-            "https://img.freepik.com/premium-photo/a-cute-little-character-with-a-face-and-a-smile-on-his-face_902049-15707.jpg?w=740",
-            "This is the first post.",
+            "User123",
+            "https://example.com/user123-profile.jpg",
+            listOf(
+                "https://img.freepik.com/premium-photo/a-cute-little-character-with-a-face-and-a-smile-on-his-face_902049-15707.jpg?w=740",
+                "https://img.freepik.com/premium-photo/a-cute-little-character-with-a-face-and-a-smile-on-his-face_902049-15707.jpg?w=740",
+                "https://img.freepik.com/premium-photo/a-cute-little-character-with-a-face-and-a-smile-on-his-face_902049-15707.jpg?w=740",
+            ),
+            "This is an awesome post!",
+            mutableStateOf(15),
             10,
-            5
+            mutableStateOf(false),
+            mutableStateOf(commentsList)
         ),
         FeedItem(
             2,
-            "4234",
-            "https://img.freepik.com/premium-photo/a-cute-little-character-with-a-face-and-a-smile-on-his-face_902049-15707.jpg?w=740",
-            "https://img.freepik.com/premium-photo/a-cute-little-character-with-a-face-and-a-smile-on-his-face_902049-15707.jpg?w=740",
-            "Just posted a photo!",
-            20,
-            8
+            "User456",
+            "https://example.com/user456-profile.jpg",
+            listOf(
+                "https://example.com/post456-image1.jpg",
+                "https://example.com/post456-image2.jpg"
+            ),
+            "Just shared a photo!",
+            mutableStateOf(20),
+            8,
+            mutableStateOf(true),
+            mutableStateOf(commentsList)
         ),
         FeedItem(
             3,
-            "234",
-            "url_to_user_profile_image3",
-            "url_to_post_image3",
-            "Feeling happy today.",
-            15,
-            3
+            "User789",
+            "https://example.com/user789-profile.jpg",
+            listOf("https://example.com/post789-image1.jpg"),
+            "Feeling happy today!",
+            mutableStateOf(25),
+            5,
+            mutableStateOf(false),
+            mutableStateOf(commentsList)
+        ),
+        FeedItem(
+            4,
+            "User101",
+            "https://example.com/user101-profile.jpg",
+            listOf("https://example.com/post101-image1.jpg"),
+            "Amazing view!",
+            mutableStateOf(18),
+            7,
+            mutableStateOf(true),
+            mutableStateOf(commentsList)
         )
     )
 }
