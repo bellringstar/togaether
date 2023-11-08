@@ -11,10 +11,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dog.data.model.matching.MatchingUserResponse
 import com.dog.data.repository.MatchingRepository
+import com.dog.util.common.FriendRequestManager
 import com.dog.util.common.RetrofitLocalClient
 import kotlinx.coroutines.launch
 
 class MatchingViewModel : ViewModel() {
+
+    private val friendRequestManager = FriendRequestManager()
 
     private val _users = mutableStateListOf<MatchingUserResponse>()
     val users: List<MatchingUserResponse> get() = _users
@@ -23,8 +26,9 @@ class MatchingViewModel : ViewModel() {
     private val _isDataLoaded = mutableStateOf(false)
     val isDataLoaded: State<Boolean> get() = _isDataLoaded
 
-    var lazyListState: LazyListState = LazyListState()
-        private set
+    private val _toastMessage = mutableStateOf<String?>(null)
+    val toastMessage: State<String?> = _toastMessage
+
 
     init {
         loadUsersFromApi()
@@ -59,7 +63,7 @@ class MatchingViewModel : ViewModel() {
     @OptIn(ExperimentalFoundationApi::class)
     fun selectUser(userId: String) {
         _selectedUserId.value = userId
-        val userIndex = _users.indexOfFirst { it.loginId == userId }
+        val userIndex = _users.indexOfFirst { it.userLoginId == userId }
         if (userIndex != -1) {
             pagerState?.let { pager ->
                 viewModelScope.launch {
@@ -68,4 +72,21 @@ class MatchingViewModel : ViewModel() {
             }
         }
     }
+
+    fun senFriendRequest(receiverNickname: String) {
+        viewModelScope.launch {
+            val response = friendRequestManager.sendFriendRequest(receiverNickname)
+            if (response != null) {
+                _toastMessage.value = "친구 신청이 성공."
+            } else {
+                Log.e("MatchingViewModel", "친구신청 실패")
+                _toastMessage.value = "친구 신청에 실패했습니다."
+            }
+        }
+    }
+
+    fun clearToastMessage() {
+        _toastMessage.value = null
+    }
+
 }
