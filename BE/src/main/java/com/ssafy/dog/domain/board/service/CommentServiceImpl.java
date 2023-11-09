@@ -90,6 +90,7 @@ public class CommentServiceImpl implements CommentService {
 					.commentContent(comment.getCommentContent())
 					.commentLikes(comment.getCommentLikes())
 					.commentId(comment.getCommentId())
+					.userProfileUrl(comment.getUser().getUserPicture())
 					.build();
 				commentList.add(comment1);
 			}
