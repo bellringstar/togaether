@@ -368,10 +368,3 @@ fun UserDetailsScreen(viewModel: MatchingViewModel, listState: LazyListState) {
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    val viewModel = MatchingViewModel()
-    MatchingPge(viewModel = viewModel)
-}

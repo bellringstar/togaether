@@ -13,6 +13,7 @@ import com.dog.data.model.common.ResponseBodyResult
 import com.dog.data.model.matching.MatchingUserResponse
 import com.dog.data.repository.FriendRepository
 import com.dog.data.repository.MatchingRepository
+import com.dog.util.common.RetrofitClient
 import com.dog.util.common.RetrofitLocalClient
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
@@ -39,7 +40,7 @@ class MatchingViewModel : ViewModel() {
     private fun loadUsersFromApi() {
         viewModelScope.launch {
             try {
-                val apiService = RetrofitLocalClient.instance.create(MatchingRepository::class.java)
+                val apiService = RetrofitClient.getInstance().create(MatchingRepository::class.java)
                 val response = apiService.getMatchingApiResponse()
 
                 if (response.isSuccessful) {
