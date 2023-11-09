@@ -9,8 +9,10 @@ import com.ssafy.dog.domain.board.enums.Scope;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class BoardDto {
 	private String userNickname;
 	private Long boardId;
@@ -38,7 +40,4 @@ public class BoardDto {
 		this.profileUrl = profileUrl;
 	}
 
-	public BoardDto() {
-		// 기본 생성자 구현 (빈 생성자)
-	}
 }

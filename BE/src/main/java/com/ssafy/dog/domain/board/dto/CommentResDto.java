@@ -5,8 +5,10 @@ import javax.validation.constraints.NotBlank;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class CommentResDto {
 	private Long boardId;
 	private Long commentId;
@@ -28,7 +30,4 @@ public class CommentResDto {
 		this.userProfileUrl = userProfileUrl;
 	}
 
-	public CommentResDto() {
-
-	}
 }
