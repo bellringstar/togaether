@@ -161,6 +161,8 @@ dependencies {
     // Querydsl 추가
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
+    // Json In Java
+    implementation group: 'org.json', name: 'json', version: '20160810'
 
     // Firebase FCM
     implementation group: 'com.google.firebase', name: 'firebase-admin', version: '9.2.0'

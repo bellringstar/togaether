@@ -25,7 +25,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.ssafy.dog.common.auditing.BaseTimeEntity;
 import com.ssafy.dog.domain.board.entity.Board;
 import com.ssafy.dog.domain.board.entity.Comment;
+import com.ssafy.dog.domain.board.entity.LikeEntity;
 import com.ssafy.dog.domain.dog.entity.Dog;
+import com.ssafy.dog.domain.user.dto.response.UserReadRes;
 import com.ssafy.dog.domain.user.dto.response.UserUpdateRes;
 import com.ssafy.dog.domain.user.model.UserGender;
 import com.ssafy.dog.domain.user.model.UserRole;
@@ -40,7 +42,7 @@ import lombok.NonNull;
 @DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "user")
-public class User extends BaseTimeEntity implements UserDetails { // 주소 속성 아직 안 들어감
+public class User extends BaseTimeEntity implements UserDetails {
 	// Entity 로서의 User 속성 및 메소드들
 	@Id
 	@Column(name = "user_id")
@@ -65,7 +67,7 @@ public class User extends BaseTimeEntity implements UserDetails { // 주소 속�
 
 	@NonNull
 	@Column(name = "user_phone")
-	@Size(max = 11)
+	@Size(min = 10, max = 11)
 	private String userPhone;
 
 	@Lob
@@ -153,6 +155,21 @@ public class User extends BaseTimeEntity implements UserDetails { // 주소 속�
 
 	public UserUpdateRes toUserUpdateRes() {
 		return UserUpdateRes.builder()
+			.userId(userId)
+			.userLoginId(userLoginId)
+			.userNickname(userNickname)
+			.userPhone(userPhone)
+			.userPicture(userPicture)
+			.userAboutMe(userAboutMe)
+			.userGender(userGender)
+			.userLatitude(userLatitude)
+			.userLongitude(userLongitude)
+			.userAddress(userAddress)
+			.build();
+	}
+
+	public UserReadRes toUserReadRes() {
+		return UserReadRes.builder()
 			.userId(userId)
 			.userLoginId(userLoginId)
 			.userNickname(userNickname)
