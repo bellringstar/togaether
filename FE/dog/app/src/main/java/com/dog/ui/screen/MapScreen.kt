@@ -44,8 +44,9 @@ fun WalkingScreen(navController: NavController) {
 fun WalkingPage(viewModel: LocationTrackingViewModel) {
     val userLocation by viewModel.userLocation.collectAsState()
     val pathPoints by viewModel.pathPoints.collectAsState()
+    val initialPosition = userLocation ?: LatLng(0.0, 0.0)
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(0.0, 0.0), 15f)
+        position = CameraPosition.fromLatLngZoom(initialPosition, 15f)
     }
 
     UpdateCameraPosition(userLocation, cameraPositionState)
@@ -65,12 +66,10 @@ private fun UpdateCameraPosition(
                     .zoom(cameraPositionState.position.zoom)
                     .build()
             )
-            cameraPositionState.move(update)
+            cameraPositionState.animate(update, 2000)
         }
     }
 }
-
-
 
 
 @Composable
@@ -107,7 +106,6 @@ private fun RenderWalkingScreen(
 }
 
 
-
 @Composable
 private fun ControlButtons(viewModel: LocationTrackingViewModel) {
     Row(Modifier.padding(bottom = 100.dp)) {
@@ -119,7 +117,6 @@ private fun ControlButtons(viewModel: LocationTrackingViewModel) {
         }
     }
 }
-
 
 
 @Preview(showBackground = true)

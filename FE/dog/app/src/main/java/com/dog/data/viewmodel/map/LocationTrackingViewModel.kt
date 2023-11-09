@@ -7,6 +7,11 @@ import android.util.Log
 import androidx.core.location.LocationManagerCompat.getCurrentLocation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dog.data.model.gps.GpsPoint
+import com.dog.data.model.gps.GpsRequest
+import com.dog.data.repository.FriendRepository
+import com.dog.data.repository.GpsRepository
+import com.dog.util.common.RetrofitClient
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
@@ -16,6 +21,7 @@ import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
 private const val UPDATE_INTERVAL_IN_MILLISECONDS: Long = 5000
 
@@ -94,13 +100,35 @@ class LocationTrackingViewModel(
         viewModelScope.launch {
             fusedLocationClient.removeLocationUpdates(locationCallback)
             Log.i("LocationTracking", "현재 위치: ${_userLocation.value} 종료")
-            resetPathPoints()
+            Log.i("LocationTracking", "지금까지 경로: ${_pathPoints.value}")
+            sendGpsDataToServer()
         }
     }
 
     fun resetPathPoints() {
         _pathPoints.value.clear()
         Log.i("LocationTracking", "Path points have been reset.")
+    }
+
+    fun sendGpsDataToServer() {
+        viewModelScope.launch {
+            val gpsPoints  = _pathPoints.value.map { GpsPoint(it.latitude, it.longitude) }
+            Log.i("LocationTracking", "전송 gpsPoints : ${gpsPoints}")
+
+            val gpsPointsWrapper = GpsRequest(mapOf("gps_points" to gpsPoints.map { listOf(it.latitude, it.longitude) }))
+            try {
+                val apiService = RetrofitClient.getInstance().create(GpsRepository::class.java)
+                Log.i("LocationTracking", "전송 데이터 : ${gpsPointsWrapper}")
+                val retrofitResponse = apiService.sendGpsTrackingData(gpsPointsWrapper)
+                if (retrofitResponse.isSuccessful) {
+                    Log.i("LocationTracking", "Data sent to server successfully")
+                } else {
+                    Log.e("LocationTracking", "Failed to send data: ${retrofitResponse.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("LocationTracking", "Error sending data to server", e)
+            }
+        }
     }
 
 }
