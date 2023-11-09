@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.dog.R
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -41,7 +42,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             .setAutoCancel(true)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setWhen(System.currentTimeMillis())
-            .setSmallIcon(android.R.drawable.ic_notification_overlay)
+            .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(title)
             .setContentText(content)
             .setContentInfo("Info")
