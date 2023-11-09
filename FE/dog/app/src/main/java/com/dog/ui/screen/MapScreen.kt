@@ -84,12 +84,6 @@ private fun RenderWalkingScreen(
     val properties = MapProperties(isMyLocationEnabled = true)
     Log.i("LocationTracking", "pathPoints[RenderWalkingScreen] : $pathPoints")
 
-    LaunchedEffect(userLocation) {
-        userLocation?.let { location ->
-            cameraPositionState.move(CameraUpdateFactory.newLatLngZoom(location, 15f))
-        }
-    }
-
     Box(modifier = Modifier.fillMaxSize()) {
         GoogleMap(
             modifier = Modifier.matchParentSize(),
