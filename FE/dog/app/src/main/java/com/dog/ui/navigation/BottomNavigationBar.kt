@@ -24,8 +24,7 @@ import com.dog.data.Screens
 import com.dog.ui.screen.HomeScreen
 import com.dog.ui.screen.MatchingScreen
 import com.dog.ui.screen.MypageScreen
-import com.dog.ui.screen.WalkingLogScreen
-import com.dog.ui.screen.WalkingScreen
+import com.dog.ui.screen.walking.WalkingScreen
 import com.dog.ui.screen.chat.ChatListScreen
 import com.dog.ui.screen.chat.ChattingScreen
 

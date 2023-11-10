@@ -3,6 +3,7 @@ plugins {
     id("kotlin-parcelize")
     id("org.jetbrains.kotlin.android")
     id("org.jlleitschuh.gradle.ktlint") version "9.1.0"
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -61,7 +62,15 @@ buildscript {
 
 
 dependencies {
-    // 코루틴
+    //inject
+    implementation("javax.inject:javax.inject:1")
+    //hilt
+    implementation("com.google.dagger:hilt-android:2.43.2")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    // Lifecycle components
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0")
+    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
+    implementation("androidx.lifecycle:lifecycle-common-java8:2.2.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     //코루틴
@@ -75,8 +84,9 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("com.google.android.material:material:1.10.0")
+    implementation("com.google.firebase:firebase-messaging:23.3.1")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
-    implementation ("com.github.bumptech.glide:compose:1.0.0-beta01")
+    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
     //레드토핏
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
@@ -91,6 +101,18 @@ dependencies {
     implementation("io.reactivex.rxjava2:rxjava:2.2.5")
     implementation("io.reactivex.rxjava2:rxandroid:2.1.0")
     implementation("androidx.navigation:navigation-compose:2.7.0")
+
+    // FCM 관련 안드로이드 설정
+    implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
+    // TODO: Add the dependencies for Firebase products you want to use
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation("com.google.firebase:firebase-messaging")
+    implementation("com.google.firebase:firebase-analytics")
+    // Add the dependencies for any other desired Firebase products
+    // https://firebase.google.com/docs/android/setup#available-libraries
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+
     //----------------------커스텀ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
     implementation("androidx.activity:activity-compose:1.8.0")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
@@ -115,4 +137,5 @@ dependencies {
     runtimeOnly("com.google.accompanist:accompanist-pager:0.32.0")
     runtimeOnly("com.google.accompanist:accompanist-flowlayout:0.32.0")
     implementation ("com.google.accompanist:accompanist-pager-indicators:0.32.0")
+    implementation ("com.google.accompanist:accompanist-permissions:0.32.0")
 }

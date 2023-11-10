@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class GpsTrackingSaveRequest {
 
+	private String runningTime;
 	private GpsPoints gpsPoints;
 
 	@Builder

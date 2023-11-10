@@ -167,6 +167,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 
+    // Firebase FCM
+    implementation group: 'com.google.firebase', name: 'firebase-admin', version: '9.2.0'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 //	testImplementation 'org.springframework.batch:spring-batch-test'
     testImplementation 'org.springframework.security:spring-security-test'

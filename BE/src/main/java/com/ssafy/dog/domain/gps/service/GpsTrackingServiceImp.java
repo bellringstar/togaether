@@ -35,6 +35,9 @@ public class GpsTrackingServiceImp implements GpsTrackingService {
 
 	@Override
 	public List<GpsTrackingResponse> findTrackingDataByUserLoginId(String userLoginId, String order) {
+		if (userLoginId == null) {
+			userLoginId = SecurityUtils.getUserLoginId();
+		}
 		List<GpsTracking> trackingList = gpsTrackingRepository.findAllByUserLoginIdAndStatus(userLoginId,
 			Status.AVAILABLE);
 

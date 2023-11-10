@@ -45,7 +45,7 @@ public class BoardController {
 	@GetMapping("/boardnear")
 	@Operation(summary = "내 주변 사용자들 게시글목록 가져오기")
 	public Api<List<BoardDto>> getBoardListNearby(@RequestParam double userLatitude,
-		@RequestParam double userLongitude, @RequestParam String UserNickname) {
-		return boardService.findBoardNeararea(userLatitude, userLongitude, UserNickname);
+		@RequestParam double userLongitude, @RequestParam String userNickname) {
+		return boardService.findBoardNeararea(userLatitude, userLongitude, userNickname);
 	}
 }
