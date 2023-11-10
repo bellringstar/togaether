@@ -27,13 +27,15 @@ public class GpsTracking {
 	private LocalDateTime createdDate;
 	private LocalDateTime modifiedDate;
 	private GpsPoints gpsPoints;
+	private String runningTime;
 	private Status status;
 
 	@Builder
-	public GpsTracking(LocalDateTime trackingDate, GpsPoints gpsPoints, Status status) {
+	public GpsTracking(LocalDateTime trackingDate, GpsPoints gpsPoints, String runningTime, Status status) {
 		this.trackingDate = trackingDate;
 		this.gpsPoints = gpsPoints;
 		this.status = status;
+		this.runningTime = runningTime;
 		this.userLoginId = SecurityUtils.getUserLoginId();
 	}
 
@@ -53,6 +55,7 @@ public class GpsTracking {
 		return GpsTracking.builder()
 			.trackingDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
 			.gpsPoints(request.getGpsPoints())
+			.runningTime(request.getRunningTime())
 			.status(Status.AVAILABLE)
 			.build();
 	}

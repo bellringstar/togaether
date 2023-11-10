@@ -41,6 +41,14 @@ public class GpsTrackingController {
 		return Api.ok(gpsTrackingResponseList);
 	}
 
+	@GetMapping("/gps")
+	public Api<List<GpsTrackingResponse>> getAllMyGpsTrackingData(
+		@RequestParam(name = "order", defaultValue = "desc") String order) {
+		List<GpsTrackingResponse> gpsTrackingResponseList = gpsTrackingService.findTrackingDataByUserLoginId(
+			null, order);
+		return Api.ok(gpsTrackingResponseList);
+	}
+
 	@DeleteMapping("/gps")
 	public Api<Boolean> deleteTrackingRecord(@RequestBody GpsTrackingDeleteRequest request) {
 		return Api.ok(gpsTrackingService.deleteTrackingRecord(request));
