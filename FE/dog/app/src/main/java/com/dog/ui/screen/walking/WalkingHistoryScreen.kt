@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -44,11 +45,12 @@ import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 fun WalkingHistoryScreen(navController: NavController, trackingViewModel: LocationTrackingViewModel) {
-    val viewModel = LocationTrackingHistoryViewModel()
+    val viewModel: LocationTrackingHistoryViewModel = hiltViewModel()
     var isMapDialogOpen by remember { mutableStateOf(false) }
     var polylinePoints by remember { mutableStateOf(emptyList<LatLng>()) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+
 
     DogTheme {
         Column {
@@ -144,13 +146,4 @@ fun ShowMapDialog(isDialogOpen: Boolean, polylinePoints: List<LatLng>, onDismiss
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    val navController = rememberNavController()
-    val context = LocalContext.current
-    val trackingViewModel = remember { LocationTrackingViewModel(context) }
-    WalkingHistoryScreen(navController, trackingViewModel)
 }

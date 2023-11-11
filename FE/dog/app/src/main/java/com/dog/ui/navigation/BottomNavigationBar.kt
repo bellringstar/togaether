@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -42,8 +43,7 @@ fun BottomNavigationBar(startRoute: String) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     var shouldShowBottomBar = rememberSaveable { (mutableStateOf(true)) }
-    val context = LocalContext.current
-    val trackingViewModel = remember { LocationTrackingViewModel(context) }
+    val LocalTrackingViewModel:LocationTrackingViewModel = hiltViewModel()
 
     when (navBackStackEntry?.destination?.route) {
         // "roomId" 값이 1이 아닌 경우에 대한 조건을 추가합니다.
@@ -112,12 +112,14 @@ fun BottomNavigationBar(startRoute: String) {
             }
             composable(Screens.Walking.route) {
                 WalkingScreen(
-                    navController,trackingViewModel
+                    navController,
+                    LocalTrackingViewModel
                 )
             }
             composable(Screens.WalkingHistory.route) {
                 WalkingHistoryScreen(
-                    navController, trackingViewModel
+                    navController
+                    ,LocalTrackingViewModel
                 )
             }
 

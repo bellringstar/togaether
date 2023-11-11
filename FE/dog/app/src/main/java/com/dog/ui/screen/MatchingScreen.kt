@@ -55,6 +55,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.dog.data.model.matching.DispositionMap
 import com.dog.data.model.matching.Dog
@@ -65,7 +66,7 @@ import com.google.accompanist.pager.*
 
 @Composable
 fun MatchingScreen(navController: NavController) {
-    val viewModel = MatchingViewModel()
+    val viewModel :MatchingViewModel = hiltViewModel()
     Column {
         MatchingPge(viewModel = viewModel)
     }

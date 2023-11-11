@@ -1,24 +1,35 @@
 package com.dog.data.viewmodel.map
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dog.data.model.gps.TrackingHistory
 import com.dog.data.repository.GpsRepository
+import com.dog.util.common.DataStoreManager
 import com.dog.util.common.RetrofitClient
 import com.dog.util.common.RetrofitLocalClient
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+@HiltViewModel
+class LocationTrackingHistoryViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+    private val dataStoreManager: DataStoreManager
+) : ViewModel() {
 
-class LocationTrackingHistoryViewModel : ViewModel() {
+    private val interceptor = RetrofitClient.RequestInterceptor(dataStoreManager)
+    private val apiService: GpsRepository = RetrofitClient.getInstance(interceptor).create(GpsRepository::class.java)
+
 
     private val _trackingHistory = MutableStateFlow<List<TrackingHistory>>(emptyList())
     val trackingHistory = _trackingHistory.asStateFlow()
     fun getTrackingHistory() {
         viewModelScope.launch {
             try {
-                val apiService = RetrofitClient.getInstance().create(GpsRepository::class.java)
 //                val apiService = RetrofitLocalClient.instance.create(GpsRepository::class.java)
                 val retrofitResponse = apiService.getTrackingHistory()
                 if (retrofitResponse.isSuccessful) {

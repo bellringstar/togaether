@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -47,6 +48,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 fun WalkingScreen(navController: NavController, viewModel: LocationTrackingViewModel) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+
 
     DogTheme {
         Column(modifier = Modifier.fillMaxSize()) {//TODO: Box로 해야하는데 안보이는 버그
@@ -205,11 +207,3 @@ private fun ControlButtons(viewModel: LocationTrackingViewModel, isRunning: Bool
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun Preview() {
-    val navController = rememberNavController()
-    val context = LocalContext.current
-    val trackingViewModel = remember { LocationTrackingViewModel(context) }
-    WalkingScreen(navController, trackingViewModel)
-}
