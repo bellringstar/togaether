@@ -137,8 +137,8 @@ class LocationTrackingViewModel(
             val formattedTimeToSend = _formattedTime.value
             val gpsPointsWrapper = GpsRequest(formattedTimeToSend,mapOf("gps_points" to gpsPoints.map { listOf(it.latitude, it.longitude) }))
             try {
-//                val apiService = RetrofitClient.getInstance().create(GpsRepository::class.java)
-                val apiService = RetrofitLocalClient.instance.create(GpsRepository::class.java)
+                val apiService = RetrofitClient.getInstance().create(GpsRepository::class.java)
+//                val apiService = RetrofitLocalClient.instance.create(GpsRepository::class.java)
                 Log.i("LocationTracking", "전송 데이터 : ${gpsPointsWrapper}")
                 val retrofitResponse = apiService.sendGpsTrackingData(gpsPointsWrapper)
                 if (retrofitResponse.isSuccessful) {

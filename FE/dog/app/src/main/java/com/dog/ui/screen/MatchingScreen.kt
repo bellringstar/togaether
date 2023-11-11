@@ -244,7 +244,7 @@ fun UserInformation(user: MatchingUserResponse, viewModel: MatchingViewModel) {
 
         }
         Text(
-            text = user.userAboutMe,
+            text = user.userAboutMe?:"자기소개가 없습니다.",
             style = MaterialTheme.typography.bodyMedium
         )
         Text(
@@ -253,7 +253,7 @@ fun UserInformation(user: MatchingUserResponse, viewModel: MatchingViewModel) {
         )
         user.userAddress?.let {
             Text(
-                text = it,
+                text = it?:"주소가 없습니다.",
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
