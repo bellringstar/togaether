@@ -13,10 +13,10 @@ data class BoardItem(
     @SerializedName("boardId") val boardId: Long,
     @SerializedName("boardContent") val boardContent: String,
     @SerializedName("boardScope") val boardScope: String,
-    @SerializedName("boardLikes") val boardLikes: Long,
+    @SerializedName("boardLikes") var boardLikes: Long,
     @SerializedName("fileUrlLists") val fileUrlLists: List<String>,
     @SerializedName("boardComments") val boardComments: Long,
-    @SerializedName("likecheck") val likecheck: Boolean,
+    @SerializedName("likecheck") var likecheck: Boolean,
     @SerializedName("profileUrl") val profileUrl: String,
 )
 

@@ -139,17 +139,22 @@ class HomeViewModel @Inject constructor(
         return response
     }
 
-    private val _likes = MutableStateFlow(0)
-    val likes: StateFlow<Int> get() = _likes
+    private val _likes = MutableStateFlow(0L)
+    val likes: MutableStateFlow<Long> get() = _likes
+
 
     private val _isLiked = MutableStateFlow(false)
     val isLiked: StateFlow<Boolean> get() = _isLiked
 
 
-    fun toggleLikeStatus() {
-        _isLiked.value = !_isLiked.value
-        if (_isLiked.value) {
+    fun toggleLikeStatus(feedItem: BoardItem) {
+        feedItem.likecheck = !feedItem.likecheck
+//        feedItem.boardLikes =
+//            if (feedItem.likecheck) feedItem.boardLikes + 1 else feedItem.boardLikes - 1
+//        Log.d("feedItem", _isLiked.value.toString())
+        if (feedItem.likecheck) {
             _likes.value += 1
+            Log.d("like", _likes.value.toString())
         } else {
             _likes.value -= 1
         }

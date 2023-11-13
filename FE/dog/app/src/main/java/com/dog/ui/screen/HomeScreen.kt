@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.outlined.ThumbUp
@@ -31,6 +32,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedCard
@@ -40,6 +42,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,7 +59,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.bumptech.glide.Glide
 import com.dog.data.model.comment.AddCommentRequest
@@ -64,7 +66,6 @@ import com.dog.data.model.comment.CommentItem
 import com.dog.data.model.feed.BoardItem
 import com.dog.data.viewmodel.feed.HomeViewModel
 import com.dog.ui.theme.DogTheme
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -162,18 +163,14 @@ fun loadImage(imageView: ImageView, url: String) {
 
 @Composable
 fun ContentSection(feedItem: BoardItem) {
-//    val isDataLoaded by homeViewModel.isDataLoaded
-//    var feedListState = homeViewModel.feedListState
-
-//    if (isDataLoaded) {
     Text(text = feedItem.boardContent)
-//    }
-
 }
 
 
 @Composable
 fun LikeSection(feedItem: BoardItem, homeViewModel: HomeViewModel) {
+    val likes by homeViewModel.likes.collectAsState()
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -183,14 +180,15 @@ fun LikeSection(feedItem: BoardItem, homeViewModel: HomeViewModel) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier.clickable {
-                homeViewModel.toggleLikeStatus()
+                homeViewModel.toggleLikeStatus(feedItem)
             }
         ) {
             Icon(
                 imageVector = if (feedItem.likecheck) Icons.Outlined.ThumbUp else Icons.Filled.ThumbUp,
                 contentDescription = null
             )
-            Text(text = "${feedItem.boardLikes} Likes")
+            var temp = feedItem.boardLikes + likes
+            Text(text = "${temp} Likes")
         }
     }
 }
@@ -243,7 +241,17 @@ fun CommentItem(comment: CommentItem) {
         Text(
             text = "${comment.userNickname}: ${comment.commentContent}"
         )
+        IconButton(
+            onClick = {
+                // 댓글 삭제 로직을 수행하세요.
+                // 여기에 삭제 동작을 수행하는 함수를 호출하거나,
+                // 댓글 삭제를 처리하는 ViewModel 함수를 호출할 수 있습니다.
+            }
+        ) {
+            Icon(imageVector = Icons.Default.Close, contentDescription = null)
+        }
     }
+    // "X" 버튼 추가
 }
 
 @Composable
@@ -333,60 +341,6 @@ fun CommentInput(
         }
     }
 }
-
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun CustomBottomSheet(
-//    feedItem: BoardItem,
-//    isSheetOpen: Boolean,
-//    onDismissSheet: () -> Unit,
-//    homeViewModel: HomeViewModel
-//) {
-//    var isCommentExpanded by remember { mutableStateOf(false) }
-//    var newCommentText by remember { mutableStateOf(TextFieldValue()) }
-//
-//    ModalBottomSheet(
-//        modifier = Modifier,
-//        sheetState = rememberModalBottomSheetState(
-//            confirmValueChange = { isSheetOpen }
-//        ),
-//        onDismissRequest = {
-//            onDismissSheet()
-//        },
-//    ) {
-//        Column(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(16.dp)
-//        ) {
-//            LazyColumn {
-//                items(homeViewModel.loadCommentListData(1L)) { comment ->
-//                    Log.d("comment", comment.toString())
-//                    CommentItem(comment = comment)
-//                }
-//                item {
-//                    CommentInput(
-//                        commentText = newCommentText,
-//                        onCommentTextChange = { newCommentText = it },
-//                        onCommentSubmit = {
-//                            // Submit 버튼이 클릭되었을 때의 동작 처리
-//                            if (newCommentText.text.isNotEmpty()) {
-//                                val newComment = Comment(
-//                                    id = homeViewModel.commentsList.size + 1,
-//                                    username = "Your Username",
-//                                    text = newCommentText.text
-//                                )
-//                                homeViewModel.addComment(newComment) // 댓글을 추가하고 즉시 새로고침
-//                                newCommentText = TextFieldValue() // 입력 필드 초기화
-//                            }
-//                        }
-//                    )
-//                }
-//            }
-//        }
-//    }
-//}
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
