@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dog.data.model.user.SignInRequest
 import com.dog.data.model.user.SignUpRequest
-import com.dog.data.repository.MatchingRepository
 import com.dog.data.repository.UserRepository
 import com.dog.util.common.DataStoreManager
 import com.dog.util.common.RetrofitClient
@@ -21,7 +20,8 @@ class UserViewModel @Inject constructor(
 ) : ViewModel() {
     private val interceptor = RetrofitClient.RequestInterceptor(dataStoreManager)
     private val userApi: UserRepository = RetrofitClient.getInstance(interceptor).create(
-        UserRepository::class.java)
+        UserRepository::class.java
+    )
 
     // 유저 정보 저장
     private
@@ -35,11 +35,11 @@ class UserViewModel @Inject constructor(
     val errMsg: State<String> get() = _errMsg
 
 
-
     suspend fun login(id: String, pw: String) {
         viewModelScope.launch {
             try {
-                val response = userApi.login(SignInRequest(id, pw))
+                val fcmToken = dataStoreManager.getFCM()
+                val response = userApi.login(SignInRequest(id, pw, fcmToken))
                 Log.d("api", response.toString())
                 if (response.isSuccessful) {
                     // 성공적으로 응답을 받았을 때의 처리

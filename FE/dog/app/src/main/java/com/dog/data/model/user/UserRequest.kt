@@ -12,4 +12,5 @@ data class SignUpRequest(
 data class SignInRequest(
     val userLoginId: String,
     val userPw: String,
+    val fcmToken: String
 )
