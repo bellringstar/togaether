@@ -4,27 +4,58 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Looper
 import android.util.Log
+import androidx.core.location.LocationManagerCompat.getCurrentLocation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dog.data.model.gps.GpsPoint
+import com.dog.data.model.gps.GpsRequest
+import com.dog.data.repository.FriendRepository
+import com.dog.data.repository.GpsRepository
+import com.dog.util.common.DataStoreManager
+import com.dog.util.common.RetrofitClient
+import com.dog.util.common.RetrofitLocalClient
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import retrofit2.Response
+import javax.inject.Inject
 
 private const val UPDATE_INTERVAL_IN_MILLISECONDS: Long = 5000
-
-class LocationTrackingViewModel(
-    private val context: Context
+@HiltViewModel
+class LocationTrackingViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+    private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
+
+    private val interceptor = RetrofitClient.RequestInterceptor(dataStoreManager)
+    private val apiService: GpsRepository = RetrofitClient.getInstance(interceptor).create(GpsRepository::class.java)
+
+
     private val _userLocation = MutableStateFlow<LatLng?>(null)
     val userLocation = _userLocation.asStateFlow()
     private val _pathPoints = MutableStateFlow<MutableList<LatLng>>(mutableListOf())
     val pathPoints = _pathPoints.asStateFlow()
+    private val _isRunning = MutableStateFlow(false)
+    val isRunning: StateFlow<Boolean> = _isRunning.asStateFlow()
+    private val _runningTime = MutableStateFlow(0L)
+    val runningTime: StateFlow<Long> = _runningTime.asStateFlow()
+
+    private val _formattedTime = MutableStateFlow("00:00")
+    val formattedTime: StateFlow<String> = _formattedTime.asStateFlow()
+
+    private var startTime = 0L
+    private var timerJob: Job? = null
 
     private var fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
@@ -32,19 +63,6 @@ class LocationTrackingViewModel(
         Priority.PRIORITY_HIGH_ACCURACY, UPDATE_INTERVAL_IN_MILLISECONDS
     ).build()
 
-    private val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            locationResult.locations.let { locations ->
-                for (location in locations) {
-                    val newLatLng = LatLng(location.latitude, location.longitude)
-                    _userLocation.value = newLatLng
-                    _pathPoints.value.add(newLatLng)
-                    Log.d("LocationTracking", "New location added: $newLatLng")
-                }
-                Log.d("LocationTracking", "Current path points: ${_pathPoints.value}")
-            }
-        }
-    }
 
     init {
         getCurrentLocation()
@@ -53,14 +71,23 @@ class LocationTrackingViewModel(
     @SuppressLint("MissingPermission")
     fun getCurrentLocation() {
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            // 위치 정보가 성공적으로 가져와졌을 때
             location?.let {
                 val currentLatLng = LatLng(it.latitude, it.longitude)
                 _userLocation.value = currentLatLng
-                _pathPoints.value.add(currentLatLng)
-                Log.i("LocationTracking", "현재 위치: ${_userLocation.value}") // 로그를 여기로 옮깁니다.
+                addPathPoint(currentLatLng) // 상태 업데이트
+                Log.i("LocationTracking", "현재 위치: ${_userLocation.value}")
             } ?: run {
                 startLocationUpdates()
+            }
+        }
+    }
+
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            locationResult.locations.forEach { location ->
+                val newLatLng = LatLng(location.latitude, location.longitude)
+                _userLocation.value = newLatLng
+                addPathPoint(newLatLng) // 상태 업데이트
             }
         }
     }
@@ -77,20 +104,80 @@ class LocationTrackingViewModel(
         }
     }
 
+    fun addPathPoint(newPoint: LatLng) {
+        val currentList = _pathPoints.value.toMutableList()
+        currentList.add(newPoint)
+        _pathPoints.value = currentList
+    }
+
     fun startTracking() {
-        _userLocation.value?.let {
-            startLocationUpdates()
-        } ?: run {
-            getCurrentLocation()
+        if (!_isRunning.value) {
+            resetPathPoints()
+            _userLocation.value?.let {
+                startLocationUpdates()
+            } ?: run {
+                getCurrentLocation()
+            }
+            _isRunning.value = true
+            startTimer()
         }
     }
 
     fun stopTracking() {
-        viewModelScope.launch {
-            fusedLocationClient.removeLocationUpdates(locationCallback)
-            Log.i("LocationTracking", "현재 위치: ${_userLocation.value} 종료")
-
+        if (_isRunning.value) {
+            viewModelScope.launch {
+                fusedLocationClient.removeLocationUpdates(locationCallback)
+                Log.i("LocationTracking", "현재 위치: ${_userLocation.value} 종료")
+                Log.i("LocationTracking", "지금까지 경로: ${_pathPoints.value}")
+                sendGpsDataToServer()
+                timerJob?.cancel()
+                _isRunning.value = false
+            }
         }
+    }
+
+    fun resetPathPoints() {
+        _pathPoints.value.clear()
+        Log.i("LocationTracking", "Path points have been reset.")
+    }
+
+    fun sendGpsDataToServer() {
+        viewModelScope.launch {
+            val gpsPoints  = _pathPoints.value.map { GpsPoint(it.latitude, it.longitude) }
+            val formattedTimeToSend = _formattedTime.value
+            val gpsPointsWrapper = GpsRequest(formattedTimeToSend,mapOf("gps_points" to gpsPoints.map { listOf(it.latitude, it.longitude) }))
+            try {
+//                val apiService = RetrofitLocalClient.instance.create(GpsRepository::class.java)
+                Log.i("LocationTracking", "전송 데이터 : ${gpsPointsWrapper}")
+                val retrofitResponse = apiService.sendGpsTrackingData(gpsPointsWrapper)
+                if (retrofitResponse.isSuccessful) {
+                    Log.i("LocationTracking", "Data sent to server successfully")
+                } else {
+                    Log.e("LocationTracking", "Failed to send data: ${retrofitResponse.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("LocationTracking", "Error sending data to server", e)
+            }
+        }
+    }
+
+    private fun startTimer() {
+        startTime = System.currentTimeMillis()
+        timerJob = viewModelScope.launch {
+            while (_isRunning.value) {
+                val currentTime = System.currentTimeMillis() - startTime
+                _runningTime.value = currentTime
+                _formattedTime.value = formatTime(currentTime)
+                delay(1000)
+            }
+        }
+    }
+
+    private fun formatTime(millis: Long): String {
+        val totalSeconds = millis / 1000
+        val minutes = totalSeconds / 60
+        val seconds = totalSeconds % 60
+        return String.format("%02d:%02d", minutes, seconds)
     }
 
 }
