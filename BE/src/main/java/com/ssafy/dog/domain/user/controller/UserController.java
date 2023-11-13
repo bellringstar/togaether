@@ -1,6 +1,5 @@
 package com.ssafy.dog.domain.user.controller;
 
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.validation.Valid;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.dog.common.api.Api;
-import com.ssafy.dog.common.error.UserErrorCode;
-import com.ssafy.dog.common.exception.ApiException;
 import com.ssafy.dog.domain.user.dto.request.UserLoginReq;
 import com.ssafy.dog.domain.user.dto.request.UserSignupReq;
 import com.ssafy.dog.domain.user.dto.request.UserUpdateReq;
@@ -47,50 +44,7 @@ public class UserController {
 	@Operation(summary = "회원가입")
 	public Api<?> signUp(@Valid @RequestBody UserSignupReq userSignupReq, Errors errors) {
 
-		if (!userService.isValidEmail(userSignupReq.getUserLoginId())) {
-			throw new ApiException(UserErrorCode.INVALID_EMAIL);
-		}
-
-		if (!userService.isValidPassword(userSignupReq.getUserPw1())) {
-			throw new ApiException(UserErrorCode.INVALID_PASSWORD);
-		}
-
-		if (userRepository.findByUserLoginId(userSignupReq.getUserLoginId()).isPresent()) {
-			throw new ApiException(UserErrorCode.EMAIL_EXISTS);
-		}
-
-		if (userRepository.findUserByUserNickname(userSignupReq.getUserNickname()).isPresent()) {
-			throw new ApiException(UserErrorCode.NICKNAME_EXISTS);
-		}
-
-		if (!userSignupReq.getUserTermsAgreed().equals(true)) {
-			throw new ApiException(UserErrorCode.TERMS_NOT_AGREED);
-		}
-
-		if (userRepository.findByUserPhone(userSignupReq.getUserPhone()).isPresent()) {
-			throw new ApiException(UserErrorCode.PHONE_EXISTS);
-		}
-
-		if (!userSignupReq.getUserPw1().equals(userSignupReq.getUserPw2())) {
-			throw new ApiException(UserErrorCode.NOT_SAME_PASSWORDS);
-		}
-
-		if (!userService.isValidPhoneNumber(userSignupReq.getUserPhone())) {
-			throw new ApiException(UserErrorCode.INVALID_PHONE_NUMBER);
-		}
-
-		if (errors.hasErrors()) {
-			// 유효성 통과 못한 필드와 메시지를 핸들링
-			Map<String, String> validatorResult = userService.validateHandling(errors);
-
-			// 각 유효성 실패에 대한 로그 출력
-			validatorResult.forEach((field, message) -> log.error("INVALID_SIGNUP_FIELD: {}, {}", field, message));
-
-			// 유효성 검사 실패 응답 리턴
-			return Api.error(UserErrorCode.INVALID_SIGNUP_FIELDS);
-		}
-
-		return userService.create(userSignupReq);
+		return userService.create(userSignupReq, errors);
 	}
 
 	@PostMapping("/login")
