@@ -7,8 +7,10 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Person(
-    val id: Int = 0,
-    val name: String = "",
-    @DrawableRes val icon: Int = R.drawable.ic_launcher
+    val id: Int = 0, // userId(PK)
+    val name: String = "", // userNickname 표시할 닉네임
+    @DrawableRes val icon: Int = R.drawable.person_icon, // 이걸 userPicture 이미지로 바꿀 수 있나
+    val userPicture: String = "",
+    val address: String = "",
 ) : Parcelable
 

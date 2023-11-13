@@ -1,20 +1,32 @@
 package com.ssafy.dog.domain.user.service;
 
-import java.util.Optional;
-
+import com.ssafy.dog.common.api.Api;
+import com.ssafy.dog.common.error.UserErrorCode;
+import com.ssafy.dog.common.exception.ApiException;
+import com.ssafy.dog.domain.user.dto.request.UserLoginReq;
+import com.ssafy.dog.domain.user.dto.request.UserSignupReq;
+import com.ssafy.dog.domain.user.dto.request.UserUpdateReq;
+import com.ssafy.dog.domain.user.dto.response.UserLoginRes;
+import com.ssafy.dog.domain.user.dto.response.UserReadRes;
+import com.ssafy.dog.domain.user.dto.response.UserUpdateRes;
+import com.ssafy.dog.domain.user.entity.User;
+import com.ssafy.dog.domain.user.model.UserRole;
+import com.ssafy.dog.domain.user.repository.UserRepository;
+import com.ssafy.dog.security.JwtToken;
+import com.ssafy.dog.security.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ssafy.dog.common.api.Api;
-import com.ssafy.dog.common.error.UserErrorCode;
-import com.ssafy.dog.common.exception.ApiException;
-import com.ssafy.dog.domain.user.dto.UserDto;
-import com.ssafy.dog.domain.user.entity.User;
-import com.ssafy.dog.domain.user.repository.UserRepository;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Pattern;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,56 +34,128 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class UserServiceImpl implements UserService {
 
-	private final UserRepository userRepository;
-	private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
-	@Override
-	public Optional<User> findByUserLoginId(String loginId) {
-		log.info("Calling findByUserLoginId with loginId: {}", loginId); // 호출 전 로깅
-		Optional<User> result = userRepository.findByUserLoginId(loginId);
-		log.info("Result for findByUserLoginId with loginId {}: {}", loginId,
-			result.isPresent() ? "Found" : "Not Found"); // 호출 후 로깅
-		return result;
-	}
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$");
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile(
+            "^(?=.*[A-Z])(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,16}$");
 
-	@Override
-	public Optional<User> findByUserNickname(String nickname) {
-		log.info("Calling findByUserNickname with nickname: {}", nickname); // 호출 전 로깅
-		Optional<User> result = userRepository.findByUserNickname(nickname);
-		log.info("Result for findByUserNickname with nickname {}: {}", nickname,
-			result.isPresent() ? "Found" : "Not Found"); // 호출 후 로깅
-		return result;
-	}
+    @Transactional
+    @Override
+    public Api<String> create(UserSignupReq userSignupReq) {
 
-	public Optional<User> findByUserPhone(String phone) {
-		log.info("Calling findByUserPhone with phone: {}", phone); // 호출 전 로깅
-		Optional<User> result = userRepository.findByUserPhone(phone);
-		log.info("Result for findByUserPhone with phone {}: {}", phone,
-			result.isPresent() ? "Found" : "Not Found"); // 호출 후 로깅
-		return result;
-	}
+        if (!isValidEmail(userSignupReq.getUserLoginId())) {
+            throw new ApiException(UserErrorCode.INVALID_EMAIL);
+        }
 
-	@Transactional
-	@Override
-	public Api<?> create(UserDto userDto) {
-		if (userRepository.findByUserLoginId(userDto.getUserLoginId()).isPresent()) {
-			throw new ApiException(UserErrorCode.EMAIL_EXISTS);
-		}
+        if (!isValidPassword(userSignupReq.getUserPw1())) {
+            throw new ApiException(UserErrorCode.INVALID_PASSWORD);
+        }
 
-		if (userRepository.findByUserNickname(userDto.getUserNickname()).isPresent()) {
-			throw new ApiException(UserErrorCode.NICKNAME_EXISTS);
-		}
+        if (userRepository.findByUserLoginId(userSignupReq.getUserLoginId()).isPresent()) {
+            throw new ApiException(UserErrorCode.EMAIL_EXISTS);
+        }
 
-		if (!userDto.getUserTermsAgreed().equals(true)) {
-			throw new ApiException(UserErrorCode.TERMS_NOT_AGREED);
-		}
+        if (userRepository.findUserByUserNickname(userSignupReq.getUserNickname()).isPresent()) {
+            throw new ApiException(UserErrorCode.NICKNAME_EXISTS);
+        }
 
-		if (userRepository.findByUserPhone(userDto.getUserPhone()).isPresent()) {
-			throw new ApiException(UserErrorCode.PHONE_EXISTS);
-		}
+        if (!userSignupReq.getUserTermsAgreed().equals(true)) {
+            throw new ApiException(UserErrorCode.TERMS_NOT_AGREED);
+        }
 
-		userDto.setUserPw(passwordEncoder.encode(userDto.getUserPw()));
-		User user = userRepository.save(userDto.toEntity());
-		return Api.ok(userDto.getUserLoginId() + " 회원가입 성공");
-	}
+        if (userRepository.findByUserPhone(userSignupReq.getUserPhone()).isPresent()) {
+            throw new ApiException(UserErrorCode.PHONE_EXISTS);
+        }
+
+        String encodedPassword = passwordEncoder.encode(userSignupReq.getUserPw1());
+        User user = User.UserBuilder.anUser()
+                .withUserLoginId(userSignupReq.getUserLoginId())
+                .withUserPw(encodedPassword)
+                .withUserNickname(userSignupReq.getUserNickname())
+                .withUserPhone(userSignupReq.getUserPhone())
+                .withUserTermsAgreed(userSignupReq.getUserTermsAgreed())
+                .withUserIsRemoved(false)
+                .withUserRole(UserRole.USER)
+                .build();
+
+        userRepository.save(user);
+
+        return Api.ok(userSignupReq.getUserLoginId() + " 회원가입 성공");
+    }
+
+    @Transactional
+    @Override
+    public Api<UserLoginRes> login(UserLoginReq userLoginReq) {
+
+        if (!isValidEmail(userLoginReq.getUserLoginId())) {
+            throw new ApiException(UserErrorCode.INVALID_EMAIL);
+        }
+
+        if (!isValidPassword(userLoginReq.getUserPw())) {
+            throw new ApiException(UserErrorCode.INVALID_PASSWORD);
+        }
+
+        User user = userRepository.findByUserLoginId(userLoginReq.getUserLoginId())
+                .orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
+
+        if (!passwordEncoder.matches(userLoginReq.getUserPw(), user.getPassword())) {
+            throw new ApiException(UserErrorCode.WRONG_PASSWORD);
+        }
+
+        // Authentication 객체 생성
+        GrantedAuthority authority = new SimpleGrantedAuthority(user.getUserRole().getValue());
+        List<GrantedAuthority> authorities = Collections.singletonList(authority);
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                user.getUserLoginId(), user.getPassword(), authorities
+        );
+
+        JwtToken jwtToken = jwtTokenProvider.generateToken(auth);
+
+        return Api.ok(new UserLoginRes(user.getUserLoginId(), user.getUserNickname(), user.getUserPicture(),
+                jwtToken.getAccessToken()));
+
+        // return Api.ok(jwtToken.getAccessToken()); // UserLoginResponseDto 로 보내기
+    }
+
+    @Transactional
+    @Override
+    public Api<UserUpdateRes> updateByUserNickname(String userNickname, UserUpdateReq userUpdateReq) {
+        User user = userRepository.findByUserNickname(userNickname)
+                .orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
+
+        user.updateUser(
+                userUpdateReq.getUserNickname(),
+                userUpdateReq.getUserPhone(),
+                userUpdateReq.getUserPicture(),
+                userUpdateReq.getUserAboutMe(),
+                userUpdateReq.getUserGender(),
+                userUpdateReq.getUserLatitude(),
+                userUpdateReq.getUserLatitude(),
+                userUpdateReq.getUserAddress()
+        );
+
+        return Api.ok(user.toUserUpdateRes());
+    }
+
+    @Transactional
+    @Override
+    public Api<UserReadRes> getByUserNickname(String userNickname) {
+        User user = userRepository.findUserByUserNickname(userNickname)
+                .orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
+
+        return Api.ok(user.toUserReadRes());
+    }
+
+    // 이메일 형식 검증 메소드
+    private boolean isValidEmail(String email) {
+        return EMAIL_PATTERN.matcher(email).matches();
+    }
+
+    private boolean isValidPassword(String password) {
+        return PASSWORD_PATTERN.matcher(password).matches();
+    }
 }

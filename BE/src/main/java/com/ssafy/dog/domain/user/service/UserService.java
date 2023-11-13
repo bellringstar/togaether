@@ -1,18 +1,22 @@
 package com.ssafy.dog.domain.user.service;
 
-import java.util.Optional;
-
 import com.ssafy.dog.common.api.Api;
-import com.ssafy.dog.domain.user.dto.UserDto;
-import com.ssafy.dog.domain.user.entity.User;
+import com.ssafy.dog.domain.user.dto.request.UserLoginReq;
+import com.ssafy.dog.domain.user.dto.request.UserSignupReq;
+import com.ssafy.dog.domain.user.dto.request.UserUpdateReq;
+import com.ssafy.dog.domain.user.dto.response.UserLoginRes;
+import com.ssafy.dog.domain.user.dto.response.UserReadRes;
+import com.ssafy.dog.domain.user.dto.response.UserUpdateRes;
+
+import javax.validation.Valid;
 
 public interface UserService {
 
-	Optional<User> findByUserLoginId(String userLoginId);
+    Api<String> create(UserSignupReq userSignupReq);
 
-	Optional<User> findByUserNickname(String userNickname);
+    Api<UserLoginRes> login(UserLoginReq userLoginReq);
 
-	Optional<User> findByUserPhone(String userPhone);
+    Api<UserUpdateRes> updateByUserNickname(String nickname, @Valid UserUpdateReq userUpdateReq);
 
-	Api<?> create(UserDto userDto);
+    Api<UserReadRes> getByUserNickname(String userNickname);
 }

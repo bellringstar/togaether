@@ -10,12 +10,14 @@ data class ResponseResult(
 
 data class BoardItem(
     @SerializedName("userNickname") val userNickname: String,
-    @SerializedName("boardId") val boardId: Int,
+    @SerializedName("boardId") val boardId: Long,
     @SerializedName("boardContent") val boardContent: String,
     @SerializedName("boardScope") val boardScope: String,
-    @SerializedName("boardLikes") val boardLikes: Int,
+    @SerializedName("boardLikes") val boardLikes: Long,
     @SerializedName("fileUrlLists") val fileUrlLists: List<String>,
-    @SerializedName("boardComments") val boardComments: Int
+    @SerializedName("boardComments") val boardComments: Long,
+    @SerializedName("likecheck") val likecheck: Boolean,
+    @SerializedName("profileUrl") val profileUrl: String,
 )
 
 data class BoardResponse(

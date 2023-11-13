@@ -1,40 +1,52 @@
 package com.ssafy.dog.domain.user.controller;
 
+import com.ssafy.dog.common.api.Api;
+import com.ssafy.dog.domain.user.dto.request.UserLoginReq;
+import com.ssafy.dog.domain.user.dto.request.UserSignupReq;
+import com.ssafy.dog.domain.user.dto.request.UserUpdateReq;
+import com.ssafy.dog.domain.user.service.UserService;
+import com.ssafy.dog.util.SecurityUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.ssafy.dog.common.api.Api;
-import com.ssafy.dog.domain.user.dto.UserDto;
-import com.ssafy.dog.domain.user.dto.UserSignupDto;
-import com.ssafy.dog.domain.user.repository.UserRepository;
-import com.ssafy.dog.domain.user.service.UserService;
-
-@RequestMapping("/user")
+@RequestMapping("/api/user")
+@RequiredArgsConstructor
 @RestController
+@Slf4j
 public class UserController {
-	private final UserService userService;
-	private final UserRepository userRepository;
+    private final UserService userService;
 
-	@Autowired
-	public UserController(UserService userService, UserRepository userRepository) { // <- RequiredArgsConstructor
-		this.userService = userService;
-		this.userRepository = userRepository;
-	}
+    @PostMapping("/signup")
+    @Operation(summary = "회원가입")
+    public Api<?> signUp(@Valid @RequestBody UserSignupReq userSignupReq) {
+        return userService.create(userSignupReq);
+    }
 
-	@PostMapping("/signup")
-	public Api<?> signUp(@Valid @RequestBody UserSignupDto userSignupDto) {
-		UserDto userDto = new UserDto();
-		userDto.setUserLoginId(userSignupDto.getUserLoginId());
-		userDto.setUserPhone(userSignupDto.getUserPhone());
-		userDto.setUserPw(userSignupDto.getUserPw1());
-		userDto.setUserNickname(userSignupDto.getUserNickname());
-		userDto.setUserTermsAgreed(userSignupDto.getUserTermsAgreed());
+    @PostMapping("/login")
+    @Operation(summary = "로그인")
+    public Api<?> login(@Valid @RequestBody UserLoginReq userLoginReq) {
 
-		return userService.create(userDto);
-	}
+        return userService.login(userLoginReq);
+    }
+
+    @PatchMapping("/update")
+    @Operation(summary = "유저 업데이트 (우선 전달 안 한 값은 null로 들어감)")
+    Api<?> update(@Valid @RequestBody UserUpdateReq userUpdateReq) {
+        String nickname = SecurityUtils.getUser().getUserNickname();
+
+        log.info("nickname : {}", nickname);
+
+        return userService.updateByUserNickname(nickname, userUpdateReq);
+    }
+
+    @GetMapping("/get/{nickname}")
+    @Operation(summary = "유저 정보 조회")
+    Api<?> read(@PathVariable("nickname") String userNickname) {
+
+        return userService.getByUserNickname(userNickname);
+    }
 }

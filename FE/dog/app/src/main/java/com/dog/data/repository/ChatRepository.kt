@@ -1,40 +1,28 @@
 package com.dog.data.repository
 
-import com.dog.data.model.chatHelthCheck.ChatHealthCheckRequest
-import com.dog.data.model.chatHelthCheck.ChatHealthCheckResponse
-import com.dog.util.common.RetrofitClient
+import com.dog.data.model.chat.ChatHistoryResponse
+import com.dog.data.model.chat.ChatListResponse
+import com.dog.data.model.chat.ExitChatroomResponse
+import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 
 interface ChatRepository {
-    @POST("/chat/test")
-    suspend fun sendChatMessage(@Body request: ChatHealthCheckRequest): ChatHealthCheckResponse
 
+    @POST("chatroom")
+    suspend fun createChatroom(@Body roomID: Int): Call<Response<ChatListResponse>>
 
-//    val chatApi = RetrofitClient.getInstance().create(ChatRepository::class.java)
-//    GlobalScope.launch
-//    {
-//        val result = chatApi.sendChatMessage(
-//            ChatRequest(
-//                id = "string",
-//                room_id = 0,
-//                content_type = "string",
-//                content = "string",
-//                sender_name = "string",
-//                sender_id = 0,
-//                send_time = 0,
-//                read_count = 0,
-//                sender_email = "string"
-//            )
-//        )
-//        Log.d("test", chatApi.toString())
-//        if (result != null) {
-//            Log.d("여기인가?: ", result.toString())
-//        }
-//    }
-//
-//    private lateinit var client: OkHttpClient
+    @GET("chatroom")
+    suspend fun getChatroomList(): Response<ChatListResponse>
 
+    @GET("chatroom/{roomId}")
+    suspend fun getChatroomHistory(@Path("roomId") roomID: Int): Response<ChatHistoryResponse>
 
+    @DELETE("chatroom/{roomId}")
+    suspend fun disconnectChatroom(@Path("roomId") roomID: Int): Response<ExitChatroomResponse>
 }
