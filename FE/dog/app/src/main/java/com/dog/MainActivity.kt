@@ -27,12 +27,17 @@ class MainActivity : ComponentActivity() {
                 ) {
                     DogApp { finish() }
                 }
+//                runBlocking {
+////                     비동기 함수 호출을 runBlocking 블록 안에서 수행
+//                    val response = HomeViewModel().loadBoarderNearData(127.11, 35.11, "test1")
+//                    Log.d("model", response.body().toString())
+//                }
+//                ForumScreen()
             }
         }
 
 
     }
-
 }
 
 
