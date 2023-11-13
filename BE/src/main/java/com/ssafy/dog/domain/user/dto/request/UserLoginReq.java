@@ -2,6 +2,7 @@ package com.ssafy.dog.domain.user.dto.request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import lombok.Getter;
@@ -18,5 +19,6 @@ public class UserLoginReq {
 		message = "대문자 하나 이상, 특수문자 하나 이상, 숫자 하나 이상을 포함한 최소 8자, 최대 16자")
 	private String userPw;
 
+	@NotNull(message = "FCM 토큰이 존재하지 않습니다")
 	private String fcmToken;
 }

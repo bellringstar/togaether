@@ -8,6 +8,4 @@ import com.ssafy.dog.domain.fcm.entity.FcmToken;
 @Repository
 public interface FcmTokenRepository extends CrudRepository<FcmToken, Long> {
 
-	FcmToken findByUserId(Long userId);
-
 }
