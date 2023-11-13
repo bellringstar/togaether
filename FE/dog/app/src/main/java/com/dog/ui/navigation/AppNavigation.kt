@@ -1,11 +1,10 @@
 package com.dog.ui.navigation
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,10 +18,11 @@ import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun AppNavigation(
     navController: NavHostController,
-    userViewModel: UserViewModel = hiltViewModel(),
+    userViewModel: UserViewModel,
     store: DataStoreManager
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -41,10 +41,11 @@ fun AppNavigation(
                 Log.d("FCM Log", "Current token: $token")
             }
 
+
     }
-    var startRoute = Screens.Home.route
-    val isLogin = userViewModel.isLogin.value
-    if (!isLogin) {
+
+    val token = userViewModel.jwtToken
+    if (token.value.isNullOrEmpty()) {
         // Token이 비어있는 경우(로그인 안된 경우) : 로그인 또는 회원 가입 화면을 표시
         // 이후 Token을 저장하고 앱의 다음 단계로 이동합니다.
         NavHost(
@@ -59,6 +60,6 @@ fun AppNavigation(
         }
     } else {
         // Token이 있는 경우: BottomNavigationBar를 표시
-        BottomNavigationBar(startRoute, userViewModel)
+        BottomNavigationBar(Screens.Home.route, userViewModel)
     }
 }
