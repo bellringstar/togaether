@@ -19,14 +19,16 @@ public class GpsTrackingResponse {
 	private LocalDateTime createdDate;
 	private LocalDateTime modifiedDate;
 	private GpsPoints gpsPoints;
+	private String runningTime;
 
 	@Builder
 	public GpsTrackingResponse(String id, LocalDateTime trackingDate, LocalDateTime createdDate,
 		LocalDateTime modifiedDate,
-		GpsPoints gpsPoints) {
+		GpsPoints gpsPoints, String runningTime) {
 		this.id = id;
 		this.trackingDate = trackingDate;
 		this.gpsPoints = gpsPoints;
+		this.runningTime = runningTime;
 		this.createdDate = createdDate;
 		this.modifiedDate = modifiedDate;
 	}
@@ -36,6 +38,7 @@ public class GpsTrackingResponse {
 			.id(gpsTracking.getId())
 			.gpsPoints(gpsTracking.getGpsPoints())
 			.trackingDate(gpsTracking.getTrackingDate())
+			.runningTime(gpsTracking.getRunningTime())
 			.createdDate(gpsTracking.getCreatedDate())
 			.modifiedDate(gpsTracking.getModifiedDate())
 			.build();

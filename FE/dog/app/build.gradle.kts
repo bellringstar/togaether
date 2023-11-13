@@ -1,10 +1,17 @@
+
+
 plugins {
     id("com.android.application")
     id("kotlin-parcelize")
     id("org.jetbrains.kotlin.android")
     id("org.jlleitschuh.gradle.ktlint") version "9.1.0"
     id("com.google.gms.google-services")
+    id ("dagger.hilt.android.plugin")
+    kotlin("kapt") version "1.8.10"
 }
+
+
+
 
 android {
     namespace = "com.dog"
@@ -33,11 +40,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -57,12 +64,29 @@ buildscript {
     }
     dependencies {
         classpath("org.jlleitschuh.gradle:ktlint-gradle:9.1.0")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.40.5")
     }
+}
+
+kapt {
+    correctErrorTypes = true
 }
 
 
 dependencies {
-    // 코루틴
+    //inject
+    implementation("javax.inject:javax.inject:1")
+    //hilt
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation ("com.google.dagger:hilt-android:2.44")
+//    implementation ("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
+    kapt ("com.google.dagger:hilt-compiler:2.44")
+    kapt ("androidx.hilt:hilt-compiler:1.0.0")
+
+    // Lifecycle components
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0")
+    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
+    implementation("androidx.lifecycle:lifecycle-common-java8:2.2.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     //코루틴
@@ -78,7 +102,7 @@ dependencies {
     implementation("com.google.android.material:material:1.10.0")
     implementation("com.google.firebase:firebase-messaging:23.3.1")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
-    implementation ("com.github.bumptech.glide:compose:1.0.0-beta01")
+    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
     //레드토핏
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")

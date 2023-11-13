@@ -12,13 +12,25 @@ import com.dog.data.local.chatList
 import com.dog.data.model.Chat
 import com.dog.data.model.chat.ChatroomInfo
 import com.dog.data.repository.ChatRepository
+import com.dog.data.repository.GpsRepository
+import com.dog.util.common.DataStoreManager
 import com.dog.util.common.RetrofitClient
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ChatViewModel : ViewModel() {
+@HiltViewModel
+class ChatViewModel @Inject constructor(
+    private val dataStoreManager: DataStoreManager
+)  : ViewModel() {
+
+    private val interceptor = RetrofitClient.RequestInterceptor(dataStoreManager)
+    private val chatApi: ChatRepository = RetrofitClient.getInstance(interceptor).create(
+        ChatRepository::class.java)
+
     // 채팅 정보 저장
     private val _chatState = MutableStateFlow(chatList)
     val chatState: StateFlow<List<Chat>> = _chatState.asStateFlow()
@@ -28,8 +40,7 @@ class ChatViewModel : ViewModel() {
     val loading: State<Boolean> get() = _loading
 
     // Retrofit 인터페이스를 사용하려면 여기서 인스턴스를 생성합니다.
-    private val chatApi: ChatRepository =
-        RetrofitClient.getInstance().create(ChatRepository::class.java)
+
     var curMessage by mutableStateOf("")
 
 
@@ -45,7 +56,7 @@ class ChatViewModel : ViewModel() {
         curMessage = ""
     }
 
-    private fun updateChatState(chat: Chat) {
+    fun updateChatState(chat: Chat) {
 //        _chatState.update { currentChatState ->
 //            currentChatState.toMutableList().apply {
 //                add(chat)
@@ -69,7 +80,7 @@ class ChatViewModel : ViewModel() {
                 val res = chatApi.getChatroomList()
 
                 if (res.isSuccessful) {
-                    Log.d("chatlist", res.body().toString())
+                    Log.d("chatlist", res.body()?.body.toString())
                     res.body()?.body?.let { chatroom ->
                         _chatListState.clear()
                         _chatListState.addAll(chatroom)
@@ -95,9 +106,12 @@ class ChatViewModel : ViewModel() {
             if (res.isSuccessful) {
                 // API 호출이 성공했을 때의 처리
                 val responseBody = res.body()
-                print(responseBody)
+                val chatHistory = res.body()?.body
+                Log.d("test", responseBody?.body.toString())
                 if (responseBody != null) {
                     // 응답 데이터를 사용하는 로직
+
+//                    _chatState.value = chatHistory // 수정된 목록을 다시 StateFlow에 할당합니다.
                 }
             } else {
                 // API 호출은 성공적으로 완료되었지만, 서버에서 오류 응답을 반환했을 때의 처리
