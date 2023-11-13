@@ -167,6 +167,7 @@ public class User extends BaseTimeEntity implements UserDetails {
                 .userLatitude(userLatitude)
                 .userLongitude(userLongitude)
                 .userAddress(userAddress)
+                .userIsRemoved(userIsRemoved)
                 .build();
     }
 

@@ -11,8 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -21,13 +24,15 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.dog.data.Screens
+import com.dog.data.viewmodel.map.LocationTrackingHistoryViewModel
+import com.dog.data.viewmodel.map.LocationTrackingViewModel
 import com.dog.ui.screen.HomeScreen
 import com.dog.ui.screen.MatchingScreen
 import com.dog.ui.screen.MypageScreen
-import com.dog.ui.screen.WalkingLogScreen
-import com.dog.ui.screen.WalkingScreen
+import com.dog.ui.screen.walking.WalkingScreen
 import com.dog.ui.screen.chat.ChatListScreen
 import com.dog.ui.screen.chat.ChattingScreen
+import com.dog.ui.screen.walking.WalkingHistoryScreen
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -38,6 +43,8 @@ fun BottomNavigationBar(startRoute: String) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     var shouldShowBottomBar = rememberSaveable { (mutableStateOf(true)) }
+    val locationTrackingViewModel:LocationTrackingViewModel = hiltViewModel()
+    val locationTrackingHistoryViewModel: LocationTrackingHistoryViewModel = hiltViewModel()
 
     when (navBackStackEntry?.destination?.route) {
         // "roomId" 값이 1이 아닌 경우에 대한 조건을 추가합니다.
@@ -106,9 +113,18 @@ fun BottomNavigationBar(startRoute: String) {
             }
             composable(Screens.Walking.route) {
                 WalkingScreen(
-                    navController
+                    navController,
+                    locationTrackingViewModel
                 )
             }
+            composable(Screens.WalkingHistory.route) {
+                WalkingHistoryScreen(
+                    navController
+                    ,locationTrackingViewModel,
+                    locationTrackingHistoryViewModel
+                )
+            }
+
             composable(Screens.Matching.route) {
                 MatchingScreen(
                     navController

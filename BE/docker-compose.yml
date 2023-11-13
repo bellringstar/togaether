@@ -153,20 +153,4 @@ services:
     volumes:
       - ./kafka/logs/3:/kafka
 
-  akhq:
-    image: tchiotludo/akhq:latest
-    hostname: akhq
-    depends_on:
-      - kafka-1
-      - kafka-2
-      - kafka-3
-    environment:
-      AKHQ_CONFIGURATION: |
-        akhq:
-          connections:
-            kafka:
-              properties:
-                bootstrap.servers: kafka1:9092,kafka2:9093,kafka3:9094
-    ports:
-      - "10000:10000"
 
