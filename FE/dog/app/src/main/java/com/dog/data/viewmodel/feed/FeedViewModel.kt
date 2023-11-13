@@ -8,15 +8,23 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dog.data.repository.FeedRepository
+import com.dog.util.common.DataStoreManager
 import com.dog.util.common.RetrofitClient
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
+import javax.inject.Inject
 
-class MyViewModel : ViewModel() {
-    private val apiService = RetrofitClient.getInstance().create(FeedRepository::class.java)
+@HiltViewModel
+class FeedViewModel @Inject constructor(
+    private val dataStoreManager: DataStoreManager
+) : ViewModel() {
+    private val interceptor = RetrofitClient.RequestInterceptor(dataStoreManager)
+    private val FeedApi: FeedRepository =
+        RetrofitClient.getInstance(interceptor).create(FeedRepository::class.java)
 
     fun uploadImages(imageUris: List<Uri>, context: Context) {
         viewModelScope.launch {
@@ -28,7 +36,7 @@ class MyViewModel : ViewModel() {
                     MultipartBody.Part.createFormData("images", file.name, requestBody)
                 }
 
-                val response = apiService.uploadImage(imageParts)
+                val response = FeedApi.uploadImage(imageParts)
                 if (response.isSuccessful) {
                     Log.d("ImageUpload", "이미지 업로드 성공!")
                     // 성공 처리 필요한대로 처리

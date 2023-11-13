@@ -15,13 +15,20 @@ import com.dog.data.model.feed.BoardItem
 import com.dog.data.model.feed.BoardResponse
 import com.dog.data.repository.CommentRepository
 import com.dog.data.repository.FeedRepository
+import com.dog.util.common.DataStoreManager
 import com.dog.util.common.RetrofitClient
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import javax.inject.Inject
 
-class HomeViewModel() : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val dataStoreManager: DataStoreManager
+) : ViewModel() {
+    private val interceptor = RetrofitClient.RequestInterceptor(dataStoreManager)
     private val _feedList = mutableStateListOf<BoardItem>()
     val feedListState: SnapshotStateList<BoardItem> get() = _feedList
 
@@ -52,8 +59,9 @@ class HomeViewModel() : ViewModel() {
     suspend fun addComment(addCommentRequest: AddCommentRequest) {
         Log.d("add", addCommentRequest.toString())
         try {
-            val apiService = RetrofitClient.getInstance().create(CommentRepository::class.java)
-            val response = apiService.addCommentApiResponse(addCommentRequest)
+            val AddCommentApi: CommentRepository =
+                RetrofitClient.getInstance(interceptor).create(CommentRepository::class.java)
+            val response = AddCommentApi.addCommentApiResponse(addCommentRequest)
             if (response.isSuccessful) {
                 val commentResponse = response.body()
                 commentResponse?.let {
@@ -86,9 +94,9 @@ class HomeViewModel() : ViewModel() {
     suspend fun loadCommentListData(
         boardId: Long
     ): CommentResponse? {
-        val apiService = RetrofitClient.getInstance().create(CommentRepository::class.java)
-
-        val commentListResponse = apiService.getCommentListApiResponse(
+        val commentListApi: CommentRepository =
+            RetrofitClient.getInstance(interceptor).create(CommentRepository::class.java)
+        val commentListResponse = commentListApi.getCommentListApiResponse(
             boardId = boardId
         )
         if (commentListResponse.isSuccessful) {
@@ -109,9 +117,10 @@ class HomeViewModel() : ViewModel() {
         userLongitude: Double,
         userNickname: String
     ): Response<BoardResponse> {
-        val apiService = RetrofitClient.getInstance().create(FeedRepository::class.java)
+        val NearDateApi: FeedRepository =
+            RetrofitClient.getInstance(interceptor).create(FeedRepository::class.java)
 //     리포지토리를 통해 데이터를 불러옵니다.
-        val response = apiService.getBoarderNearApiResponse(
+        val response = NearDateApi.getBoarderNearApiResponse(
             userLatitude = userLatitude,
             userLongitude = userLongitude,
             userNickname = userNickname

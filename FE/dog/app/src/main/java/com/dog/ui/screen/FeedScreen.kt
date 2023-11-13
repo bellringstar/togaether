@@ -25,12 +25,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.dog.data.viewmodel.feed.MyViewModel
+import com.dog.data.viewmodel.feed.FeedViewModel
+import com.dog.data.viewmodel.feed.HomeViewModel
 
 
 @Composable
-fun ForumScreen(viewModel: MyViewModel = viewModel()) {
+fun ForumScreen(viewModel: FeedViewModel = hiltViewModel()) {
     val localContext = LocalContext.current
     val selectedImageUris = remember { mutableStateListOf<Uri>() }
 

@@ -55,6 +55,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.bumptech.glide.Glide
@@ -63,13 +64,14 @@ import com.dog.data.model.comment.CommentItem
 import com.dog.data.model.feed.BoardItem
 import com.dog.data.viewmodel.feed.HomeViewModel
 import com.dog.ui.theme.DogTheme
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    val homeViewModel: HomeViewModel = viewModel()
+    val homeViewModel: HomeViewModel = hiltViewModel()
     var feedItems = homeViewModel.feedListState
     Log.d("temp", feedItems.toList().toString())
     DogTheme {
@@ -86,7 +88,7 @@ fun HomeScreen(navController: NavController) {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(feedItems) { feedItem ->
-                    FeedItemCard(feedItem = feedItem)
+                    FeedItemCard(feedItem = feedItem, homeViewModel = homeViewModel)
                 }
             }
         }
@@ -94,7 +96,7 @@ fun HomeScreen(navController: NavController) {
 }
 
 @Composable
-fun FeedItemCard(feedItem: BoardItem) {
+fun FeedItemCard(feedItem: BoardItem, homeViewModel: HomeViewModel) {
     val context = LocalContext.current
     val imageView = remember { ImageView(context) }
     OutlinedCard(
@@ -144,8 +146,8 @@ fun FeedItemCard(feedItem: BoardItem) {
             modifier = Modifier.padding(16.dp)
         ) {
             // 좋아요(like) 섹션
-            LikeSection(feedItem = feedItem, homeViewModel = HomeViewModel())
-            CommentSection(feedItem = feedItem, homeViewModel = HomeViewModel())
+            LikeSection(feedItem = feedItem, homeViewModel = homeViewModel)
+            CommentSection(feedItem = feedItem, homeViewModel = homeViewModel)
         }
     }
 }
