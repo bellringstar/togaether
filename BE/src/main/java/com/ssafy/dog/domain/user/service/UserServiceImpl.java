@@ -21,6 +21,8 @@ import org.springframework.validation.FieldError;
 import com.ssafy.dog.common.api.Api;
 import com.ssafy.dog.common.error.UserErrorCode;
 import com.ssafy.dog.common.exception.ApiException;
+import com.ssafy.dog.domain.fcm.entity.FcmToken;
+import com.ssafy.dog.domain.fcm.repository.FcmTokenRepository;
 import com.ssafy.dog.domain.user.dto.request.UserLoginReq;
 import com.ssafy.dog.domain.user.dto.request.UserSignupReq;
 import com.ssafy.dog.domain.user.dto.request.UserUpdateReq;
@@ -45,6 +47,7 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtTokenProvider jwtTokenProvider;
+	private final FcmTokenRepository fcmTokenRepository;
 
 	private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$");
 	private static final Pattern PASSWORD_PATTERN = Pattern.compile(
@@ -145,6 +148,9 @@ public class UserServiceImpl implements UserService {
 
 		JwtToken jwtToken = jwtTokenProvider.generateToken(auth);
 
+		// Redis에 userId, fcmToken 저장
+		fcmTokenRepository.save(new FcmToken(user.getUserId(), userLoginReq.getFcmToken()));
+		
 		return Api.ok(new UserLoginRes(user.getUserLoginId(), user.getUserNickname(), user.getUserPicture(),
 			jwtToken.getAccessToken()));
 
