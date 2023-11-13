@@ -10,13 +10,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.dog.data.viewmodel.user.UserViewModel
 import com.dog.ui.navigation.AppNavigation
@@ -56,7 +54,6 @@ fun DogApp(onPermissionDenied: () -> Unit) {
         val navController = rememberNavController()
         val context = LocalContext.current
         val store = DataStoreManager(context)
-        val tokenText = store.getAccessToken.collectAsState(initial = "test").value
         val userViewModel: UserViewModel = hiltViewModel()
 
         AppNavigation(navController, userViewModel, store)
