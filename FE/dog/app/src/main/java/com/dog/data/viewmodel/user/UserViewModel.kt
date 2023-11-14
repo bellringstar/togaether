@@ -45,10 +45,6 @@ class UserViewModel @Inject constructor(
     private val _userInfo = MutableStateFlow<UserBody?>(null)
     val userInfo = _userInfo.asStateFlow()
 
-    fun renderLogin() {
-        _isLogin.value = true
-    }
-
     suspend fun login(id: String, pw: String) {
         viewModelScope.launch {
             try {

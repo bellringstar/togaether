@@ -131,11 +131,16 @@ fun BottomNavigationBar(startRoute: String, userViewModel: UserViewModel) {
                     navController
                 )
             }
-            composable(Screens.Mypage.route) {
-                MypageScreen(
-                    navController,
-                    userViewModel
-                )
+//            navController.navigate("mypage/${userNickname}") << 이거로 이동하기
+            composable(route = "mypage/{userNickname}") { backStackEntry ->
+                val userNickname = backStackEntry.arguments?.getString("userNickname")
+                if (userNickname != null) {
+                    MypageScreen(
+                        navController,
+                        userViewModel,
+                        userNickname
+                    )
+                }
             }
             composable(
                 route = "chatroom/{roomId}",
