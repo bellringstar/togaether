@@ -29,6 +29,7 @@ import com.ssafy.dog.domain.board.repository.FileUrlRepository;
 import com.ssafy.dog.domain.board.repository.LikeReposiotry;
 import com.ssafy.dog.domain.user.entity.User;
 import com.ssafy.dog.domain.user.repository.UserRepository;
+import com.ssafy.dog.util.SecurityUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +61,8 @@ public class BoardServiceImpl implements BoardService {
 
 	@Transactional
 	public Api<String> createBoard(BoardReqDto boardDto) {
-		Optional<User> curUser = userRepository.findByUserNickname(boardDto.getUserNickname());
+		String userNickname = SecurityUtils.getUser().getUserNickname();
+		Optional<User> curUser = userRepository.findByUserNickname(userNickname);
 		if (curUser.isEmpty()) {
 			throw new ApiException(UserErrorCode.USER_NOT_FOUND);
 		}
@@ -92,7 +94,8 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Transactional
-	public Api<List<BoardDto>> findBoardbyNickname(String userNickname, String viewUserNickname) {
+	public Api<List<BoardDto>> findBoardbyNickname(String userNickname) {
+		String viewUserNickname = SecurityUtils.getUser().getUserNickname();
 		Optional<User> curUser = userRepository.findUserByUserNickname(userNickname);
 		User currentUser = curUser.orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
 		Optional<User> curUser1 = userRepository.findUserByUserNickname(viewUserNickname);
@@ -130,11 +133,16 @@ public class BoardServiceImpl implements BoardService {
 
 	@Transactional
 	public Api<String> deleteBoard(Long boardId) {
+		Long userId = SecurityUtils.getUserId();
 		Optional<Board> boardOptional = boardRepository.findById(boardId);
 		Board board = boardOptional.orElseThrow(() -> new ApiException(BoardErrorCode.BOARD_LIST_IS_EMPTY));
 		if (board.getBoardStatus() == FileStatus.DELETE) {
 			throw new ApiException(BoardErrorCode.BOARD_LIST_IS_EMPTY);
 		}
+		if (!Objects.equals(board.getUser().getUserId(), userId)) {
+			throw new ApiException(BoardErrorCode.USER_NOT_MATCH);
+		}
+
 		List<FileUrl> fileUrls = board.getFileUrlLists();
 		for (FileUrl fileUrl : fileUrls) {
 			fileUrl.removeFile();
@@ -150,9 +158,9 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Transactional
-	public Api<List<BoardDto>> findBoardNeararea(double userLatitude, double userLongitude, String viewUserNickname) {
+	public Api<List<BoardDto>> findBoardNeararea(double userLatitude, double userLongitude) {
+		String viewUserNickname = SecurityUtils.getUser().getUserNickname();
 		List<Board> boardList = boardRepository.findAll(sort);
-
 		Optional<User> curUser1 = userRepository.findUserByUserNickname(viewUserNickname);
 		User currentUser1 = curUser1.orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
 
