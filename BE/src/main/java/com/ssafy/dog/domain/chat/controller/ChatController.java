@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,13 +69,13 @@ public class ChatController {
 	}
 
 	@MessageMapping("/message")
-	// public void sendMessage(@Valid MessageDto message, @Header("Authorization") final String accessToken) {
-	public void sendMessage(@Valid MessageDto message) {
+	public void sendMessage(@Valid MessageDto message, @Header("Authorization") final String accessToken) {
+		// public void sendMessage(@Valid MessageDto message) {
 
-		// chatService.sendMessage(message, accessToken);
+		chatService.sendMessage(message, accessToken);
 
 		//임시 구현
-		chatService.sendMessage(message, String.valueOf(message.getSenderId()));
+		// chatService.sendMessage(message, String.valueOf(message.getSenderId()));
 
 	}
 
