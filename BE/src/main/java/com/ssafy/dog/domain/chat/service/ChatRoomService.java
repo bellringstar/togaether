@@ -2,6 +2,7 @@ package com.ssafy.dog.domain.chat.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,10 +31,16 @@ public class ChatRoomService {
 
 	@Transactional
 	public void connectChatRoom(Long chatRoomId, Long userId) {
-		ChatRoomUsers chatRoomUsers = ChatRoomUsers.builder().userId(userId).chatRoomId(chatRoomId).build();
 
-		log.info("Redis 접속 저장 : {}", chatRoomUsers.toString());
-		chatRoomUsersRepository.save(chatRoomUsers);
+		Optional<ChatRoomUsers> chatRoomUsers = chatRoomUsersRepository.findByChatRoomIdAndUserId(chatRoomId, userId);
+
+		if (!chatRoomUsers.isPresent()) {
+			ChatRoomUsers newChatRoomUsers = ChatRoomUsers.builder().userId(userId).chatRoomId(chatRoomId).build();
+
+			log.info("Redis 접속 저장 : {}", newChatRoomUsers.getUserId());
+			chatRoomUsersRepository.save(newChatRoomUsers);
+		}
+
 	}
 
 	@Transactional
