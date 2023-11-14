@@ -13,7 +13,6 @@ import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface FeedRepository {
@@ -27,7 +26,7 @@ interface FeedRepository {
     suspend fun PostFeedApiResponse(@Body request: BoardRequest): Response<ResponseBody>
 
     @DELETE("board")
-    suspend fun deleteFeedApiResponse(@Path("boardId") boardId: Long): Response<DeleteFeedResponse>
+    suspend fun deleteFeedApiResponse(@Query("boardId") boardId: Long): Response<DeleteFeedResponse>
 
 
     @Multipart
