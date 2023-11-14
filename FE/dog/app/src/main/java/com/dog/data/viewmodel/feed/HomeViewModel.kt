@@ -13,9 +13,10 @@ import com.dog.data.model.comment.CommentItem
 import com.dog.data.model.comment.CommentResponse
 import com.dog.data.model.feed.BoardItem
 import com.dog.data.model.feed.BoardResponse
+import com.dog.data.model.like.LikeUpRequest
 import com.dog.data.repository.CommentRepository
 import com.dog.data.repository.FeedRepository
-import com.dog.data.repository.GpsRepository
+import com.dog.data.repository.LikeRepository
 import com.dog.util.common.DataStoreManager
 import com.dog.util.common.RetrofitClient
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,24 +31,33 @@ class HomeViewModel @Inject constructor(
     private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
     private val interceptor = RetrofitClient.RequestInterceptor(dataStoreManager)
-    private val addCommentApi: CommentRepository =
+    private val commentApi: CommentRepository =
         RetrofitClient.getInstance(interceptor).create(CommentRepository::class.java)
+    private val likeApi: LikeRepository =
+        RetrofitClient.getInstance(interceptor).create(LikeRepository::class.java)
+    private val feedApi: FeedRepository =
+        RetrofitClient.getInstance(interceptor).create(FeedRepository::class.java)
+
     private val _feedList = mutableStateListOf<BoardItem>()
     val feedListState: SnapshotStateList<BoardItem> get() = _feedList
 
     private val _commentList = mutableStateListOf<CommentItem>()
     val commentListState: SnapshotStateList<CommentItem> get() = _commentList
 
-
     private var _isDataLoaded = mutableStateOf(false)
     val isDataLoaded: State<Boolean> get() = _isDataLoaded
+
+    //좋아요
+    private val _likes = MutableStateFlow(0L)
+    val likes: MutableStateFlow<Long> get() = _likes
+    private val _isLiked = MutableStateFlow(false)
+    val isLiked: StateFlow<Boolean> get() = _isLiked
 
     init {
         viewModelScope.launch {
             val userLatitude = 127.11
             val userLongitude = 35.11
-            val userNickname = "test1"
-            loadBoarderNearData(userLatitude, userLongitude, userNickname)
+            loadBoarderNearData(userLatitude, userLongitude)
         }
     }
 
@@ -58,11 +68,14 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun addComment(addCommentRequest: AddCommentRequest) {
+    fun addComment(
+        addCommentRequest: AddCommentRequest, userName: String?,
+        userProfileUrl: String?
+    ) {
         viewModelScope.launch {
             Log.d("API_Response", addCommentRequest.toString())
             try {
-                val response = addCommentApi.addCommentApiResponse(addCommentRequest)
+                val response = commentApi.addCommentApiResponse(addCommentRequest)
                 if (response.isSuccessful) {
                     Log.i("API_Response", "댓글 등록 : ${response.body()}")
                     val commentResponse = response.body()
@@ -72,9 +85,9 @@ class HomeViewModel @Inject constructor(
                             boardId = addCommentRequest.boardId,
                             commentId = 0,
                             commentContent = addCommentRequest.commentContent,
-                            userNickname = addCommentRequest.userNickname,
+                            userNickname = userName ?: "", // TODO: 바로 들어가게 해야함
                             commentLikes = 0,
-                            userProfileUrl = ""  // 여기에 프로필 URL을 설정해야 합니다.
+                            userProfileUrl = userProfileUrl ?: "",  // 여기에 프로필 URL을 설정해야 합니다.
                         )
                         _commentList.add(newCommentItem)
                         _commentsCount.value = _commentList.size
@@ -115,11 +128,9 @@ class HomeViewModel @Inject constructor(
         return null
     }
 
-
     suspend fun loadBoarderNearData(
         userLatitude: Double,
         userLongitude: Double,
-        userNickname: String
     ): Response<BoardResponse> {
         val NearDateApi: FeedRepository =
             RetrofitClient.getInstance(interceptor).create(FeedRepository::class.java)
@@ -127,7 +138,6 @@ class HomeViewModel @Inject constructor(
         val response = NearDateApi.getBoarderNearApiResponse(
             userLatitude = userLatitude,
             userLongitude = userLongitude,
-            userNickname = userNickname
         )
         if (response.isSuccessful) {
             response.body()?.body?.let { boardNearApi ->
@@ -143,28 +153,6 @@ class HomeViewModel @Inject constructor(
         return response
     }
 
-    private val _likes = MutableStateFlow(0L)
-    val likes: MutableStateFlow<Long> get() = _likes
-
-
-    private val _isLiked = MutableStateFlow(false)
-    val isLiked: StateFlow<Boolean> get() = _isLiked
-
-
-    fun toggleLikeStatus(feedItem: BoardItem) {
-        feedItem.likecheck = !feedItem.likecheck
-//        feedItem.boardLikes =
-//            if (feedItem.likecheck) feedItem.boardLikes + 1 else feedItem.boardLikes - 1
-//        Log.d("feedItem", _isLiked.value.toString())
-        if (feedItem.likecheck) {
-            _likes.value += 1
-            Log.d("like", _likes.value.toString())
-        } else {
-            _likes.value -= 1
-        }
-    }
-
-
     private val _commentsList = mutableStateListOf<Comment>()
     val commentsList: List<Comment> get() = _commentsList
 
@@ -176,4 +164,141 @@ class HomeViewModel @Inject constructor(
         _commentsCount.value = _commentsList.size
     }
 
+    //like
+    fun toggleLikeStatus(feedItem: BoardItem) {
+
+        viewModelScope.launch {
+            val likeUpRequest = LikeUpRequest(feedItem.boardId)
+//             likecheck 상태에 따라 게시물 좋아요 또는 취소 호출
+            if (!feedItem.likecheck) {
+                likePost(likeUpRequest, feedItem)
+            } else {
+                likeDown(feedItem)
+            }
+        }
+    }
+
+    suspend fun likePost(likeUpRequest: LikeUpRequest, feedItem: BoardItem) {
+        viewModelScope.launch {
+            Log.d("API_Response", likeUpRequest.toString())
+            try {
+                val response = likeApi.likeUp(likeUpRequest)
+                Log.d("likeUp", response.body()?.body.toString())
+                if (response.isSuccessful) {
+                    Log.i("API_Response", "게시글 좋아요 등록 : ${response.body()}")
+                    val likeResponse = response.body()?.body
+                    likeResponse?.let {
+                        // 성공적으로 좋아요가 추가되었을 때의 처리
+                        if (!feedItem.likecheck) {
+                            // 좋아요 수 증가 (눌렀을 때만)
+                            feedItem.boardLikes += 1
+                            feedItem.likecheck = true
+                            _likes.value = feedItem.boardLikes
+                        }
+                        // 좋아요 여부 업데이트
+                        _isLiked.value = feedItem.likecheck
+                    }
+                } else {
+                    // 좋아요 추가 실패 시의 처리
+                    Log.e(
+                        "API_Response",
+                        "Like Post Failed: ${response.code()}, ${response.message()}"
+                    )
+                }
+            } catch (e: Exception) {
+                // 예외 발생 시의 처리
+                Log.e("API_Response", "Exception: ${e.message}", e)
+            }
+        }
+    }
+
+    suspend fun DeleteFeed(feedItem: BoardItem) {
+        viewModelScope.launch {
+            try {
+                val response = feedApi.deleteFeedApiResponse(boardId = feedItem.boardId)
+                Log.d("delete", response.body().toString())
+                if (response.isSuccessful) {
+                    val deleteFeedResponse = response.body()?.body
+                    deleteFeedResponse?.let {
+                        feedItem.boardId
+                    }
+                } else {
+                    // 게시글 삭제 실패 시의 처리
+                    Log.e(
+                        "API_Response",
+                        "Delete Feed Failed: ${response.code()}, ${response.message()}"
+                    )
+                }
+            } catch (e: Exception) {
+                Log.e("API_Response", "Exception: ${e.message}", e)
+            }
+        }
+    }
+
+    suspend fun likeDown(feedItem: BoardItem) {
+        viewModelScope.launch {
+            try {
+                val response = likeApi.likeDown(boardId = feedItem.boardId)
+                Log.d("likeDown", response.body().toString())
+                if (response.isSuccessful) {
+                    Log.i("API_Response", "게시글 좋아요 감소 : ${response.body()}")
+                    val likeResponse = response.body()?.body
+                    likeResponse?.let {
+                        // 성공적으로 좋아요가 감소되었을 때의 처리
+                        if (feedItem.likecheck) {
+                            // 좋아요 수 감소 (눌렀을 때만)
+                            feedItem.boardLikes -= 1
+                            feedItem.likecheck = false
+                            _likes.value = feedItem.boardLikes
+                        }
+                        // 좋아요 여부 업데이트
+                        _isLiked.value = feedItem.likecheck
+                    }
+                } else {
+                    // 좋아요 감소 실패 시의 처리
+                    Log.e(
+                        "API_Response",
+                        "Like Down Failed: ${response.code()}, ${response.message()}"
+                    )
+                }
+            } catch (e: Exception) {
+                // 예외 발생 시의 처리
+                Log.e("API_Response", "Exception: ${e.message}", e)
+            }
+        }
+    }
+
+    fun deleteComment(comment: Long) {
+        viewModelScope.launch {
+            try {
+                val response = commentApi.deleteCommentApiResponse(commentId = comment)
+                Log.d("deleteComment", response.body().toString())
+                if (response.isSuccessful) {
+                    Log.i("API_Response", "댓글 삭제 성공 : ${response.body()}")
+                    val deleteCommentResponse = response.body()?.body
+                    deleteCommentResponse?.let {
+                        // 성공적으로 댓글이 삭제되었을 때의 처리
+                        // You can perform additional actions if needed
+                    }
+                } else {
+                    // 댓글 삭제 실패 시의 처리
+                    Log.e(
+                        "API_Response",
+                        "Delete Comment Failed: ${response.code()}, ${response.message()}"
+                    )
+                }
+            } catch (e: Exception) {
+                // 예외 발생 시의 처리
+                Log.e("API_Response", "Exception: ${e.message}", e)
+            }
+        }
+    }
 }
+
+
+
+
+
+
+
+

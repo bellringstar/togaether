@@ -3,7 +3,7 @@ package com.dog.data.model.feed
 import com.google.gson.annotations.SerializedName
 
 data class ResponseResult(
-    @SerializedName("code") val code: Int,
+    @SerializedName("code") val code: Long,
     @SerializedName("message") val message: String,
     @SerializedName("description") val description: String
 )

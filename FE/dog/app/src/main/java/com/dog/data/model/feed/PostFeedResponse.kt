@@ -1,15 +1,14 @@
-package com.dog.data.model.comment
+package com.dog.data.model.feed
 
 import com.google.gson.annotations.SerializedName
 
-
-data class DeleteCommentResponse(
-    @SerializedName("result") val result: DeleteCommentResult,
+data class ResponseBody(
+    @SerializedName("result") val result: DeleteFeedResult,
     @SerializedName("body") val body: String
 )
 
-data class DeleteCommentResult(
-    @SerializedName("code") val code: Long,
+data class PostFeedResponseResult(
+    @SerializedName("code") val code: Int,
     @SerializedName("message") val message: String,
     @SerializedName("description") val description: String
 )

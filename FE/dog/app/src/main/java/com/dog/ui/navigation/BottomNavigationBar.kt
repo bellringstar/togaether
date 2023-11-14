@@ -27,6 +27,7 @@ import com.dog.data.viewmodel.user.UserViewModel
 import com.dog.ui.screen.HomeScreen
 import com.dog.ui.screen.MatchingScreen
 import com.dog.ui.screen.MypageScreen
+import com.dog.ui.screen.PostFeedScreen
 import com.dog.ui.screen.chat.ChatListScreen
 import com.dog.ui.screen.chat.ChattingScreen
 import com.dog.ui.screen.walking.WalkingHistoryScreen
@@ -135,6 +136,11 @@ fun BottomNavigationBar(startRoute: String, userViewModel: UserViewModel) {
                 MypageScreen(
                     navController,
                     userViewModel
+                )
+            }
+            composable(Screens.PostFeed.route){
+                PostFeedScreen(
+                    navController,
                 )
             }
             composable(
