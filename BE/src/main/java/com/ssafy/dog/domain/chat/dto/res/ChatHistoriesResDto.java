@@ -23,7 +23,7 @@ public class ChatHistoriesResDto {
 
 	private String content;
 
-	private String sendDate;
+	private String sendTime;
 
 	private List<Long> readList;
 
@@ -34,7 +34,7 @@ public class ChatHistoriesResDto {
 		this.senderName = history.getSenderName();
 		this.contentType = history.getContentType();
 		this.content = history.getContent();
-		this.sendDate = history.getSendDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-hh-mm-ss-a"));
+		this.sendTime = history.getSendDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-hh-mm-a"));
 		this.readList = readList;
 
 	}
