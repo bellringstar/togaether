@@ -159,6 +159,7 @@ public class ChatService {
 		log.info("채팅 읽은 사람들 : {}", connectedList);
 		log.info("히스토리 PK 값 : {}", historyId);
 		ChatRead curRead = ChatRead.builder().
+			roomId(message.getRoomId()).
 			historyId(historyId).
 			readList(connectedList).build();
 

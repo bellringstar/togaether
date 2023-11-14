@@ -10,7 +10,9 @@ import com.ssafy.dog.common.exception.ApiException;
 import com.ssafy.dog.domain.chat.entity.ChatMembers;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 public class ChatMembersRepositoryImpl implements ChatMembersRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
@@ -33,7 +35,7 @@ public class ChatMembersRepositoryImpl implements ChatMembersRepositoryCustom {
 			.fetchOne();
 
 		if (chatMember == null) {
-			new ApiException(ChatErrorCode.CHATROOM_NOT_FOUND);
+			throw new ApiException(ChatErrorCode.CHATROOM_NOT_FOUND);
 		}
 		return chatMember;
 	}
