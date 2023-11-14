@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.dog.common.api.Api;
 import com.ssafy.dog.domain.chat.dto.MessageDto;
+import com.ssafy.dog.domain.chat.dto.req.ChatRoomLeaveReqDto;
 import com.ssafy.dog.domain.chat.dto.req.ChatRoomReqDto;
 import com.ssafy.dog.domain.chat.dto.res.ChatHistoriesResDto;
 import com.ssafy.dog.domain.chat.dto.res.ChatListResDto;
@@ -58,6 +59,13 @@ public class ChatController {
 
 		chatRoomService.disconnectChatRoom(chatRoomId, SecurityUtils.getUserId());
 		return Api.ok(chatRoomId + " 번 채팅방 : " + SecurityUtils.getUserId() + "나감");
+	}
+
+	@DeleteMapping("/chatroom/leave")
+	public Api<?> leaveChat(@RequestBody ChatRoomLeaveReqDto chatRoomLeaveReqDto) {
+
+		chatRoomService.leaveChatRoom(chatRoomLeaveReqDto.getRoomId(), SecurityUtils.getUserId());
+		return Api.ok(chatRoomLeaveReqDto.getRoomId() + " 번 채팅방 : " + SecurityUtils.getUserId() + "나감");
 	}
 
 	@MessageMapping("/message")

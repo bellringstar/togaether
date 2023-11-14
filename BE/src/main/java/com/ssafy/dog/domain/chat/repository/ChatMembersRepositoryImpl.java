@@ -5,6 +5,8 @@ import static com.ssafy.dog.domain.chat.entity.QChatMembers.*;
 import java.util.List;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.dog.common.error.ChatErrorCode;
+import com.ssafy.dog.common.exception.ApiException;
 import com.ssafy.dog.domain.chat.entity.ChatMembers;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,20 @@ public class ChatMembersRepositoryImpl implements ChatMembersRepositoryCustom {
 			.from(chatMembers)
 			.where(chatMembers.user.userId.eq(userId))
 			.fetch();
+	}
+
+	@Override
+	public ChatMembers findByRoomIdAndUserId(Long roomId, Long userId) {
+		ChatMembers chatMember = jpaQueryFactory
+			.select(chatMembers)
+			.from(chatMembers)
+			.where(chatMembers.user.userId.eq(userId).and(chatMembers.chatRoom.roomId.eq(roomId)))
+			.fetchOne();
+
+		if (chatMember == null) {
+			new ApiException(ChatErrorCode.CHATROOM_NOT_FOUND);
+		}
+		return chatMember;
 	}
 
 }
