@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,8 +24,11 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -42,6 +46,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
@@ -58,7 +63,10 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 
 @Composable
 fun MypageScreen(
-    navController: NavController, myPageViewModel: MyPageViewModel, userNickname: String? = null
+    navController: NavController,
+    myPageViewModel: MyPageViewModel,
+    userNickname: String? = null,
+    modifier: Modifier = Modifier.fillMaxHeight()
 ) {
     val userInfoState = myPageViewModel.userInfo.collectAsState()
     val dogs = myPageViewModel.dogs.collectAsState()
@@ -105,18 +113,21 @@ fun MypageScreen(
                         Modifier
                             .padding(4.dp)
                             .height(80.dp)
+                            .weight(1f)
                     )
                     EditDogButton(
                         navController, isOwnProfile,
                         Modifier
                             .padding(4.dp)
                             .height(80.dp)
+                            .weight(1f)
                     )
                     FriendButtons(
                         myPageViewModel, navController,
                         Modifier
                             .padding(4.dp)
                             .height(80.dp)
+                            .weight(1f)
                     )
                 }
                 Divider(
@@ -196,7 +207,7 @@ fun EditProfileButton(
                 navController.navigate("edit_profile")
             }, modifier = modifier
         ) {
-            Text(text = "프로필 편집")
+            Text(text = "프로필\n편집", textAlign = TextAlign.Center)
         }
 
     }
@@ -210,12 +221,13 @@ fun EditDogButton(navController: NavController, isOwnProfile: Boolean, modifier:
                 navController.navigate("edit_dog")
             }, modifier = modifier
         ) {
-            Text(text = "내 강아지 편집")
+            Text(text = "강아지\n편집", textAlign = TextAlign.Center)
         }
     }
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FriendButtons(
     myPageViewModel: MyPageViewModel, navController: NavController, modifier: Modifier
@@ -230,47 +242,37 @@ fun FriendButtons(
             myPageViewModel.clearToastMessage()
         }
     }
-    Row(
-        horizontalArrangement = Arrangement.SpaceAround
-    ) {
-        if (isOwnProfile) {
-            FriendRequestsScreen(myPageViewModel, navController, modifier)
-        } else {
-            Button(
-                onClick = {
-                    myPageViewModel.sendFriendRequest(myPageViewModel.currentUserNickname.value!!)
-                }, modifier = modifier
-            ) {
-                Text(text = "친구 신청")
-            }
+    if (isOwnProfile) {
+        var showDialog by remember { mutableStateOf(false) }
+        val friendRequests = myPageViewModel.friendRequest.collectAsState()
+
+        Button(modifier = modifier, onClick = {
+            myPageViewModel.getFriendRequests()
+            showDialog = true
+        }) {
+            Text(text = "새 친구\n요청", textAlign = TextAlign.Center)
+        }
+
+        if (showDialog) {
+            FriendRequestDialog(
+                friendRequests = friendRequests.value,
+                onDismiss = { showDialog = false },
+                myPageViewModel = myPageViewModel,
+                navController
+            )
+        }
+    } else {
+        Button(
+            onClick = {
+                myPageViewModel.sendFriendRequest(myPageViewModel.currentUserNickname.value!!)
+            }, modifier = modifier
+        ) {
+            Text(text = "친구 신청")
         }
     }
+
 }
 
-@Composable
-fun FriendRequestsScreen(
-    myPageViewModel: MyPageViewModel,
-    navController: NavController,
-    modifier: Modifier
-) {
-    var showDialog by remember { mutableStateOf(false) }
-    val friendRequests = myPageViewModel.friendRequest.collectAsState()
-    Button(modifier = modifier, onClick = {
-        myPageViewModel.getFriendRequests()
-        showDialog = true
-    }) {
-        Text(text = "친구 요청")
-    }
-
-    if (showDialog) {
-        FriendRequestDialog(
-            friendRequests = friendRequests.value,
-            onDismiss = { showDialog = false },
-            myPageViewModel = myPageViewModel,
-            navController
-        )
-    }
-}
 
 @Composable
 fun FriendRequestDialog(
