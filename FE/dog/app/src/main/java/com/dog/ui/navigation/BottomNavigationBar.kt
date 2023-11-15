@@ -32,6 +32,7 @@ import com.dog.ui.screen.MatchingScreen
 import com.dog.ui.screen.PostFeedScreen
 import com.dog.ui.screen.chat.ChatListScreen
 import com.dog.ui.screen.chat.ChattingScreen
+import com.dog.ui.screen.profile.EditDogProfileScreen
 import com.dog.ui.screen.profile.EditUserProfileScreen
 import com.dog.ui.screen.profile.MypageScreen
 import com.dog.ui.screen.walking.WalkingHistoryScreen
@@ -67,6 +68,7 @@ fun BottomNavigationBar(startRoute: String, userViewModel: UserViewModel) {
 
     shouldShowBottomBar.value = when (navBackStackEntry?.destination?.route) {
         "profile/{userNickname}" -> false
+        "edit_profile", "edit_dog" -> false
         else -> true
     }
 
@@ -166,7 +168,7 @@ fun BottomNavigationBar(startRoute: String, userViewModel: UserViewModel) {
             }
 
             composable("edit_dog") {
-                EditUserProfileScreen(navController, myPageViewModel, imageUploadViewModel)
+                EditDogProfileScreen(navController, myPageViewModel, imageUploadViewModel)
             }
         }
     }

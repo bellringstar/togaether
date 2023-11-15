@@ -71,6 +71,8 @@ class MyPageViewModel @Inject constructor(
     private val _articles = MutableStateFlow<List<BoardItem>>(listOf())
     val articles: StateFlow<List<BoardItem>> = _articles.asStateFlow()
 
+    private val _toastMessage = mutableStateOf<String?>(null)
+    val toastMessage: State<String?> = _toastMessage
     // 유저 정보 저장
     init {
         getUser()
@@ -242,5 +244,40 @@ class MyPageViewModel @Inject constructor(
                 Log.d("api_err", e.message.toString())
             }
         }
+    }
+
+    fun sendFriendRequest(receiverNickname: String) {
+        viewModelScope.launch {
+            try {
+                val retrofitResponse = friendApi.sendFriendRequest(receiverNickname)
+                if (retrofitResponse.isSuccessful) {
+                    val responseBody = retrofitResponse.body()
+                    _toastMessage.value = "${currentUserNickname.value}님에게 친구 신청이 성공적으로 전송되었습니다."
+                } else {
+                    // 처리 실패 시
+                    val errorBody = retrofitResponse.errorBody()?.string()
+                    val gson = Gson()
+                    val typeToken = object : TypeToken<Response<ResponseBodyResult>>() {}.type
+                    try {
+                        val errorResponse: Response<ResponseBodyResult> = gson.fromJson(errorBody, typeToken)
+                        Log.e("sendFriendRequest", "${errorResponse.result.message}")
+                        _toastMessage.value = errorResponse.result.description
+                    } catch (e: JsonSyntaxException) {
+                        Log.e("sendFriendRequest", "JSON 파싱 에러", e)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("sendFriendRequest", "네트워크 요청 에러", e)
+                _toastMessage.value = "친구 신청 중 오류가 발생했습니다."
+            }
+        }
+    }
+
+    fun clearToastMessage() {
+        _toastMessage.value = null
+    }
+
+    fun updateDogInfo(dog: DogInfo) {
+        Log.i("updateDog", "$dog")
     }
 }
