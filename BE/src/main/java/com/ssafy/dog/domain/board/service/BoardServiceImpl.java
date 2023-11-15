@@ -63,7 +63,6 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	private boolean checkFriend(User user, User friend) {
-		System.out.println("=======================================================================");
 		return friendshipRepository.findByUserAndFriend(user, friend).isPresent();
 	}
 
