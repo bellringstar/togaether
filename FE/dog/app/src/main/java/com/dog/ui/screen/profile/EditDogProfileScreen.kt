@@ -219,7 +219,10 @@ fun DogEditFields(
     )
 
     Row {
-        Button(onClick = { imagePickerLauncher.launch("image/*") }) {
+        Button(
+            onClick = { imagePickerLauncher.launch("image/*") },
+            modifier = Modifier.weight(1f)
+        ) {
             Text("강아지 사진 수정")
         }
 
@@ -237,7 +240,7 @@ fun DogEditFields(
                     userId = dog.userId
                 )
             )
-        }) {
+        }, modifier = Modifier.weight(1f)) {
             Text("강아지 정보 업데이트")
         }
 
