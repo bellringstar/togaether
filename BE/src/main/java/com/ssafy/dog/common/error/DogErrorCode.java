@@ -18,6 +18,7 @@ public enum DogErrorCode implements ErrorCodeIfs {
     INVALID_DOG_UPDATE_FIELDS(400, 1609, "유효하지 않은 개 속성입니다."),
     DISPOSITION_VALUE_ERROR(400, 1610, "입력된 개 성향이 DogDisposition 내의 값들과 다릅니다."),
     SIZE_VALUE_ERROR(400, 1611, "입력된 개 크기가 'SMALL', 'MEDIUM', 'LARGE' 중 하나가 아닙니다."),
+    DISPOSITION_DUPLICATE_ERROR(400, 1612, "입력된 개 성향이 중복됩니다."),
     ;
     // 프론트와 협의 후 에러 탐지 로직 추가 예정
 

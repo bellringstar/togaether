@@ -22,10 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -99,6 +96,12 @@ public class DogServiceImpl implements DogService {
         if (!dogUpdateReq.getDogDispositionList().stream()
                 .allMatch(this::isValidDisposition)) {
             throw new ApiException(DogErrorCode.DISPOSITION_VALUE_ERROR);
+        }
+
+        List<DogDisposition> dispositions = dogUpdateReq.getDogDispositionList();
+        Set<DogDisposition> uniqueDispositions = new HashSet<>(dispositions);
+        if (dispositions.size() != uniqueDispositions.size()) {
+            throw new ApiException(DogErrorCode.DISPOSITION_DUPLICATE_ERROR);
         }
 
         if (dogUpdateReq.getDogAboutMe().length() > 200) {
