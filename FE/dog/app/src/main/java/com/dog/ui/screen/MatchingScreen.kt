@@ -88,7 +88,7 @@ fun MatchingPge(viewModel: MatchingViewModel) {
     val listState = rememberLazyListState()
     val users = viewModel.users
 
-    Column {
+    Column(modifier = Modifier.fillMaxSize()) {
         LazyRow(
             state = listState,
             modifier = Modifier.fillMaxWidth()
@@ -285,7 +285,7 @@ fun DogsListView(dogs: List<Dog>?) {
                 dogList.size
             }
             Column(
-                modifier = Modifier.padding(start = 15.dp),
+                modifier = Modifier.padding(start = 15.dp, end = 15.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 HorizontalPager(
@@ -341,7 +341,7 @@ fun DogItemView(dog: Dog) {
 
     FlowRow(
         modifier = Modifier
-            .padding(top = 4.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth()
             .height(60.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
@@ -372,7 +372,8 @@ fun UserDetailsScreen(viewModel: MatchingViewModel, listState: LazyListState) {
 
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            userScrollEnabled = true
         ) { page ->
             UserDetailsView(user = viewModel.users[page], viewModel = viewModel)
         }
