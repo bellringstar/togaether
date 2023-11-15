@@ -1,14 +1,12 @@
 package com.dog.ui.screen.profile
 
 import android.annotation.SuppressLint
-import android.content.res.Resources.Theme
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRowScopeInstance.align
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -45,7 +43,6 @@ import com.dog.data.viewmodel.ImageUploadViewModel
 import com.dog.data.viewmodel.user.MyPageViewModel
 import com.dog.ui.theme.DogTheme
 import com.dog.util.common.ImageLoader
-import com.google.firebase.auth.UserInfo
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -99,7 +96,9 @@ fun EditUserProfileScreen(
                             Icon(Icons.Filled.ArrowBack, "뒤로가기")
                         }
                     },
-                    modifier = Modifier.height(30.dp).padding(top=5.dp)
+                    modifier = Modifier
+                        .height(30.dp)
+                        .padding(top = 5.dp)
                 )
             }
         ) { innerPadding ->
@@ -141,7 +140,10 @@ fun EditUserProfileScreen(
                         .fillMaxWidth()
                         .heightIn(min = 100.dp, max = 140.dp)
                 )
-                Button(onClick = { imagePickerLauncher.launch("image/*") }, modifier = Modifier.fillMaxWidth()) {
+                Button(
+                    onClick = { imagePickerLauncher.launch("image/*") },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     Text("프로필 이미지 수정")
                 }
                 Spacer(modifier = Modifier.size(4.dp))
@@ -169,7 +171,6 @@ fun EditUserProfileScreen(
 }
 
 
-
 @Composable
 fun ProfileImageSection(
     uploadStatus: ImageUploadViewModel.UploadStatus,
@@ -186,6 +187,7 @@ fun ProfileImageSection(
                 onDelete = handleDeleteImage
             )
         }
+
         ImageUploadViewModel.UploadStatus.UPLOADING -> CircularProgressIndicator()
         ImageUploadViewModel.UploadStatus.FAILED -> {
             Text("업로드에 실패했습니다. 다시 시도해주세요")
