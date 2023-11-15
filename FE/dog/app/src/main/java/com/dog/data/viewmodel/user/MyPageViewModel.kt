@@ -12,6 +12,9 @@ import com.bumptech.glide.Glide.init
 import com.dog.data.model.common.Response
 import com.dog.data.model.common.ResponseBodyResult
 import com.dog.data.model.dog.DogInfo
+import com.dog.data.model.feed.BoardItem
+import com.dog.data.model.feed.BoardRequest
+import com.dog.data.model.feed.BoardResponse
 import com.dog.data.model.matching.Dog
 import com.dog.data.model.matching.MatchingUserResponse
 import com.dog.data.model.user.SignInRequest
@@ -19,6 +22,7 @@ import com.dog.data.model.user.SignUpRequest
 import com.dog.data.model.user.UserBody
 import com.dog.data.model.user.UserUpdateRequest
 import com.dog.data.repository.DogRepository
+import com.dog.data.repository.FeedRepository
 import com.dog.data.repository.FriendRepository
 import com.dog.data.repository.UserRepository
 import com.dog.util.common.DataStoreManager
@@ -47,6 +51,9 @@ class MyPageViewModel @Inject constructor(
     private val dogApi: DogRepository = RetrofitClient.getInstance(interceptor).create(
         DogRepository::class.java
     )
+    private val feedApi: FeedRepository = RetrofitClient.getInstance(interceptor).create(
+        FeedRepository::class.java
+    )
 
     var loginUserNickname = mutableStateOf<String?>(null)
     var currentUserNickname = mutableStateOf<String?>(null)
@@ -61,10 +68,14 @@ class MyPageViewModel @Inject constructor(
     private val _dogs = MutableStateFlow<List<DogInfo>>(listOf())
     val dogs: StateFlow<List<DogInfo>> = _dogs.asStateFlow()
 
+    private val _articles = MutableStateFlow<List<BoardItem>>(listOf())
+    val articles: StateFlow<List<BoardItem>> = _articles.asStateFlow()
+
     // 유저 정보 저장
     init {
         getUser()
         getDog()
+        getUserArticle()
     }
 
 
@@ -125,11 +136,11 @@ class MyPageViewModel @Inject constructor(
             val nickname = userNickname ?: loginUser
             try {
                 val response =
-                    dogApi.getDogs(nickname)
+                    feedApi.getUserBoards(nickname)
                 Log.i("getDog", "저장된 유저 이름 ${nickname}")
                 if (response.isSuccessful && response.body() != null) {
-                    response.body()?.body?.let { dogs ->
-                        _dogs.value = dogs
+                    response.body()?.body?.let { articles ->
+                        _articles.value = articles
                     }
                 } else {
                     // 서버에서 올바르지 않은 응답을 반환한 경우
@@ -146,6 +157,7 @@ class MyPageViewModel @Inject constructor(
         currentUserNickname.value = nickName
         getUser(nickName)
         getDog(nickName)
+        getUserArticle(nickName)
     }
 
     fun getFriendRequests() {
