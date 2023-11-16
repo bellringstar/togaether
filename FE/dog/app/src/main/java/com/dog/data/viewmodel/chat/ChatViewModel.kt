@@ -43,8 +43,8 @@ class ChatViewModel @Inject constructor(
     )
 
     // 채팅 정보 저장
-    private val _chatState = mutableStateListOf<ChatState>()
-    val chatState: List<ChatState> get() = _chatState
+    private val _chatState = MutableStateFlow<List<ChatState>>(emptyList())
+    val chatState: StateFlow<List<ChatState>> get() = _chatState
 
     // 채팅방 목록
     private val _chatListState = mutableStateListOf<ChatroomInfo>()
@@ -69,16 +69,18 @@ class ChatViewModel @Inject constructor(
     var curChatroomTotalCnt by mutableIntStateOf(0)
     var curMessage by mutableStateOf("")
 
-    suspend fun newChatroom(roomName: String, selectedFriends: List<String>) {
+    suspend fun newChatroom(roomName: String, selectedFriends: List<String?>) {
         viewModelScope.launch {
             val friendNicknames = selectedFriends.map { it }
 
+            Log.d("newChatroom", selectedFriends.toString())
             try {
                 val res = chatApi.createChatroom(CreateChatroomRequest(roomName, friendNicknames))
 
                 if (res.isSuccessful) {
                     // Handle success, you might want to update UI or navigate to the created chatroom
                     Log.d("newChatroom", res.body().toString())
+                    _loading.value = true
                 } else {
                     // 서버에서 올바르지 않은 응답을 반환한 경우
                     _loading.value = false
@@ -88,7 +90,7 @@ class ChatViewModel @Inject constructor(
                     try {
                         val errorResponse: Response<ResponseBodyResult> =
                             gson.fromJson(errorBody, typeToken)
-                        Log.e("newChatroom", "${errorResponse.result.message}")
+                        Log.e("newChatroom", "${errorResponse.result.description}")
                         _toastMessage.value = errorResponse.result.description
                     } catch (e: JsonSyntaxException) {
                         Log.e("newChatroom", "JSON 파싱 에러", e)
@@ -96,7 +98,7 @@ class ChatViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 Log.e("APIError in ChatViewModel", "API 호출 중 오류 발생: ${e.message}")
-                _toastMessage.value = "친구목록을 불러오는 중 오류가 발생했습니다."
+                _toastMessage.value = "채팅방을 생성하는 중 오류가 발생했습니다."
             }
         }
     }
@@ -110,12 +112,10 @@ class ChatViewModel @Inject constructor(
     }
 
     private fun updateChatState(chat: ChatState) {
-//        val currentChatState = chatState.value.toMutableList() // 현재 상태를 가져옵니다.
-//        currentChatState.add(chat)
-//        _chatState.value = currentChatState // 수정된 목록을 다시 StateFlow에 할당합니다.
-        Log.d("chatState-before", chatState.toString())
-        _chatState.add(chat)
-        Log.d("chatState-after", chatState.toString())
+        val currentChatState = _chatState.value.toMutableList()
+        currentChatState.add(chat)
+        _chatState.value = currentChatState
+        Log.d("chatState-after", _chatState.value.toString())
     }
 
     fun updateReadList(userId: String) {
@@ -123,7 +123,7 @@ class ChatViewModel @Inject constructor(
         currentReadList.add(userId)
         _readList.clear()
         _readList.addAll(currentReadList)
-        Log.d("readList", _readList.toString())
+        Log.d("readList", _readList.toList().toString())
     }
 
     fun leaveChatroom(roomId: Long) {
@@ -226,8 +226,9 @@ class ChatViewModel @Inject constructor(
                 val chatHistory = res.body()?.body
                 Log.d("chatHistoryRes", responseBody?.body.toString())
                 if (chatHistory != null) {
-                    _chatState.clear()
-                    _chatState.addAll(chatHistory)
+                    _chatState.value = chatHistory
+//                    _chatState.clear()
+//                    _chatState.addAll(chatHistory)
                 }
             } else {
                 // 서버에서 올바르지 않은 응답을 반환한 경우

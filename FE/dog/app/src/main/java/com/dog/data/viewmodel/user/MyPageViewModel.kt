@@ -126,6 +126,7 @@ class MyPageViewModel @Inject constructor(
                 if (response.isSuccessful && response.body() != null) {
                     response.body()?.body?.let { dogs ->
                         _dogs.value = dogs
+                        Log.d("getDog", "받아온 개 정보 ${dogs}")
                     }
                 } else {
                     // 서버에서 올바르지 않은 응답을 반환한 경우
@@ -248,6 +249,7 @@ class MyPageViewModel @Inject constructor(
             }
         }
     }
+
 
     fun sendFriendRequest(receiverNickname: String) {
         viewModelScope.launch {
