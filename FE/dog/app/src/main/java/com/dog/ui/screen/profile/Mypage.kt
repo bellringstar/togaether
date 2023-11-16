@@ -24,11 +24,13 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Badge
-import androidx.compose.material3.BadgedBox
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -87,68 +89,79 @@ fun MypageScreen(
         Surface(
             modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
         ) {
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(15.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-//                verticalArrangement = Arrangement.Center
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    ProfileImage(userInfoState.value)
-                }
-                userInfoState.value?.let { UserInfo(it) }
-                // 강아지 정보
-                DogsListView(dogs = dogs.value)
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    EditProfileButton(
-                        navController, isOwnProfile,
-                        Modifier
-                            .padding(4.dp)
-                            .height(80.dp)
-                            .weight(1f)
-                    )
-                    EditDogButton(
-                        navController, isOwnProfile,
-                        Modifier
-                            .padding(4.dp)
-                            .height(80.dp)
-                            .weight(1f)
-                    )
-                    FriendButtons(
-                        myPageViewModel, navController,
-                        Modifier
-                            .padding(4.dp)
-                            .height(80.dp)
-                            .weight(1f)
-                    )
-                }
-                Divider(
-                    color = Color.Gray,
-                    thickness = 1.dp,
-                    modifier = Modifier.padding(vertical = 5.dp)
-                )
+            Box {
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(15.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+//                verticalArrangement = Arrangement.Center
                 ) {
-                    Text(
-                        text = "사진",
-                        color = Purple500,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        ProfileImage(userInfoState.value)
+                    }
+                    userInfoState.value?.let { UserInfo(it) }
+                    // 강아지 정보
+                    DogsListView(dogs = dogs.value)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        EditProfileButton(
+                            navController, isOwnProfile,
+                            Modifier
+                                .padding(4.dp)
+                                .height(80.dp)
+                                .weight(1f)
+                        )
+                        EditDogButton(
+                            navController, isOwnProfile,
+                            Modifier
+                                .padding(4.dp)
+                                .height(80.dp)
+                                .weight(1f)
+                        )
+                        FriendButtons(
+                            myPageViewModel, navController,
+                            Modifier
+                                .padding(4.dp)
+                                .height(80.dp)
+                                .weight(1f)
+                        )
+                    }
                     Divider(
                         color = Color.Gray,
                         thickness = 1.dp,
                         modifier = Modifier.padding(vertical = 5.dp)
                     )
-                    ArticleImageGrid(myPageViewModel)
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Text(
+                            text = "사진",
+                            color = Purple500,
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                        Divider(
+                            color = Color.Gray,
+                            thickness = 1.dp,
+                            modifier = Modifier.padding(vertical = 5.dp)
+                        )
+                        ArticleImageGrid(myPageViewModel)
+                    }
+                }
+                IconButton(
+                    onClick = {
+                        // 로그아웃 처리 로직
+                    },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(top = 16.dp, end = 16.dp)
+                ) {
+                    Icon(imageVector = Icons.Default.ExitToApp, contentDescription = "로그아웃")
                 }
             }
         }
