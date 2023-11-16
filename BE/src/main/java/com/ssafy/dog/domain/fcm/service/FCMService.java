@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class FirebaseService {
+public class FCMService {
 
 	private final FcmTokenRepository fcmTokenRepository;
 
@@ -49,7 +49,7 @@ public class FirebaseService {
 		}
 	}
 
-	private String getFcmToken(Long userId) {
+	public String getFcmToken(Long userId) {
 		log.info("user PK : {}", userId);
 
 		Optional<FcmToken> fcmToken = fcmTokenRepository.findById(userId);
@@ -63,12 +63,12 @@ public class FirebaseService {
 	}
 
 	public void sendChatMessage() {
-		
+
 	}
 
 	// FCM 채팅방 구독
 	public void subscribeFCM(List<String> registrationTokens, Long roomId) {
-		String topic = "Chat" + roomId;
+		String topic = "ChatRoom" + roomId;
 		try {
 			FirebaseMessaging.getInstance().subscribeToTopic(
 				registrationTokens, topic);

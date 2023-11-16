@@ -28,6 +28,7 @@ import com.ssafy.dog.domain.chat.repository.mongo.ChatHistoryRepository;
 import com.ssafy.dog.domain.chat.repository.mongo.ChatReadRepository;
 import com.ssafy.dog.domain.chat.repository.redis.ChatRoomUsersRepository;
 import com.ssafy.dog.domain.chat.util.KafkaConstants;
+import com.ssafy.dog.domain.fcm.service.FCMService;
 import com.ssafy.dog.domain.user.entity.User;
 import com.ssafy.dog.domain.user.repository.UserRepository;
 import com.ssafy.dog.security.JwtTokenProvider;
@@ -52,17 +53,26 @@ public class ChatService {
 	private final ChatRoomUsersRepository chatRoomUsersRepository;
 	private final ChatReadRepository chatReadRepository;
 	private final JwtTokenProvider jwtTokenProvider;
+	private final FCMService fcmService;
 
 	@Transactional
 	public Api<?> createChatRoom(ChatRoomReqDto chatRoomReqDto) {
+
 		List<User> users = new ArrayList<>();
+
 		if (chatRoomReqDto.getUserNicks().isEmpty()) {
 			throw new ApiException(ChatErrorCode.CHATROOM_USER_NOT_SELECT);
 		}
+
+		List<String> fcmTokens = new ArrayList<>();
 		for (String nickName : chatRoomReqDto.getUserNicks()) {
 			User user = userRepository.findByUserNickname(nickName)
 				.orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
 			users.add(user);
+
+			// FCM 토큰값 Redis에서 가져오기
+			String fcmtoken = fcmService.getFcmToken(user.getUserId());
+			fcmTokens.add(fcmtoken);
 		}
 
 		ChatRoom chatRoom = ChatRoom.builder().roomTitle(chatRoomReqDto.getRoomTitle()).build();
@@ -77,6 +87,9 @@ public class ChatService {
 			chatMembersList.add(chatMembers);
 		}
 		chatMembersRepository.saveAll(chatMembersList);
+
+		// roomId로 FCM 구독
+		fcmService.subscribeFCM(fcmTokens, chatRoom.getRoomId());
 
 		return Api.ok(chatRoom.getRoomId() + "채팅방 생성 성공");
 	}
