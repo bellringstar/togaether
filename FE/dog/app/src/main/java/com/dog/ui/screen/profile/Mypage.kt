@@ -248,7 +248,7 @@ fun EditDogButton(navController: NavController, isOwnProfile: Boolean, modifier:
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FriendButtons(
-    myPageViewModel: MyPageViewModel, navController: NavController, modifier: Modifiers
+    myPageViewModel: MyPageViewModel, navController: NavController, modifier: Modifier
 ) {
     val isOwnProfile =
         myPageViewModel.loginUserNickname.value == myPageViewModel.currentUserNickname.value
