@@ -4,13 +4,11 @@ import android.Manifest
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import android.util.Log
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
@@ -28,13 +26,11 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.shouldShowRationale
-import kotlinx.coroutines.delay
-import javax.inject.Inject
 
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun DogApp(dataStoreManager: DataStoreManager,onPermissionDenied: () -> Unit) {
+fun DogApp(dataStoreManager: DataStoreManager, onPermissionDenied: () -> Unit) {
 
 
     val permissionsState = rememberMultiplePermissionsState(
@@ -64,9 +60,9 @@ fun DogApp(dataStoreManager: DataStoreManager,onPermissionDenied: () -> Unit) {
         val isUserLoggedIn = userViewModel.isLogin.collectAsState().value
         val isLoading = userViewModel.isLoading.collectAsState().value
         val gpsIsLoading = locationTrackingViewModel.isLoading.collectAsState().value
-        if (isLoading || gpsIsLoading){
+        if (isLoading || gpsIsLoading) {
             CircularProgressIndicator()
-        }else {
+        } else {
             AppNavigation(navController, userViewModel, dataStoreManager, isUserLoggedIn)
         }
     } else {

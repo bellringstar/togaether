@@ -51,11 +51,13 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.dog.data.model.dog.DogInfo
 import com.dog.data.model.matching.DispositionMap
 import com.dog.data.model.user.UserBody
 import com.dog.data.viewmodel.user.MyPageViewModel
+import com.dog.data.viewmodel.user.UserViewModel
 import com.dog.ui.theme.DogTheme
 import com.dog.ui.theme.Purple400
 import com.dog.ui.theme.Purple500
@@ -71,11 +73,13 @@ fun MypageScreen(
     modifier: Modifier = Modifier.fillMaxHeight()
 ) {
     val userInfoState = myPageViewModel.userInfo.collectAsState()
+    val userViewModel: UserViewModel = hiltViewModel()
     val dogs = myPageViewModel.dogs.collectAsState()
     val lifecycleOwner = LocalLifecycleOwner.current
-
+    val isLoggedIn = userViewModel.isLogin.collectAsState().value
     val isOwnProfile =
         myPageViewModel.loginUserNickname.value == myPageViewModel.currentUserNickname.value
+
 
     DisposableEffect(lifecycleOwner) {
         lifecycleOwner.lifecycle.addObserver(myPageViewModel)
@@ -155,7 +159,8 @@ fun MypageScreen(
                 }
                 IconButton(
                     onClick = {
-                        // 로그아웃 처리 로직
+                        userViewModel.logout()
+
                     },
                     modifier = Modifier
                         .align(Alignment.TopEnd)

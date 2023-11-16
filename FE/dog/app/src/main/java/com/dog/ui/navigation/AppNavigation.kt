@@ -25,7 +25,7 @@ fun AppNavigation(
     navController: NavHostController,
     userViewModel: UserViewModel,
     store: DataStoreManager,
-    isLoggedIn:Boolean
+    isLoggedIn: Boolean
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -44,6 +44,7 @@ fun AppNavigation(
                 Log.d("FCM Log", "Current token: $token")
             }
     }
+
 
     if (!isLoggedIn) {
         NavHost(
