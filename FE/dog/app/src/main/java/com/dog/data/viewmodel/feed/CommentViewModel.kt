@@ -27,8 +27,10 @@ class CommentViewModel @Inject constructor(
     private val interceptor = RetrofitClient.RequestInterceptor(dataStoreManager)
     private val commentApi: CommentRepository =
         RetrofitClient.getInstance(interceptor).create(CommentRepository::class.java)
+
     private val _commentList = mutableStateListOf<CommentItem>()
-    val commentListState: SnapshotStateList<CommentItem> get() = _commentList
+    val commentListState: SnapshotStateList<CommentItem> = _commentList
+
 
     private val _commentsList = mutableStateListOf<Comment>()
     val commentsList: List<Comment> get() = _commentsList
@@ -46,6 +48,7 @@ class CommentViewModel @Inject constructor(
         }
     }
 
+
     fun addComment(
         addCommentRequest: AddCommentRequest,
         userViewModel: UserViewModel
@@ -53,6 +56,7 @@ class CommentViewModel @Inject constructor(
         viewModelScope.launch {
             Log.d("API_Response", addCommentRequest.toString())
             try {
+
                 val response = commentApi.addCommentApiResponse(addCommentRequest)
 
                 if (response.isSuccessful) {
@@ -60,7 +64,6 @@ class CommentViewModel @Inject constructor(
                     val commentResponse = response.body()
                     commentResponse?.let {
                         val userInfo = userViewModel.userInfo.value //TODO::물어보기 왜 안됨?
-                        Log.d("userInfo", userInfo.toString())
                         if (userInfo != null) {
                             val userNickname = userInfo.userNickname
                             val userProfileUrl = userInfo.userPicture
@@ -72,8 +75,8 @@ class CommentViewModel @Inject constructor(
                                 commentLikes = 0,
                                 userProfileUrl = userProfileUrl,  // 여기에 프로필 URL을 설정해야 합니다.
                             )
-                            _commentList.add(newCommentItem)
-                            _commentsCount.value = _commentList.size.toLong()
+                            commentListState.add(newCommentItem)
+                            commentsCount.value = _commentList.size.toLong()
                         } else {
                             // 사용자 정보가 없을 경우에 대한 처리
                             Log.e("API_Response", "User information is not available")

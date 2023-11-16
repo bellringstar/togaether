@@ -22,10 +22,8 @@ import com.dog.data.viewmodel.feed.LikeViewModel
 
 @Composable
 fun Like(feedItem: BoardItem, likeViewModel: LikeViewModel, navController: NavController) {
-    val likes by likeViewModel.likes.collectAsState()
-    Column(
-
-    ) {
+    val likes by likeViewModel.getLikes(feedItem.boardId).collectAsState()
+    Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp),

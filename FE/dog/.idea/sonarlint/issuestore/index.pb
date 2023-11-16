@@ -18,8 +18,6 @@ f
 6app/src/main/java/com/dog/ui/components/ProfileCard.kt,0\0\00e0f08a286be725e872114ccb62278e70266ecf
 `
 0app/src/main/java/com/dog/ui/components/Input.kt,1\5\15197df675c4626d0fb6f9766be9caa84ed44f1a
-i
-9app/src/main/java/com/dog/ui/components/icon_component.kt,b\3\b39fc8a602cc57e44b432e6affc4238dda901fb5
 a
 1app/src/main/java/com/dog/ui/components/Button.kt,8\f\8fd9daf2d43e282ce1153fcdf8f5e31bdef7df60
 Y
@@ -30,8 +28,6 @@ Aapp/src/main/java/com/dog/data/model/common/ResponseBodyResult.kt,7\e\7ef42536
 ,app/src/main/java/com/dog/data/model/Chat.kt,d\4\d430df346ccc791fe82146d82a58fbcd94c88f5f
 e
 5app/src/main/java/com/dog/util/common/StompManager.kt,6\3\633c836778ed4a90c7e2812ba0d229161dc7f238
-]
--app/src/main/java/com/dog/ui/screen/Mypage.kt,6\e\6e307538acbae826d83c57c813b9d745cc307bda
 C
 settings.gradle.kts,7\4\749edfcc96398253e5b3416184e95c46621da850
 A
@@ -40,8 +36,6 @@ X
 (gradle/wrapper/gradle-wrapper.properties,f\b\fbe448ebfc3eb2d4e308f6b8b043666f5b57235e
 ^
 .app/src/main/java/com/dog/data/model/Person.kt,b\b\bbd32c7d4935adf38deec63156f3d4fbd0e22451
-]
--app/src/main/java/com/dog/data/local/dummy.kt,1\b\1b46ccade89547bfdf306984dd7859a43b0b5ded
 a
 1app/src/main/java/com/dog/ui/screen/HomeScreen.kt,f\7\f7449df02d32e0a384ef25c19c697d86863adc2c
 n
