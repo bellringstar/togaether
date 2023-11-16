@@ -93,6 +93,7 @@ class LocationTrackingViewModel @Inject constructor(
         getCurrentLocation { location ->
             location?.let { latLng ->
                 viewModelScope.launch {
+                    _userLocation.value = latLng
                     dataStoreManager.saveLocation(latLng.latitude, latLng.longitude)
                     updateUserLatLangProfile(latLng.latitude, latLng.longitude)
                     _isLoading.value = false
