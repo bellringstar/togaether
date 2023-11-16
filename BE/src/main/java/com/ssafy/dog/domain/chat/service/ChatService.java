@@ -1,6 +1,7 @@
 package com.ssafy.dog.domain.chat.service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -159,8 +160,8 @@ public class ChatService {
 		log.info("유저 PK : {}", userId);
 
 		// read 한 사람들 추가
-		LocalDateTime origTime = LocalDateTime.now();
-		message.setSendTimeAndSenderAndRead(LocalDateTime.now(), userId, message.getSenderName(),
+		LocalDateTime origTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+		message.setSendTimeAndSenderAndRead(LocalDateTime.now(ZoneId.of("Asia/Seoul")), userId, message.getSenderName(),
 			chatRoomService.isConnected(message.getRoomId()));
 		kafkaProducerService.send(KafkaConstants.KAFKA_CHAT_TOPIC, message);
 
