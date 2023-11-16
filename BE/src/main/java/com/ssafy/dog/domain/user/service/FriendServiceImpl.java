@@ -6,6 +6,7 @@ import com.ssafy.dog.common.exception.ApiException;
 import com.ssafy.dog.domain.fcm.dto.FCMDto;
 import com.ssafy.dog.domain.fcm.service.FirebaseService;
 import com.ssafy.dog.domain.user.dto.request.FriendRequestReqDto;
+import com.ssafy.dog.domain.user.dto.response.FriendReadRes;
 import com.ssafy.dog.domain.user.dto.response.FriendRequestResDto;
 import com.ssafy.dog.domain.user.dto.response.FriendUnfriendRes;
 import com.ssafy.dog.domain.user.dto.response.UserReadRes;
@@ -46,6 +47,8 @@ public class FriendServiceImpl implements FriendService { // 리팩토링 시 �
 
         User receiver = userRepository.findByUserNickname(receiverNickname)
                 .orElseThrow(() -> new ApiException(UserErrorCode.RECEIVER_NOT_FOUND));
+
+        log.info("senderId, receiverId = {}, {}", sender.getUserId(), receiver.getUserId());
 
         if (sender.equals(receiver)) { // 2. 발신자와 수신자가 동일한지 검사
             throw new ApiException(UserErrorCode.I_AM_MY_OWN_FRIEND);
@@ -279,24 +282,15 @@ public class FriendServiceImpl implements FriendService { // 리팩토링 시 �
 
     @Transactional
     @Override
-    public Api<List<UserReadRes>> getFriendsList(Long userId) {
+    public Api<List<FriendReadRes>> getFriendsList(Long userId) {
         List<Friendship> friendships = friendshipRepository.findAllByUserUserId(userId);
 
-        List<UserReadRes> friendsList = friendships.stream()
+        List<FriendReadRes> friendsList = friendships.stream()
                 .map(friendship -> {
                     User friend = friendship.getFriend();
-                    return UserReadRes.builder()
-                            .userId(friend.getUserId())
-                            .userLoginId(friend.getUserLoginId())
+                    return FriendReadRes.builder()
                             .userNickname(friend.getUserNickname())
-                            .userPhone(friend.getUserPhone())
                             .userPicture(friend.getUserPicture())
-                            .userAboutMe(friend.getUserAboutMe())
-                            .userGender(friend.getUserGender())
-                            .userLatitude(friend.getUserLatitude())
-                            .userLongitude(friend.getUserLongitude())
-                            .userAddress(friend.getUserAddress())
-                            .userIsRemoved(friend.getUserIsRemoved())
                             .build();
                 })
                 .collect(Collectors.toList());

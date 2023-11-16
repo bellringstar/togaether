@@ -26,7 +26,9 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
 		List<Tuple> result = jpaQueryFactory
 			.select(
 				chatRoom.roomId,
-				user.userNickname
+				chatRoom.roomTitle,
+				user.userNickname,
+				user.userPicture
 			)
 			.from(chatRoom)
 			.innerJoin(chatRoom.chatMembers, chatMembers)
@@ -41,22 +43,28 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
 			))
 			.fetch();
 
-		Map<Long, List<String>> userNicknamesMap = new HashMap<>();
+		Map<Long, Map<String, String>> userNicknamesMap = new HashMap<>();
+		Map<Long, String> roomTitlesMap = new HashMap<>();
 
 		for (Tuple tuple : result) {
 			Long roomId = tuple.get(chatRoom.roomId);
+			String roomTitle = tuple.get(chatRoom.roomTitle);
 			String userNickname = tuple.get(user.userNickname);
+			String userPicture = tuple.get(user.userPicture);
 
-			userNicknamesMap.computeIfAbsent(roomId, k -> new ArrayList<>()).add(userNickname);
+			userNicknamesMap.computeIfAbsent(roomId, k -> new HashMap<>()).put(userNickname, userPicture);
+			roomTitlesMap.put(roomId, roomTitle);
+
 		}
 
 		List<ChatListResDto> dtos = new ArrayList<>();
 
-		for (Map.Entry<Long, List<String>> entry : userNicknamesMap.entrySet()) {
-			dtos.add(new ChatListResDto(entry.getKey(), entry.getValue()));
+		for (Map.Entry<Long, Map<String, String>> entry : userNicknamesMap.entrySet()) {
+			dtos.add(new ChatListResDto(entry.getKey(), roomTitlesMap.get(entry.getKey()), entry.getValue()));
 		}
 
 		return dtos;
 
 	}
+
 }
