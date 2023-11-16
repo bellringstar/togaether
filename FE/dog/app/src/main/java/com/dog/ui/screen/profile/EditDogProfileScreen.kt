@@ -1,6 +1,9 @@
 package com.dog.ui.screen.profile
 
+import android.content.Context
 import android.net.Uri
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -27,6 +30,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -41,6 +45,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.dog.data.Screens
@@ -49,7 +54,10 @@ import com.dog.data.model.matching.DispositionMap
 import com.dog.data.viewmodel.ImageUploadViewModel
 import com.dog.data.viewmodel.user.MyPageViewModel
 import com.dog.ui.components.MainButton
+import com.dog.ui.components.calander.CustomDatePicker
 import com.dog.ui.theme.DogTheme
+import com.dog.util.common.formatDate
+import java.util.Date
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,9 +96,18 @@ fun EditDogProfileScreen(
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                if(dogs.value.isNullOrEmpty()) item { MainButton(text = "등록된 강아지가 없습니다!", onClick = goRegisterDog) }
+                if (dogs.value.isNullOrEmpty()) item {
+                    MainButton(
+                        text = "등록된 강아지가 없습니다!",
+                        onClick = goRegisterDog
+                    )
+                }
                 item {
-                    MainButton(modifier = Modifier.fillMaxWidth(), text = "새 강아지 등록하기", onClick = goRegisterDog)
+                    MainButton(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "새 강아지 등록하기",
+                        onClick = goRegisterDog
+                    )
                     DropdownMenuForDogs(
                         dogs = dogs.value,
                         selectedDog = selectedDog,
@@ -164,13 +181,23 @@ fun DogEditFields(
     }
 
     var dogName by remember { mutableStateOf(dog.dogName) }
-    var dogBirthdate by remember { mutableStateOf(dog.dogBirthdate) }
+    var dogBirthdate by remember {
+        mutableStateOf(
+            formatDate(
+                Date().toString(),
+                "EEE MMM dd HH:mm:ss zzz yyyy"
+            )
+        )
+    }
     var dogBreed by remember { mutableStateOf(dog.dogBreed) }
     var dogDispositionList by remember { mutableStateOf(dog.dogDispositionList) }
+    Log.i("checktest-origin", dogDispositionList.toString())
     var dogPicture by remember { mutableStateOf(dog.dogPicture ?: "1") }
     var dogAboutMe by remember { mutableStateOf(dog.dogAboutMe) }
     var dogSize by remember { mutableStateOf(dog.dogSize) }
     val selectedDispositionsSet = remember { mutableStateOf(dogDispositionList.toSet()) }
+    val context = LocalContext.current
+    var isDatePickerVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = dog) {
         dogName = dog.dogName
@@ -183,23 +210,27 @@ fun DogEditFields(
 
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        TextField(
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(horizontal = 16.dp)) {
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
             value = dogName,
             onValueChange = { dogName = it },
-            label = { Text("강아지 이름") },
-            modifier = Modifier.fillMaxWidth()
+            label = { Text("강아지 이름") }
         )
 
-        TextField(
+        OutlinedTextField(
             value = dogAboutMe,
             onValueChange = {
-                if (it.length <= 200) { // 최대 길이 제한
+                if (it.length <= 100) { // 최대 길이 제한
                     dogAboutMe = it
                 }
             },
             label = { Text("자기소개") },
-            placeholder = { Text(" 강아지 자기소개를 입력해주세요 (최대 200자)") },
+            placeholder = { Text("강아지 자기소개를 입력해주세요 (최대 100자)") },
             singleLine = false,
             maxLines = 4,
             modifier = Modifier
@@ -207,18 +238,20 @@ fun DogEditFields(
                 .heightIn(min = 100.dp, max = 140.dp)
         )
 
-        TextField(
-            value = dogBirthdate,
-            onValueChange = { dogBirthdate = it },
-            label = { Text("강아지 생일") },
-            modifier = Modifier.fillMaxWidth()
+
+        CustomDatePicker(
+            curDate = dogBirthdate,
+            curOpen = isDatePickerVisible
         )
 
-        TextField(
+
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
             value = dogBreed,
             onValueChange = { dogBreed = it },
-            label = { Text("강아지 견종") },
-            modifier = Modifier.fillMaxWidth()
+            label = { Text("강아지 견종") }
         )
 
         DogSizeDropdown(
@@ -232,7 +265,8 @@ fun DogEditFields(
             selectedDispositionsSet = selectedDispositionsSet,
             onDispositionsChanged = { newList ->
                 dogDispositionList = newList
-            }
+            },
+            context = context
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -243,14 +277,12 @@ fun DogEditFields(
                 .padding(16.dp)
                 .align(Alignment.CenterHorizontally)
         ) {
-            Button(
-                onClick = { imagePickerLauncher.launch("image/*") },
-                modifier = Modifier.weight(1f)
-            ) {
-                Text("사진 수정")
-            }
+            MainButton(
+                text = "사진 수정",
+                modifier = Modifier.weight(1f),
+                onClick = { imagePickerLauncher.launch("image/*") })
 
-            Button(onClick = {
+            MainButton(text = "정보 수정", modifier = Modifier.weight(1f), onClick = {
                 onUpdate(
                     DogInfo(
                         dogId = dog.dogId,
@@ -261,12 +293,11 @@ fun DogEditFields(
                         dogAboutMe = dogAboutMe,
                         dogSize = dogSize,
                         dogPicture = uploadedImageUrls.firstOrNull() ?: dog.dogPicture,
-                        userId = dog.userId
+//                        userId = dog.userId
                     )
                 )
-            }, modifier = Modifier.weight(1f)) {
-                Text("정보 수정")
-            }
+            })
+
 
         }
     }
@@ -310,7 +341,8 @@ fun DogSizeDropdown(
 @Composable
 fun DogDispositionSelection(
     selectedDispositionsSet: MutableState<Set<String>>,
-    onDispositionsChanged: (List<String>) -> Unit
+    onDispositionsChanged: (List<String>) -> Unit,
+    context: Context
 ) {
     val dispositionOptions = DispositionMap.map.entries.toList()
 
@@ -320,6 +352,7 @@ fun DogDispositionSelection(
             .padding(16.dp)
             .height(200.dp)
     ) {
+
         items(dispositionOptions) { (english, korean) ->
             Row(
                 modifier = Modifier
@@ -327,14 +360,27 @@ fun DogDispositionSelection(
                     .clickable {
                         val currentlyChecked = selectedDispositionsSet.value.contains(english)
                         val newSet = selectedDispositionsSet.value.toMutableSet()
+//                        Log.i("checktest_checked", currentlyChecked.toString())
+//                        Log.i("checktest_selectedSet", selectedDispositionsSet.toString())
+
                         if (currentlyChecked) {
                             newSet.remove(english)
                         } else if (newSet.size < 5) {
                             newSet.add(english)
                         }
-                        if (newSet.size in 3..5) {
+                        if (newSet.size in 1..5) { // 3이라 개 생성에서 0으로 시작해서 로직 안돔
                             selectedDispositionsSet.value = newSet
                             onDispositionsChanged(newSet.toList())
+                            if (newSet.size < 3) {
+                                // 3개 미만이라 동작 안하는 제약 or 알림 넣기
+                                Toast
+                                    .makeText(
+                                        context,
+                                        "옵션 개수가 부족합니다.(최소 3개 선택 필요)",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                    .show()
+                            }
                         }
                     }
             ) {
