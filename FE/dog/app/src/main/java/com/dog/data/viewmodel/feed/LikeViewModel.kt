@@ -22,10 +22,24 @@ class LikeViewModel @Inject constructor(
     private val likeApi: LikeRepository =
         RetrofitClient.getInstance(interceptor).create(LikeRepository::class.java)
 
-    private val _likes = MutableStateFlow(0L)
-    val likes: MutableStateFlow<Long> get() = _likes
-    private val _isLiked = MutableStateFlow(false)
-    val isLiked: StateFlow<Boolean> get() = _isLiked
+    // 각 게시글에 대한 좋아요 수를 Map으로 관리
+    private val _likesMap = mutableMapOf<Long, MutableStateFlow<Long>>()
+
+    // 좋아요 수를 관리하는 StateFlow를 반환하는 함수
+    private fun getLikesFlow(boardId: Long): MutableStateFlow<Long> {
+        return _likesMap.getOrPut(boardId) { MutableStateFlow(0L) }
+    }
+
+    // 좋아요 수를 반환하는 StateFlow를 public으로 제공
+    fun getLikes(boardId: Long): StateFlow<Long> {
+        return getLikesFlow(boardId)
+    }
+
+    // 게시글에 대한 좋아요 수를 업데이트하는 함수
+    private fun updateLikes(boardId: Long, newLikes: Long) {
+        getLikesFlow(boardId).value = newLikes
+    }
+
 
     //like
     fun toggleLikeStatus(feedItem: BoardItem) {
@@ -54,10 +68,8 @@ class LikeViewModel @Inject constructor(
                             // 좋아요 수 증가 (눌렀을 때만)
                             feedItem.boardLikes += 1
                             feedItem.likecheck = true
-                            _likes.value = feedItem.boardLikes
+                            updateLikes(feedItem.boardId, feedItem.boardLikes)
                         }
-                        // 좋아요 여부 업데이트
-                        _isLiked.value = feedItem.likecheck
                     }
                 } else {
                     // 좋아요 추가 실패 시의 처리
@@ -87,10 +99,8 @@ class LikeViewModel @Inject constructor(
                             // 좋아요 수 감소 (눌렀을 때만)
                             feedItem.boardLikes -= 1
                             feedItem.likecheck = false
-                            _likes.value = feedItem.boardLikes
+                            updateLikes(feedItem.boardId, feedItem.boardLikes)
                         }
-                        // 좋아요 여부 업데이트
-                        _isLiked.value = feedItem.likecheck
                     }
                 } else {
                     // 좋아요 감소 실패 시의 처리

@@ -1,6 +1,5 @@
 package com.dog.ui.screen.feed
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -35,9 +34,8 @@ fun CustomBottomSheet(
     var newCommentText by remember { mutableStateOf(TextFieldValue()) }
     // 비동기적으로 데이터를 로드하고 상태를 갱신하는 부분
     LaunchedEffect(feedItem.boardId) {
-        val commentList = commentViewModel.loadCommentListData(feedItem.boardId)
+        var commentList = commentViewModel.loadCommentListData(feedItem.boardId)
         commentList?.let { commentListApi ->
-            Log.d("commentListAPi", commentListApi.comments.toString())
             commentViewModel.commentListState.clear()
             commentViewModel.commentListState.addAll(commentListApi.comments)
         }

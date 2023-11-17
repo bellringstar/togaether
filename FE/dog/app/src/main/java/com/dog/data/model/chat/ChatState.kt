@@ -7,5 +7,5 @@ data class ChatState(
     val contentType: String = "", // 글 or 사진 구분용
     val content: String = "",
     val sendTime: String,
-    val readList: ArrayList<Int>
+    val readList: Set<String>
 )
