@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.dog.data.Screens
 import com.dog.data.model.dog.RegisterDogInfo
 import com.dog.data.viewmodel.ImageUploadViewModel
 import com.dog.data.viewmodel.user.MyPageViewModel
@@ -107,6 +108,7 @@ fun RegisterDogScreen(
         )
         Log.d("dog", dog.toString())
         myPageViewModel.registerNewDog(dog)
+        navController.navigate(Screens.Home.route)
     }
 
     Box(

@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.dog.data.model.common.Response
 import com.dog.data.model.common.ResponseBodyResult
 import com.dog.data.model.dog.DogInfo
+import com.dog.data.model.dog.NewDog
 import com.dog.data.model.dog.RegisterDogInfo
 import com.dog.data.model.feed.BoardItem
 import com.dog.data.model.user.UserBody
@@ -62,8 +63,8 @@ class MyPageViewModel @Inject constructor(
     private val _dogs = MutableStateFlow<List<DogInfo>>(listOf())
     val dogs: StateFlow<List<DogInfo>> = _dogs.asStateFlow()
 
-    private val _newDog = MutableStateFlow<DogInfo?>(null)
-    val newDog: StateFlow<DogInfo?> = _newDog.asStateFlow()
+    private val _newDog = MutableStateFlow<NewDog?>(null)
+    val newDog: StateFlow<NewDog?> = _newDog.asStateFlow()
 
     private val _articles = MutableStateFlow<List<BoardItem>>(listOf())
     val articles: StateFlow<List<BoardItem>> = _articles.asStateFlow()
@@ -312,8 +313,8 @@ class MyPageViewModel @Inject constructor(
             try {
                 val res = dogApi.postDog(dog)
                 if (res.isSuccessful && res.body() != null) {
-                    Log.d("registerNewDog", res.body()?.body.toString()) // 성공시 dogId
-                    Log.i("registerNewDog", _newDog.value.toString())
+                    Log.d("registerNewDog", res.body().toString()) // 성공시 dogId
+                    Log.i("registerNewDog", _newDog.value?.dogId.toString())
                     _toastMessage.value = res.body()?.body?.dogId.toString() + "번 개가 등록되었습니다."
                 } else {
                     // 서버에서 올바르지 않은 응답을 반환한 경우
