@@ -318,13 +318,6 @@ fun ChatScreen(
     val listState = rememberLazyListState()
     val totalCnt = chatViewModel.curChatroomTotalCnt
 
-    // LaunchedEffect를 사용하여 최하단으로 스크롤
-    LaunchedEffect(chatState) {
-        if (listState != null && chatState != null && chatState.isNotEmpty()) {
-            listState.animateScrollToItem(chatState.size - 1)
-        }
-    }
-
     // 스크롤 위치를 최하단으로 이동
     DisposableEffect(listState, chatState) {
         coroutineScope.launch {
