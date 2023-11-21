@@ -57,95 +57,69 @@
 
 ## 🔥 서비스 화면 소개
 
-1. 회원가입
+### 1. 회원가입
 
-> > (1) 이메일 인증 요청
-
-> > <img src = "exec/img/emailValidation.gif" width=30%  height=30%>
-
-> > (2) 이메일 검증
-
-> > <img src = "exec/img/emailValidationCheck.gif" width=30%  height=30%>
-
-> > (3) 닉네임 중복체크
-
-> > <img src = "exec/img/dupNickname.gif" width=30%  height=30%>
+| <p align="center">이메일 인증 요청</p>                | <p align="center">이메일 검증</p>                          | <p align="center">닉네임 중복체크</p>             |
+| ----------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------- |
+| <img src = "exec/img/emailValidation.gif" height=400> | <img src = "exec/img/emailValidationCheck.gif" height=400> | <img src = "exec/img/dupNickname.gif" height=400> |
 
 <br>
 
-2. 로그인
+### 2. 로그인
 
-> > <img src = "exec/img/login.gif" width=30%  height=30%>
-
-<br>
-
-3. 피드
-
-> > (1) 피드 작성
-
-> > <img src = "exec/img/board-create.gif" width=30%  height=30%>
-
-> > (2) 피드 삭제
-
-> > <img src = "exec/img/board-delete.gif" width=30%  height=30%>
-
-> > (3) 댓글 작성
-
-> > <img src = "exec/img/comment-create.gif" width=30%  height=30%>
-
-> > (4) 댓글 삭제
-
-> > <img src = "exec/img/comment-delete.gif" width=30%  height=30%>
-
-> > (5) 좋아요
-
-> > <img src = "exec/img/like.gif" width=30%  height=30%>
-
-> > (6) 프로필 피드 이동
-
-> > <img src = "exec/img/profile-move.gif" width=30%  height=30%>
+> > <img src = "exec/img/login.gif" height=400>
 
 <br>
 
-4. 산책
+### 3. 피드
 
-> > <img src = "exec/img/tracking.gif" width=30%  height=30%>
-
-<br>
-
-5. 매칭
-
-> > <img src = "exec/img/matching.gif" width=30%  height=30%>
+| <p align="center">피드 작성</p>                    | <p align="center">피드 삭제</p>                    | <p align="center">좋아요</p>               |
+| -------------------------------------------------- | -------------------------------------------------- | ------------------------------------------ |
+| <img src = "exec/img/board-create.gif" height=400> | <img src = "exec/img/board-delete.gif" height=400> | <img src = "exec/img/like.gif" height=400> |
 
 <br>
 
-6. 채팅
+### 4. 댓글
 
-> > (1) 채팅방 생성
-
-> > <img src = "exec/img/chattingList.gif" width=30%  height=30%>
-
-> > (2) 채팅창
-
-> > <img src = "exec/img/chatting.gif" width=30%  height=30%>
+| <p align="center">댓글 작성</p>                       | <p align="center">댓글 삭제</p>                       |
+| ----------------------------------------------------- | ----------------------------------------------------- |
+| <img src = "exec/img/comment-create.gif" height=400 > | <img src = "exec/img/comment-delete.gif" height=400 > |
 
 <br>
 
-7. 마이페이지
+### 5. 산책
 
-> > <img src = "exec/img/mypage.gif" width=30%  height=30%>
+> > <img src = "exec/img/tracking.gif" height=400>
 
 <br>
 
-9. FCM 알림
+### 6. 매칭
 
-> > 친구 신청 관련
+> > <img src = "exec/img/matching.gif" height=400>
 
-> > <img src = "exec/img/friend-alram.gif" width=30%  height=30%/>
+<br>
 
-> > <img src = "exec/img/acceptFriendCheck.gif" width=30%  height=30%/>
+### 7. 채팅
 
-> > <img src = "exec/img/alreadyFriend.gif" width=30%  height=30%/>
+| <p align="center">채팅방 생성</p>                  | <p align="center">채팅창</p>                   |
+| -------------------------------------------------- | ---------------------------------------------- |
+| <img src = "exec/img/chattingList.gif" height=400> | <img src = "exec/img/chatting.gif" height=400> |
+
+<br>
+
+### 8. 마이페이지
+
+| <p align="center">프로필 피드 이동</p>             | <p align="center">마이페이지</p>             |
+| -------------------------------------------------- | -------------------------------------------- |
+| <img src = "exec/img/profile-move.gif" height=400> | <img src = "exec/img/mypage.gif" height=400> |
+
+<br>
+
+### 9. FCM 알림 (친구 신청 관련)
+
+| <p align="center">친구 요청 알림</p>               | <p align="center">친구 수락</p>                         | <p align="center">이미 친구인 관계</p>              |
+| -------------------------------------------------- | ------------------------------------------------------- | --------------------------------------------------- |
+| <img src = "exec/img/friend-alram.gif" height=400> | <img src = "exec/img/acceptFriendCheck.gif" height=400> | <img src = "exec/img/alreadyFriend.gif" height=400> |
 
 <br>
 <br>
