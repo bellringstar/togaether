@@ -163,6 +163,7 @@
 - MySQL
 - MongoDB
 - Redis
+- javacv
 
 <br>
 
