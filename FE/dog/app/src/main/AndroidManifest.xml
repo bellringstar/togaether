@@ -20,9 +20,11 @@
             android:theme="@style/Theme.Dog"
             android:usesCleartextTraffic="true"
             tools:targetApi="31">
+            <!--
         <meta-data
                 android:name="com.google.android.geo.API_KEY"
-                android:value="AIzaSyCxziSmxXrZNqg2uS_PZm0L-21zJ5MOeDA" />
+                android:value="####" />
+                -->
 
 <!--        <activity-->
 <!--                android:name=".charTest.MainActivity"-->
