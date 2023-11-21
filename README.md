@@ -163,7 +163,7 @@
 - MySQL
 - MongoDB
 - Redis
-- javacv
+- Javacv
 
 <br>
 
@@ -314,7 +314,7 @@ DataStore란 프로토콜 버퍼를 사용해 key-value 쌍이 지정된 객체�
 
 ## ERD
 
-<img src="exec/img/erd.png" width=7%  height=70%>
+<img src="exec/img/erd.png" width=70%  height=70%>
 
 ## 👨‍👩‍👧 협업 툴
 
