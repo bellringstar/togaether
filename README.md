@@ -1,11 +1,4 @@
-# 🐕같이가개
-
-<div align="center">
-  <div style="font-size: xx-large; justify-items: center" >강아지 산책 커뮤니티</div>
-  <!-- <img src="./readme_assets/images/jutopiaLogo.png" height="200">  -->
-</div>
-
----
+# 🐕같이가개(강아지 산책 커뮤니티)
 
 # 🎬UCC
 
@@ -126,9 +119,9 @@
 
 ## ⚙️ 개발 환경
 
-### Front-end
+### ✨Front-end✨
 
-<div align=center>
+<div>
 <img src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=black">
 <img src="https://img.shields.io/badge/Jetpack Compose-4285F4?style=for-the-badge&logo=Jetpack Compose&logoColor=white">
 <img src="https://img.shields.io/badge/Google Maps-4285F4?style=for-the-badge&logo=google Maps&logoColor=white">
@@ -145,7 +138,7 @@
 
 <br>
 
-### Back-end
+### ✨Back-end✨
 
 <div>
 <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white">
@@ -173,7 +166,7 @@
 
 <br>
 
-### INFRA
+### ✨INFRA✨
 
 <div>
 <img src="https://img.shields.io/badge/AWS EC2-FF9900?style=for-the-badge&logo=amazon ec2&logoColor=white">
@@ -187,7 +180,7 @@
 
 <br>
 
-### 협업 툴
+### ✨협업 툴✨
 
 <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">&nbsp;<img src="https://img.shields.io/badge/jira-0052CC?style=for-the-badge&logo=jirasoftware&logoColor=white">&nbsp;<img src="https://img.shields.io/badge/mattermost-0058CC?style=for-the-badge&logo=mattermost&logoColor=white">&nbsp;<img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white">&nbsp;<img src="https://img.shields.io/badge/figma-EA4335?style=for-the-badge&logo=figma&logoColor=white">&nbsp;
 
@@ -198,7 +191,7 @@
 
 <br>
 
-### IDE
+### ✨IDE✨
 
 <div>
 <img src="https://img.shields.io/badge/IntelliJ-000000?style=for-the-badge&logo=IntelliJ idea&logoColor=white">
@@ -316,11 +309,11 @@ DataStore란 프로토콜 버퍼를 사용해 key-value 쌍이 지정된 객체�
 
 ## 아키텍쳐
 
-<img src="exec/img/architecture.png" width=50%  height=50% />
+<img src="exec/img/architecture.png" width=70%  height=70% />
 
 ## ERD
 
-<img src="exec/img/erd.png" width=50%  height=50%>
+<img src="exec/img/erd.png" width=7%  height=70%>
 
 ## 👨‍👩‍👧 협업 툴
 
@@ -341,9 +334,9 @@ DataStore란 프로토콜 버퍼를 사용해 key-value 쌍이 지정된 객체�
 
 # 👩‍💻 팀원 역할 분배
 
-| 김대홍                   | 권영재                   | 김기홍                   | 김현종                   | 소영섭                   | 이성연                   |
-| ------------------------ | ------------------------ | ------------------------ | ------------------------ | ------------------------ | ------------------------ |
-| <img src="" width="100"> | <img src="" width="100"> | <img src="" width="100"> | <img src="" width="100"> | <img src="" width="100"> | <img src="" width="100"> |
-| Leader & Backend         | Frontend                 | Backend                  | Backend                  | Frontend                 | Backend                  |
+| 김대홍                                 | 권영재                         | 김기홍                        | 김현종                        | 소영섭                         | 이성연                        |
+| -------------------------------------- | ------------------------------ | ----------------------------- | ----------------------------- | ------------------------------ | ----------------------------- |
+| <img src="" width="100">               | <img src="" width="100">       | <img src="" width="100">      | <img src="" width="100">      | <img src="" width="100">       | <img src="" width="100">      |
+| <p align="center">Leader & Backend</p> | <p align="center">Frontend</p> | <p align="center">Backend</p> | <p align="center">Backend</p> | <p align="center">Frontend</p> | <p align="center">Backend</p> |
 
 <br>
